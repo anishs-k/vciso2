@@ -60,3 +60,6 @@ dist_client/*/evidence/
 
 # CTW admin: generated bundles and client image files (passwords never land here, but SQL and images do)
 ctw-admin/builds/
+
+# Generated / downloaded client init SQL
+001_client_init*.sql
