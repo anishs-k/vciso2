@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CyberTrustWorksClientIntakeSpec",
+  "description": "Client intake and licensing specification used to dynamically generate client Docker images and tailored database schemas.",
+  "type": "object",
+  "required": [
+    "organization",
+    "contract",
+    "licensing_limits",
+    "selected_frameworks",
+    "enabled_modules",
+    "initial_users"
+  ],
+  "properties": {
+    "organization": {
+      "type": "object",
+      "required": ["customer_id", "customer_name", "category", "industry", "primary_domain", "offices", "contacts"],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{3,32}$",
+          "description": "Unique client tenant code (e.g., Cust_00101 or ACME_CORP)"
+        },
+        "customer_name": {
+          "type": "string",
+          "description": "Official legal name of the client organization"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Enterprise", "Mid-Market", "SMB", "Government", "Financial Institution"],
+          "description": "Client tier/category"
+        },
+        "industry": {
+          "type": "string",
+          "description": "Primary industry sector (e.g. Banking & Financial Services, Healthcare, SaaS, Telecom)"
+        },
+        "primary_domain": {
+          "type": "string",
+          "description": "Primary corporate domain (e.g., acmewidgets.com)"
+        },
+        "deployment_fqdn": {
+          "type": "string",
+          "description": "FQDN or internal URL where client will host the vCISO platform (e.g., vciso.acme.com)"
+        },
+        "offices": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["office_id", "office_type", "office_address", "city", "state", "country", "pincode"],
+            "properties": {
+              "office_id": { "type": "string" },
+              "office_type": { "type": "string", "enum": ["Primary", "Secondary", "Data Center", "Regional Office"] },
+              "office_address": { "type": "string" },
+              "city": { "type": "string" },
+              "state": { "type": "string" },
+              "country": { "type": "string" },
+              "pincode": { "type": "string" }
+            }
+          }
+        },
+        "contacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["contact_id", "office_id", "contact_type", "contact_priority", "contact_person", "designation", "contact_email", "contact_phone"],
+            "properties": {
+              "contact_id": { "type": "string" },
+              "office_id": { "type": "string" },
+              "contact_type": { "type": "string", "enum": ["Executive", "Primary vCISO", "IT Security", "Escalation", "Emergency"] },
+              "contact_priority": { "type": "integer", "minimum": 1, "maximum": 5 },
+              "contact_person": { "type": "string" },
+              "designation": { "type": "string" },
+              "department": { "type": "string" },
+              "contact_email": { "type": "string", "format": "email" },
+              "contact_phone": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": ["contract_id", "customer_ref_po", "financial_year", "contract_start_date", "contract_end_date", "contract_period_months", "currency", "invoicing_frequency"],
+      "properties": {
+        "contract_id": { "type": "string" },
+        "customer_ref_po": { "type": "string" },
+        "contract_type": { "type": "string", "enum": ["Original", "Extension", "AMC", "AR", "CR"], "default": "Original" },
+        "financial_year": { "type": "integer", "minimum": 2024, "maximum": 2050 },
+        "contract_period_months": { "type": "integer", "minimum": 1, "maximum": 60 },
+        "contract_start_date": { "type": "string", "format": "date" },
+        "contract_end_date": { "type": "string", "format": "date" },
+        "contract_value": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "default": "USD" },
+        "invoicing_frequency": { "type": "string", "enum": ["M", "Q", "H", "Y"], "default": "M" }
+      }
+    },
+    "licensing_limits": {
+      "type": "object",
+      "required": ["max_users", "max_vcisos", "max_org_owners", "max_api_integrations", "max_frameworks", "valid_to"],
+      "description": "Strict hard limits enforced in PostgreSQL triggers and application License Guard. The client organization CANNOT exceed these limits.",
+      "properties": {
+        "max_users": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum total active user accounts allowed in the organization."
+        },
+        "max_vcisos": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hard quota for vCISO role seats. Client cannot assign the vCISO role to more users than this."
+        },
+        "max_org_owners": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hard quota for Organisation Owner / Executive role seats."
+        },
+        "max_control_owners": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 50,
+          "description": "Maximum number of control owners allowed."
+        },
+        "max_api_integrations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum number of external security scanner / tool API connections allowed."
+        },
+        "max_frameworks": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum number of compliance frameworks licensed."
+        },
+        "valid_to": {
+          "type": "string",
+          "format": "date",
+          "description": "License expiry date. Platform operations freeze or enter read-only mode after this date."
+        }
+      }
+    },
+    "selected_frameworks": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of Master Frameworks licensed by the client. Only these frameworks will be seeded into their database.",
+      "items": {
+        "type": "object",
+        "required": ["framework_id", "office_ids"],
+        "properties": {
+          "framework_id": {
+            "type": "integer",
+            "description": "Framework ID from Master-Framework (e.g. 101: ISO 9001, 102: ISO 27001, 103: DPDPA, 108: NIST CSF 2.0, 109: PCI DSS v4)"
+          },
+          "office_ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Offices where this framework applies"
+          },
+          "review_frequency_months": {
+            "type": "integer",
+            "default": 12,
+            "description": "Default review frequency in months"
+          },
+          "office_review_months": {
+            "type": "object",
+            "additionalProperties": { "type": "integer", "minimum": 1 },
+            "description": "Review frequency in months per office (office_id -> months); an office not listed uses review_frequency_months"
+          }
+        }
+      }
+    },
+    "enabled_modules": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of modules enabled for this client. Docker build drops unselected modules, and DB schema activates corresponding tables.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "compliance",
+          "vulnerabilities",
+          "alerting",
+          "mobile_access",
+          "news_breach_watch",
+          "onprem_ai_assessment",
+          "incidents"
+        ]
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "description": "Security scanner and threat feed tool integration details",
+      "properties": {
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tool_name", "enabled", "pull_frequency_per_day"],
+            "properties": {
+              "tool_name": { "type": "string", "enum": ["Tenable", "Qualys", "Rapid7", "Greenbone", "McAfee", "Zscaler"] },
+              "enabled": { "type": "boolean" },
+              "target_endpoint": { "type": "string" },
+              "pull_frequency_per_day": { "type": "integer", "default": 1 }
+            }
+          }
+        }
+      }
+    },
+    "news_watch_profile": {
+      "type": "object",
+      "description": "Required if news_breach_watch module is enabled. Registered with Companion Cloud.",
+      "properties": {
+        "monitored_names": { "type": "array", "items": { "type": "string" } },
+        "monitored_domains": { "type": "array", "items": { "type": "string" } },
+        "monitored_cities": { "type": "array", "items": { "type": "string" } },
+        "custom_keywords": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "security_policies": {
+      "type": "object",
+      "properties": {
+        "sso_type": { "type": "string", "enum": ["LOCAL", "SAML_2_0", "OIDC", "AZURE_AD", "OKTA"], "default": "LOCAL" },
+        "sso_metadata_url": { "type": "string" },
+        "mfa_enforced": { "type": "boolean", "default": true },
+        "password_expiry_days": { "type": "integer", "default": 90 },
+        "session_timeout_minutes": { "type": "integer", "default": 15 }
+      }
+    },
+    "initial_users": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Initial bootstrap admin accounts (e.g. initial vCISO and Org Owner) that are provisioned on DB creation.",
+      "items": {
+        "type": "object",
+        "required": ["user_id", "login_id", "user_name", "user_email", "role_type", "office_id"],
+        "properties": {
+          "user_id": { "type": "string" },
+          "login_id": { "type": "string" },
+          "user_name": { "type": "string" },
+          "user_email": { "type": "string", "format": "email" },
+          "user_mobile": { "type": "string" },
+          "designation": { "type": "string" },
+          "department": { "type": "string" },
+          "role_type": { "type": "string", "enum": ["vCISO", "Organisation Owner", "Control Owner", "Auditor", "Viewer"] },
+          "office_id": { "type": "string" }
+        }
+      }
+    }
+  }
+}

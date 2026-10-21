@@ -1,0 +1,33 @@
+{
+  "name": "vciso-platform-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "vCISO Platform API",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "build": "node scripts/build.js",
+    "start:dist": "node dist/index.js",
+    "link": "node scripts/link-db.js",
+    "intake": "python3 intake/server.py",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^2.4.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "javascript-obfuscator": "^4.1.1",
+    "prettier": "^3.4.2"
+  }
+}

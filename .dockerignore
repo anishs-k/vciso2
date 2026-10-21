@@ -1,0 +1,18 @@
+node_modules
+dist
+.git
+.gitignore
+.devcontainer
+.vscode
+.env
+.env.*
+!.env.example
+*.log
+coverage
+docker-compose*.yml
+Dockerfile
+.dockerignore
+README.md
+
+# CTW-side admin tool and its database: never part of a client image
+ctw-admin

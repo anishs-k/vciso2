@@ -1,0 +1,12 @@
+# Build context of the client image (Dockerfile). An allow-list: only what the image is built from is
+# sent, so client bundles (passwords, SQL), .env files, the CTW admin tool, docs and the Python tooling
+# can never end up in a client's image. (.dockerignore stays the rule for the dev container.)
+*
+!package.json
+!package-lock.json
+!src/
+!scripts/build.js
+!vciso-platform/vciso-app/
+vciso-platform/vciso-app/node_modules/
+vciso-platform/vciso-app/dist/
+vciso-platform/vciso-app/.env*

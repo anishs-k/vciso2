@@ -1,0 +1,178 @@
+{
+  "organization": {
+    "customer_id": "Cust_00101",
+    "customer_name": "Acme Financial Services International Ltd.",
+    "category": "Enterprise",
+    "industry": "Banking & Financial Services",
+    "primary_domain": "acmefinance.com",
+    "deployment_fqdn": "vciso.acmefinance.com",
+    "offices": [
+      {
+        "office_id": "Cust_00101_001",
+        "office_type": "Primary",
+        "office_address": "Tower 4, Bandra Kurla Complex",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "country": "India",
+        "pincode": "400051"
+      },
+      {
+        "office_id": "Cust_00101_002",
+        "office_type": "Secondary",
+        "office_address": "77 London Wall",
+        "city": "London",
+        "state": "Greater London",
+        "country": "United Kingdom",
+        "pincode": "EC2M 5TN"
+      }
+    ],
+    "contacts": [
+      {
+        "contact_id": "Cust_00101_001_0001",
+        "office_id": "Cust_00101_001",
+        "contact_type": "Executive",
+        "contact_priority": 1,
+        "contact_person": "Vikram Malhotra",
+        "designation": "Chief Technology & Risk Officer",
+        "department": "Executive Board",
+        "contact_email": "v.malhotra@acmefinance.com",
+        "contact_phone": "+91-98200-11223"
+      },
+      {
+        "contact_id": "Cust_00101_001_0002",
+        "office_id": "Cust_00101_001",
+        "contact_type": "Primary vCISO",
+        "contact_priority": 1,
+        "contact_person": "Priya Sharma",
+        "designation": "Head of Information Security / vCISO",
+        "department": "Information Security",
+        "contact_email": "priya.sharma@acmefinance.com",
+        "contact_phone": "+91-98200-33445"
+      },
+      {
+        "contact_id": "Cust_00101_001_0003",
+        "office_id": "Cust_00101_001",
+        "contact_type": "Escalation",
+        "contact_priority": 2,
+        "contact_person": "Rohan Gupta",
+        "designation": "Security Operations Lead",
+        "department": "IT Operations",
+        "contact_email": "rohan.gupta@acmefinance.com",
+        "contact_phone": "+91-98200-55667"
+      }
+    ]
+  },
+  "contract": {
+    "contract_id": "Contract_00101_001",
+    "customer_ref_po": "PO_ACME_2026_09",
+    "contract_type": "Original",
+    "financial_year": 2026,
+    "contract_period_months": 12,
+    "contract_start_date": "2026-04-01",
+    "contract_end_date": "2027-03-31",
+    "contract_value": 1200000.0,
+    "currency": "INR",
+    "invoicing_frequency": "M"
+  },
+  "licensing_limits": {
+    "max_users": 25,
+    "max_vcisos": 2,
+    "max_org_owners": 1,
+    "max_control_owners": 20,
+    "max_api_integrations": 10,
+    "max_frameworks": 2,
+    "valid_to": "2027-03-31"
+  },
+  "selected_frameworks": [
+    {
+      "framework_id": 102,
+      "office_ids": [
+        "Cust_00101_001",
+        "Cust_00101_002"
+      ],
+      "review_frequency_months": 12
+    },
+    {
+      "framework_id": 103,
+      "office_ids": [
+        "Cust_00101_001"
+      ],
+      "review_frequency_months": 6
+    }
+  ],
+  "enabled_modules": [
+    "compliance",
+    "vulnerabilities",
+    "alerting",
+    "mobile_access",
+    "news_breach_watch",
+    "incidents"
+  ],
+  "integrations": {
+    "tools": [
+      {
+        "tool_name": "Tenable",
+        "enabled": true,
+        "target_endpoint": "https://cloud.tenable.com",
+        "pull_frequency_per_day": 2
+      },
+      {
+        "tool_name": "Greenbone",
+        "enabled": true,
+        "target_endpoint": "https://scanner.internal.acmefinance.com:9390",
+        "pull_frequency_per_day": 1
+      }
+    ]
+  },
+  "news_watch_profile": {
+    "monitored_names": [
+      "Acme Financial",
+      "Acme Financial Services",
+      "Acme International Bank"
+    ],
+    "monitored_domains": [
+      "acmefinance.com",
+      "acmebank.co.in",
+      "secure.acmefinance.com"
+    ],
+    "monitored_cities": [
+      "Mumbai",
+      "London",
+      "Bengaluru"
+    ],
+    "custom_keywords": [
+      "Fintech leak",
+      "Acme core banking"
+    ]
+  },
+  "security_policies": {
+    "sso_type": "LOCAL",
+    "mfa_enforced": true,
+    "password_expiry_days": 90,
+    "session_timeout_minutes": 15
+  },
+  "initial_users": [
+    {
+      "user_id": "User_0001",
+      "login_id": "priya.sharma",
+      "user_name": "Priya Sharma",
+      "user_email": "priya.sharma@acmefinance.com",
+      "user_mobile": "+91-98200-33445",
+      "designation": "vCISO",
+      "department": "Information Security",
+      "role_type": "vCISO",
+      "office_id": "Cust_00101_001"
+    },
+    {
+      "user_id": "User_0002",
+      "login_id": "vikram.malhotra",
+      "user_name": "Vikram Malhotra",
+      "user_email": "v.malhotra@acmefinance.com",
+      "user_mobile": "+91-98200-11223",
+      "designation": "CTO & Risk Officer",
+      "department": "Executive Board",
+      "role_type": "Organisation Owner",
+      "office_id": "Cust_00101_001"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: 'Source Serif 4', serif; letter-spacing: -0.01em; }
+body { margin: 0; font-family: 'Inter', 'Nunito Sans', system-ui, -apple-system, sans-serif; color: #1A202C; background-color: #EDF2F7; }
+.admin-card { border-radius: 2px; box-shadow: none; border: 1px solid #D7DEE7; background: #ffffff; }
+.admin-card:hover { box-shadow: none; }
+.kanban-col { min-height: 400px; }
+.drag-over { border: 2px dashed #2563eb !important; background: #eff6ff !important; }
+.tag-badge { display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 2px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

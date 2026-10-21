@@ -1,0 +1,1778 @@
+{
+  "framework": "Digital Personal Data Protection Act, 2023 (India) + DPDP Rules, 2025",
+  "description": "vCISO client questionnaire covering the Data-Fiduciary-facing obligations of the DPDP Act, 2023 (Chapters 1-4, ss.3-17) and the operative DPDP Rules, 2025 that bind Data Fiduciaries/Processors. Chapters 5-9 of the Act (ss.18-44, Data Protection Board / Appellate Tribunal constitution, powers and procedure) and the Board/Tribunal-internal Rules are summarized for context only, not scored.",
+  "regulatory_status_as_of": "28 August 2026",
+  "key_dates": {
+    "act_assent": "11 August 2023",
+    "rules_notified": "13 November 2025",
+    "phase_1_effective": "13 November 2025 (Rules 1, 2, 17-21; ss.18-26, 35, 38-43, 44(1)&(3))",
+    "phase_2_effective": "13 November 2026 (Rule 4 — Consent Manager registration; s.6(9), s.27(1)(d))",
+    "phase_3_effective": "13 May 2027 (remaining provisions — full compliance deadline)"
+  },
+  "scoring_model": {
+    "status_values": [
+      "PASS",
+      "PARTIAL",
+      "FAIL",
+      "N/A"
+    ],
+    "logic": "Each question's selected option carries a 'status'. Roll up per section/rule: PASS if 'yes', PARTIAL if 'partial', FAIL if 'no', N/A if 'na' (excluded from scoring, requires justification). Each question also carries 'penalty_exposure' — the maximum Schedule penalty tied to that obligation — so failed items can be sorted by regulatory risk, not just by count."
+  },
+  "total_questions": 50,
+  "counts": {
+    "act_sections": 29,
+    "rules": 21
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "reference": "S.3",
+      "part": "Act",
+      "group": "Chapter 1 — Preliminary",
+      "title": "Application of the Act",
+      "question": "Has your organization determined whether the DPDP Act applies to its processing activities — i.e. processing of digital personal data within India, personal data collected non-digitally and later digitized, or processing outside India connected to offering goods/services to individuals in India — and documented this applicability assessment (including any personal/domestic-use or publicly-available-data exclusions relied on)?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q002",
+      "reference": "S.4",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Grounds for processing personal data",
+      "question": "Does your organization process personal data only on one of the two lawful grounds recognized by the Act — the Data Principal's consent (section 6) or a certain legitimate use (section 7) — for a purpose not expressly forbidden by law, with no other basis (e.g. no reliance on an undocumented 'legitimate interest')?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q003",
+      "reference": "S.5(1)&(3)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Notice to the Data Principal",
+      "question": "Does every consent request your organization sends include, or is preceded by, a notice describing the personal data and purpose of processing, how the Data Principal can exercise her rights and withdraw consent, and how she can complain to the Data Protection Board — available in English or a Schedule VIII language?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q004",
+      "reference": "S.5(2)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Notice for pre-Act (legacy) consent",
+      "question": "For Data Principals who gave consent before the Act's obligations came into force, has your organization sent (or planned to send) a retrospective notice covering the same information — personal data/purpose, rights and withdrawal process, and how to complain to the Board?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q005",
+      "reference": "S.6(1)-(3)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Consent standard",
+      "question": "Is consent your organization collects free, specific, informed, unconditional and unambiguous with a clear affirmative action (no pre-ticked boxes or bundling), limited to the data necessary for the stated purpose, presented in clear/plain language with a language option, and does it include the contact details of a Data Protection Officer or other authorized person?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q006",
+      "reference": "S.6(4)-(6)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Consent withdrawal",
+      "question": "Can a Data Principal withdraw consent as easily as she gave it, and does your organization (and its Data Processors) cease processing her personal data within a reasonable time of withdrawal, without affecting the legality of processing carried out before withdrawal?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q007",
+      "reference": "S.6(7)-(9)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Consent Manager channel",
+      "question": "Does your organization support Data Principals giving, managing, reviewing or withdrawing consent through a Board-registered Consent Manager, where applicable to your sector/services?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q008",
+      "reference": "S.6(10)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Proof of notice and consent",
+      "question": "Can your organization produce evidence, on request, that a valid notice was given and valid consent was obtained for any given processing activity (i.e. are notice/consent records retained and retrievable)?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q009",
+      "reference": "S.7",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Reliance on certain legitimate uses",
+      "question": "Where your organization processes personal data without consent under a 'certain legitimate use' (e.g. voluntarily-provided data for an obvious purpose, State-benefit delivery, legal compliance, medical emergency, employment purposes), has each such use been mapped to a specific clause of section 7 and documented, rather than assumed?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q010",
+      "reference": "S.8(2)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Data Processor contracts",
+      "question": "Does your organization engage every Data Processor that handles personal data on its behalf only under a valid written contract that covers information-security and data-handling obligations?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q011",
+      "reference": "S.8(3)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Data accuracy for decisions/disclosure",
+      "question": "Where personal data your organization processes is likely to be used to make a decision affecting the Data Principal, or disclosed to another Data Fiduciary, does your organization take steps to ensure its completeness, accuracy and consistency?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q012",
+      "reference": "S.8(4)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Technical and organizational measures",
+      "question": "Has your organization implemented appropriate technical and organizational measures to give effect to the Act and its Rules (beyond security safeguards alone — e.g. privacy-by-design, staff training, documented processes)?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q013",
+      "reference": "S.8(5)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Security safeguards to prevent breach",
+      "question": "Does your organization take reasonable security safeguards to prevent personal data breaches, covering data it holds directly and data processed on its behalf by Data Processors?",
+      "penalty_exposure": "Up to ₹250 crore (Schedule item 1 — s.8(5) security safeguards)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q014",
+      "reference": "S.8(6)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Breach intimation obligation",
+      "question": "Does your organization have a process to intimate the Data Protection Board and each affected Data Principal in the event of a personal data breach, in the prescribed form and manner?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 2 — s.8(6) breach intimation)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q015",
+      "reference": "S.8(7)-(8)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Retention and erasure",
+      "question": "Does your organization erase personal data (and instruct its Data Processors to do the same) once a Data Principal withdraws consent or once the specified purpose is no longer being served — unless retention is required by law — and has it defined when a purpose is 'no longer served' for its own processing activities?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q016",
+      "reference": "S.8(9)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Publishing a contact point",
+      "question": "Has your organization published the business contact information of a Data Protection Officer (if applicable) or another person able to answer Data Principals' questions about processing of their personal data?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q017",
+      "reference": "S.8(10)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Grievance redressal mechanism",
+      "question": "Has your organization established an effective, accessible mechanism for Data Principals to raise grievances about the processing of their personal data?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q018",
+      "reference": "S.9(1)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Verifiable parental/guardian consent",
+      "question": "Before processing personal data of a child (under 18) or a person with a disability who has a lawful guardian, does your organization obtain verifiable consent from the parent or lawful guardian, in the prescribed manner?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 3 — s.9 children's/PwD data)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q019",
+      "reference": "S.9(2)-(3)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "No detriment, tracking or targeted ads to children",
+      "question": "Does your organization avoid processing that is likely to cause detriment to a child's well-being, and refrain from behavioural monitoring, tracking, or targeted advertising directed at children?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 3 — s.9 children's/PwD data)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q020",
+      "reference": "S.9(4)-(5)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Children's-data exemptions assessed",
+      "question": "Where your organization relies on a prescribed exemption from the children's-data obligations (e.g. a specific class of Data Fiduciary or purpose, or a Central-Government-notified safe age threshold), has that reliance been assessed and documented rather than assumed?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 3 — s.9 children's/PwD data)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q021",
+      "reference": "S.10(1)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "Significant Data Fiduciary (SDF) status assessment",
+      "question": "Has your organization assessed whether it is likely to be notified as a Significant Data Fiduciary (based on volume/sensitivity of personal data, risk to Data Principals, or impact on sovereignty, electoral integrity, State security or public order), and does it monitor for such notification?",
+      "penalty_exposure": "Up to ₹150 crore (Schedule item 4 — s.10 Significant Data Fiduciary duties)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q022",
+      "reference": "S.10(2)",
+      "part": "Act",
+      "group": "Chapter 2 — Obligations of Data Fiduciary",
+      "title": "SDF additional obligations",
+      "question": "If your organization is (or expects to be) notified as a Significant Data Fiduciary, has it appointed an India-based Data Protection Officer accountable to its Board/governing body, appointed an independent data auditor, and established periodic Data Protection Impact Assessments and audits?",
+      "penalty_exposure": "Up to ₹150 crore (Schedule item 4 — s.10 Significant Data Fiduciary duties)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q023",
+      "reference": "S.11",
+      "part": "Act",
+      "group": "Chapter 3 — Rights and Duties of Data Principal",
+      "title": "Right to access information",
+      "question": "Can your organization, on request, give a Data Principal a summary of the personal data being processed, the processing activities undertaken, and the identities of other Data Fiduciaries/Data Processors it has been shared with (subject to the law-enforcement-sharing exception)?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q024",
+      "reference": "S.12",
+      "part": "Act",
+      "group": "Chapter 3 — Rights and Duties of Data Principal",
+      "title": "Right to correction and erasure",
+      "question": "Does your organization act on Data Principal requests to correct inaccurate data, complete incomplete data, update outdated data, and erase data — refusing erasure only where retention is legally required?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q025",
+      "reference": "S.13",
+      "part": "Act",
+      "group": "Chapter 3 — Rights and Duties of Data Principal",
+      "title": "Right of grievance redressal",
+      "question": "Does your organization provide readily available means of grievance redressal and respond to Data Principal grievances within the prescribed period?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q026",
+      "reference": "S.14",
+      "part": "Act",
+      "group": "Chapter 3 — Rights and Duties of Data Principal",
+      "title": "Right to nominate",
+      "question": "Does your organization support a Data Principal's right to nominate another individual to exercise her rights in the event of her death or incapacity?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q027",
+      "reference": "S.15",
+      "part": "Act",
+      "group": "Chapter 3 — Rights and Duties of Data Principal",
+      "title": "Communicating Data Principal duties",
+      "question": "Does your organization make Data Principals aware of their duties under the Act (e.g. not to impersonate others, not to suppress material information, not to file frivolous grievances), where relevant to your notices or terms of service?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q028",
+      "reference": "S.16",
+      "part": "Act",
+      "group": "Chapter 4 — Special Provisions",
+      "title": "Cross-border transfer restrictions",
+      "question": "Before transferring personal data outside India, does your organization check whether the destination country/territory is on any list restricted by Central Government notification, and track sector-specific localization rules (e.g. RBI, SEBI, IRDAI) that may impose stricter requirements?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q029",
+      "reference": "S.17",
+      "part": "Act",
+      "group": "Chapter 4 — Special Provisions",
+      "title": "Exemptions assessed, not assumed",
+      "question": "Where your organization relies on an exemption under section 17 (e.g. legal claims, court/tribunal processing, law-enforcement purposes, M&A processing, loan-default recovery, research/archiving/statistics, or a startup/class exemption), has each reliance been individually assessed and documented rather than applied as a blanket exemption?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q030",
+      "reference": "Rule 3",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Notice — form and content",
+      "question": "Does your organization's notice stand independently (not buried inside Terms of Service), use clear and plain language, itemize the specific personal data collected, state the purpose and the goods/services it enables, and clearly explain how to withdraw consent, exercise rights, and complain to the Board?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q031",
+      "reference": "Rule 4",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Consent Manager registration",
+      "question": "Where your organization integrates with a Consent Manager, is that Consent Manager duly registered with the Data Protection Board and does it meet the technical, operational and financial conditions (net worth, interoperability, audit trails) in the First Schedule?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q032",
+      "reference": "Rule 5",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "State processing for subsidies/benefits/services",
+      "question": "Where your organization is a State instrumentality processing personal data to provide a subsidy, benefit, service, certificate, licence or permit under section 7(b), does that processing meet the standards prescribed in the Second Schedule? (Mark Not Applicable if your organization is not a State instrumentality.)",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q033",
+      "reference": "Rule 6(a)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Technical security safeguards",
+      "question": "Has your organization implemented the specific safeguards contemplated by Rule 6 — encryption, obfuscation, masking or virtual tokens for personal data, strict access controls, and continuous monitoring to detect unauthorized access — including flow-down of the same obligations to Data Processors by contract?",
+      "penalty_exposure": "Up to ₹250 crore (Schedule item 1 — s.8(5) security safeguards)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q034",
+      "reference": "Rule 6(b)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Log retention, backups and business continuity",
+      "question": "Does your organization retain logs and personal data/traffic data relevant to a breach for at least one year (unless a longer period is legally required), and maintain backups and business-continuity measures to keep data available and unaltered after an incident?",
+      "penalty_exposure": "Up to ₹250 crore (Schedule item 1 — s.8(5) security safeguards)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q035",
+      "reference": "Rule 7(a)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Breach notification to Data Principals",
+      "question": "When your organization becomes aware of a personal data breach, does it notify each affected Data Principal without delay, describing the breach, its likely consequences, mitigation measures taken, and safety steps the individual can take?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 2 — s.8(6) breach intimation)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q036",
+      "reference": "Rule 7(b)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Breach notification to the Board",
+      "question": "Does your organization give the Data Protection Board an initial intimation without delay, followed by a detailed report within 72 hours (or an extended period granted by the Board) covering facts, impact, mitigation and remedial actions?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 2 — s.8(6) breach intimation)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q037",
+      "reference": "Rule 8(a)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Retention periods and erasure trigger",
+      "question": "Has your organization defined retention periods for each class of personal data it holds — applying the default 3-year erasure rule for the specified large e-commerce/social media/online-gaming classes in the Third Schedule where applicable, and erasing other data once the specified purpose is no longer served or consent is withdrawn?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q038",
+      "reference": "Rule 8(b)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Advance notice before scheduled erasure",
+      "question": "Does your organization notify the Data Principal at least 48 hours before personal data is erased under a scheduled/inactivity-based erasure process, giving her the opportunity to log in or respond if she wishes to retain the relationship?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q039",
+      "reference": "Rule 9",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Published contact information",
+      "question": "Has your organization published, in the prescribed manner (e.g. on its website/app), the business contact information of its Data Protection Officer or another designated person able to answer questions about personal data processing?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q040",
+      "reference": "Rule 10",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Verifiable consent for a child",
+      "question": "Does your organization use a verifiable method (e.g. reliable identity/age details, or another mechanism recognized under the Rules) to confirm that consent for processing a child's personal data is given by the child's actual parent or lawful guardian?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 3 — s.9 children's/PwD data)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q041",
+      "reference": "Rule 11",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Verifiable consent for a person with disability",
+      "question": "Does your organization use an equivalent verifiable method to confirm that consent for processing the personal data of a person with a disability who has a lawful guardian is given by that lawful guardian?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 3 — s.9 children's/PwD data)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q042",
+      "reference": "Rule 12",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Children's-data exemption classes",
+      "question": "Where your organization falls within a class of Data Fiduciary or purpose exempted from certain children's-data obligations under the Fourth Schedule, has this been documented with the conditions that justify the exemption?",
+      "penalty_exposure": "Up to ₹200 crore (Schedule item 3 — s.9 children's/PwD data)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q043",
+      "reference": "Rule 13(a)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "SDF — annual DPIA and independent audit",
+      "question": "If your organization is a Significant Data Fiduciary, does it conduct an annual Data Protection Impact Assessment and an annual independent audit, and report the findings to the Data Protection Board?",
+      "penalty_exposure": "Up to ₹150 crore (Schedule item 4 — s.10 Significant Data Fiduciary duties)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q044",
+      "reference": "Rule 13(b)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "SDF — India-based DPO",
+      "question": "If your organization is a Significant Data Fiduciary, has it appointed a Data Protection Officer based in India who reports to its Board of Directors or equivalent governing body?",
+      "penalty_exposure": "Up to ₹150 crore (Schedule item 4 — s.10 Significant Data Fiduciary duties)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q045",
+      "reference": "Rule 13(c)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "SDF — algorithmic software due diligence",
+      "question": "If your organization is a Significant Data Fiduciary, does it exercise due diligence over the algorithmic software it uses for hosting, displaying, uploading, storing, updating or sharing personal data, to ensure it does not pose a risk to Data Principals' rights?",
+      "penalty_exposure": "Up to ₹150 crore (Schedule item 4 — s.10 Significant Data Fiduciary duties)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q046",
+      "reference": "Rule 13(d)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "SDF — localization/cross-border restrictions",
+      "question": "If your organization is a Significant Data Fiduciary, does it comply with any Government-specified restriction on transferring specified categories of personal data or associated traffic data outside India?",
+      "penalty_exposure": "Up to ₹150 crore (Schedule item 4 — s.10 Significant Data Fiduciary duties)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q047",
+      "reference": "Rule 14(a)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Published rights-exercise process",
+      "question": "Has your organization published a clear process for Data Principals to exercise their rights (access, correction, erasure, grievance, nomination) — including what identifiers (username, customer ID, email, etc.) may be required to verify identity?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q048",
+      "reference": "Rule 14(b)",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "90-day response timeline",
+      "question": "Does your organization respond to Data Principal requests (access, correction, updating, erasure) and grievances within the prescribed 90-day period?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q049",
+      "reference": "Rule 15",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Cross-border transfer conditions",
+      "question": "When personal data is requested by, or made available to, a foreign State or its instrumentality, does your organization meet any conditions specified by the Central Government for such transfers, in addition to checking the restricted-country list under section 16?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q050",
+      "reference": "Rule 16",
+      "part": "Rules",
+      "group": "DPDP Rules, 2025 — Data Fiduciary Obligations",
+      "title": "Research/archiving/statistical exemption",
+      "question": "Where your organization relies on the research, archiving or statistical-purposes exemption, does it ensure the personal data is not used to make any decision specific to a Data Principal, and that processing follows the prescribed standards?",
+      "penalty_exposure": "Up to ₹50 crore (Schedule item 7 — breach of any other provision of the Act/Rules)",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    }
+  ]
+}

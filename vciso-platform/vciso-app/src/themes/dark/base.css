@@ -1,0 +1,10 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #F1F5F9; background-color: #0F172A; }
+.admin-card { border-radius: 2px; border: 1px solid #334155; background: #1E293B; }
+.kanban-col { min-height: 400px; }
+.drag-over { border: 2px dashed #60A5FA !important; background: #172554 !important; }
+.tag-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 2px; font-size: 11px; font-weight: 500; }
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #475569; }

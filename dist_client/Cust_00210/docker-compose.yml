@@ -1,0 +1,44 @@
+# ==============================================================================
+# CyberTrustWorks vCISO Platform - Client Deployment
+# Client: Nimbus Logistics Pvt Ltd (Cust_00210)
+# Licensed Users: 20 | Max vCISOs: 2
+# ==============================================================================
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vciso_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeThisSecureDbPassword2026!}
+      POSTGRES_DB: vciso_cust_00210
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - vciso_pgdata:/var/lib/postgresql/data
+      # Turnkey initial schema runs automatically on empty volume:
+      - ./001_client_init.sql:/docker-entrypoint-initdb.d/001_client_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vciso_admin -d vciso_cust_00210"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # UI + API, built for this client only (its instance.json and licensed modules are inside the image).
+  # On first start it links itself to the database above; link.json (session and data keys) and
+  # uploaded evidence are kept on vciso_data. Back up vciso_data together with vciso_pgdata.
+  api:
+    image: cybertrustworks/vciso-platform:cust_00210-v1
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://vciso_admin:${POSTGRES_PASSWORD:-ChangeThisSecureDbPassword2026!}@db:5432/vciso_cust_00210
+    volumes:
+      - vciso_data:/data
+    ports:
+      - "${API_PORT:-4000}:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  vciso_pgdata:
+  vciso_data:

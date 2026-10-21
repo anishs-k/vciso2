@@ -1,0 +1,5 @@
+# Layered on top of the root docker-compose.yml when VS Code opens the dev container.
+# Keeps the api container alive so you can run/debug the server yourself from VS Code.
+services:
+  api:
+    command: sleep infinity

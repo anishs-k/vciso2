@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anis – Docker DB Download</title>
+<style>
+  :root {
+    --bg: #f5f7fb; --surface: #fff; --ink: #0f172a; --muted: #64748b; --line: #e2e8f0;
+    --accent: #2563eb; --accent-soft: #eff6ff; --ok: #16a34a; --bad: #dc2626;
+    font-family: "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); }
+  header { background: var(--surface); border-bottom: 1px solid var(--line); padding: 18px 28px; display: flex; align-items: center; gap: 14px; }
+  header .logo { width: 40px; height: 40px; border-radius: 10px; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 18px; }
+  header h1 { margin: 0; font-size: 19px; }
+  header small { color: var(--muted); }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; display: grid; gap: 18px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+  .card h2 { margin: 0 0 14px; font-size: 16px; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: end; }
+  label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; color: #334155; text-transform: uppercase; letter-spacing: .03em; }
+  select { min-width: 260px; height: 42px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 8px; font: 15px inherit; background: #fff; }
+  button, a.btn { height: 42px; padding: 0 18px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: var(--ink); font: 600 14px inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  button:hover, a.btn:hover { background: #f8fafc; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  a.btn.primary, button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  a.btn.primary:hover, button.primary:hover { background: #1d4ed8; }
+  .big { height: 54px; font-size: 16px; padding: 0 26px; }
+  .options { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; color: #334155; font-size: 14px; }
+  .options label { display: flex; gap: 8px; align-items: center; text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 14px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .msg { padding: 12px 14px; border-radius: 8px; font-size: 14px; }
+  .msg.bad { background: #fef2f2; color: var(--bad); border: 1px solid #fecaca; }
+  .msg.ok { background: #f0fdf4; color: var(--ok); border: 1px solid #bbf7d0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.act { text-align: right; }
+  td.act a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 600; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 22px; }
+  .filter { height: 38px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 8px; font: 14px inherit; min-width: 240px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">A</div>
+  <div>
+    <h1>Anis – Docker DB Download</h1>
+    <small>Docker ke Postgres se data, ek click mein download</small>
+  </div>
+</header>
+
+<main>
+  <div id="error" class="msg bad" hidden></div>
+
+  <section class="card">
+    <h2>1. Database chuno</h2>
+    <div class="row">
+      <label>Container
+        <select id="container"></select>
+      </label>
+      <label>Database
+        <select id="db" disabled></select>
+      </label>
+      <button id="refresh" type="button" title="Containers dobara dhoondo">⟳ Refresh</button>
+    </div>
+    <p class="muted" id="containerInfo"></p>
+  </section>
+
+  <section class="card">
+    <h2>2. Download</h2>
+    <div class="row">
+      <a class="btn primary big" id="dlSql" href="#">⬇ Download SQL</a>
+      <a class="btn big" id="dlZip" href="#">⬇ Download all tables (CSV .zip)</a>
+    </div>
+    <div class="options">
+      <label><input type="checkbox" id="inserts" checked> SQL mein INSERT lines (padhne mein aasaan)</label>
+      <label><input type="checkbox" id="dataOnly"> Sirf data (tables ka structure nahi)</label>
+    </div>
+    <p class="muted">SQL file se poora database dobara banaya ja sakta hai (<code>psql -f file.sql</code>). CSV files Excel mein khulti hain.</p>
+  </section>
+
+  <section class="card">
+    <div class="row" style="justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h2 style="margin: 0;">3. Tables <span class="pill" id="tableCount">0</span></h2>
+      <input class="filter" id="filter" placeholder="Table dhoondo…">
+    </div>
+    <div class="grid" id="stats"></div>
+    <div style="overflow-x: auto; margin-top: 12px;">
+      <table>
+        <thead><tr><th>Table</th><th style="text-align:right">Rows</th><th></th></tr></thead>
+        <tbody id="tables"><tr><td colspan="3" class="muted">Database chuno…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let currentTables = [];
+
+  async function api(path) {
+    const r = await fetch(path, { cache: 'no-store' });
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.error || r.statusText);
+    return body;
+  }
+
+  function showError(err) {
+    $('error').hidden = !err;
+    $('error').textContent = err ? `⚠ ${err.message || err}` : '';
+  }
+
+  function option(value, label) {
+    const o = document.createElement('option');
+    o.value = value;
+    o.textContent = label;
+    return o;
+  }
+
+  function remember(key, value) {
+    try { localStorage.setItem(`anis.${key}`, value); } catch {}
+  }
+  function recall(key) {
+    try { return localStorage.getItem(`anis.${key}`); } catch { return null; }
+  }
+
+  async function loadContainers() {
+    showError(null);
+    const sel = $('container');
+    sel.replaceChildren(option('', 'Loading…'));
+    try {
+      const list = await api('/api/containers');
+      sel.replaceChildren(...(list.length ? list.map((c) => option(c.name, c.name)) : [option('', 'Koi Postgres container nahi chal raha')]));
+      sel.dataset.info = JSON.stringify(list);
+      const last = recall('container');
+      if (last && list.some((c) => c.name === last)) sel.value = last;
+      await loadDatabases();
+    } catch (err) {
+      sel.replaceChildren(option('', '—'));
+      showError(new Error(`Docker se baat nahi ho payi. Docker Desktop chal raha hai? (${err.message})`));
+    }
+  }
+
+  async function loadDatabases() {
+    const c = $('container').value;
+    const info = JSON.parse($('container').dataset.info || '[]').find((x) => x.name === c);
+    $('containerInfo').textContent = info ? `${info.image} · ${info.status}${info.ports ? ` · ${info.ports}` : ''}` : '';
+    const sel = $('db');
+    sel.disabled = true;
+    if (!c) return renderTables([]);
+    remember('container', c);
+    sel.replaceChildren(option('', 'Loading…'));
+    try {
+      const dbs = await api(`/api/databases?c=${encodeURIComponent(c)}`);
+      sel.replaceChildren(...dbs.map((d) => option(d, d)));
+      const last = recall(`db.${c}`);
+      const preferred = dbs.find((d) => d === last) || dbs.find((d) => d !== 'postgres') || dbs[0];
+      if (preferred) sel.value = preferred;
+      sel.disabled = false;
+      await loadTables();
+    } catch (err) {
+      showError(err);
+    }
+  }
+
+  async function loadTables() {
+    const c = $('container').value;
+    const db = $('db').value;
+    updateLinks();
+    if (!c || !db) return renderTables([]);
+    remember(`db.${c}`, db);
+    $('tables').innerHTML = '<tr><td colspan="3" class="muted">Loading…</td></tr>';
+    try {
+      showError(null);
+      renderTables(await api(`/api/tables?c=${encodeURIComponent(c)}&db=${encodeURIComponent(db)}`));
+    } catch (err) {
+      showError(err);
+      renderTables([]);
+    }
+  }
+
+  function renderTables(list) {
+    currentTables = list;
+    const q = $('filter').value.trim().toLowerCase();
+    const shown = list.filter((t) => !q || t.name.toLowerCase().includes(q));
+    $('tableCount').textContent = list.length;
+    const rows = list.reduce((n, t) => n + t.rows, 0);
+    const filled = list.filter((t) => t.rows > 0).length;
+    $('stats').innerHTML = list.length
+      ? `<div class="stat"><span class="muted">Tables</span><b>${list.length}</b></div>
+         <div class="stat"><span class="muted">Data wali tables</span><b>${filled}</b></div>
+         <div class="stat"><span class="muted">Total rows</span><b>${rows.toLocaleString('en-IN')}</b></div>`
+      : '';
+    const tbody = $('tables');
+    tbody.replaceChildren();
+    if (!shown.length) {
+      tbody.innerHTML = `<tr><td colspan="3" class="muted">${list.length ? 'Koi table nahi mili' : 'Koi table nahi'}</td></tr>`;
+      return;
+    }
+    const c = encodeURIComponent($('container').value);
+    const db = encodeURIComponent($('db').value);
+    for (const t of shown) {
+      const tr = document.createElement('tr');
+      const name = document.createElement('td');
+      name.textContent = t.schema === 'public' ? t.name : `${t.schema}.${t.name}`;
+      const n = document.createElement('td');
+      n.className = 'num';
+      n.textContent = t.rows.toLocaleString('en-IN');
+      const act = document.createElement('td');
+      act.className = 'act';
+      const a = document.createElement('a');
+      a.href = `/download/csv?c=${c}&db=${db}&schema=${encodeURIComponent(t.schema)}&table=${encodeURIComponent(t.name)}`;
+      a.textContent = '⬇ CSV';
+      act.append(a);
+      tr.append(name, n, act);
+      tbody.append(tr);
+    }
+  }
+
+  function updateLinks() {
+    const c = encodeURIComponent($('container').value);
+    const db = encodeURIComponent($('db').value);
+    const ready = c && db;
+    const opts = `${$('inserts').checked ? '&inserts=1' : ''}${$('dataOnly').checked ? '&dataOnly=1' : ''}`;
+    for (const [id, href] of [['dlSql', `/download/sql?c=${c}&db=${db}${opts}`], ['dlZip', `/download/csv-zip?c=${c}&db=${db}`]]) {
+      const a = $(id);
+      a.href = ready ? href : '#';
+      a.style.pointerEvents = ready ? '' : 'none';
+      a.style.opacity = ready ? '' : '.5';
+    }
+  }
+
+  $('container').addEventListener('change', loadDatabases);
+  $('db').addEventListener('change', loadTables);
+  $('refresh').addEventListener('click', loadContainers);
+  $('inserts').addEventListener('change', updateLinks);
+  $('dataOnly').addEventListener('change', updateLinks);
+  $('filter').addEventListener('input', () => renderTables(currentTables));
+  loadContainers();
+</script>
+</body>
+</html>

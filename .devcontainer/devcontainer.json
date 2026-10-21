@@ -1,0 +1,33 @@
+{
+  "name": "vCISO Platform",
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.devcontainer.yml"],
+  "service": "api",
+  "runServices": ["api", "db"],
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+
+  "features": {
+    // Lets you run `docker build` inside the container to produce client images.
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [4000, 5432],
+  "postCreateCommand": "npm install",
+  "remoteUser": "node"
+}

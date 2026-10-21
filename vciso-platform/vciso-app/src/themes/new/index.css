@@ -1,0 +1,3 @@
+/* Theme "new" (default): page base + register design system */
+@import './base.css';
+@import './register.css';

@@ -1,0 +1,26 @@
+# CyberTrustWorks central database (CTW side only; never part of a client bundle).
+# Values come from ctw-admin/.env (copy .env.example).
+name: ctw-admin
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${CTW_DB_USER:-ctw_admin}
+      POSTGRES_PASSWORD: ${CTW_DB_PASSWORD:?set CTW_DB_PASSWORD in ctw-admin/.env}
+      POSTGRES_DB: ${CTW_DB_NAME:-ctw}
+    ports:
+      - "${CTW_DB_PORT:-5440}:5432"
+    volumes:
+      - ctw_pgdata:/var/lib/postgresql/data
+      # *.sql here runs once, on first start with an empty volume.
+      - ./db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ctw_pgdata:

@@ -1,0 +1,46 @@
+# Local infrastructure. Values come from .env (copy .env.example to get started).
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vciso}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vciso_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-vciso}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # *.sql here runs once, on first start with an empty pgdata volume.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: ${POSTGRES_USER:-vciso}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-vciso_dev_password}
+      PGDATABASE: ${POSTGRES_DB:-vciso}
+    ports:
+      - "${API_PORT:-4000}:4000"
+    volumes:
+      - .:/workspace:cached
+      # Keep the container's node_modules instead of the (possibly macOS-built) host copy.
+      - node_modules:/workspace/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  node_modules:

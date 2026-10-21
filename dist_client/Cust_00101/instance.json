@@ -1,0 +1,21 @@
+{
+  "instance_id": "6c0be703-55ad-4d26-9f11-669c10c40cbb",
+  "customer_id": "Cust_00101",
+  "customer_name": "Acme Financial Services International Ltd.",
+  "license_id": "LIC_Cust_00101",
+  "license_seal": "931a540912376f1b894328f3d0147bc54db10239ad77cff725fc338b9e5fdac7",
+  "schema_version": 2,
+  "generated_at": "2026-10-21T08:44:43+05:30",
+  "licensed_frameworks": [
+    102,
+    103
+  ],
+  "licensed_modules": [
+    "alerting",
+    "compliance",
+    "incidents",
+    "mobile_access",
+    "news_breach_watch",
+    "vulnerabilities"
+  ]
+}

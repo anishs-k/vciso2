@@ -1,0 +1,967 @@
+{
+  "framework": "Cloud Security Posture Management (CSPM)",
+  "framework_id": "cspm",
+  "description": "Current-state cloud security discovery questionnaire supporting a Cloud Security Posture Assessment. Every question is mandatory and is phrased natively for the cloud platform selected for the organization during onboarding (Microsoft Azure, Amazon Web Services or Google Cloud Platform).",
+  "providers": [
+    {
+      "id": "azure",
+      "name": "Microsoft Azure",
+      "shortName": "Azure"
+    },
+    {
+      "id": "aws",
+      "name": "Amazon Web Services",
+      "shortName": "AWS"
+    },
+    {
+      "id": "gcp",
+      "name": "Google Cloud Platform",
+      "shortName": "GCP"
+    }
+  ],
+  "response_model": {
+    "type": "free_text",
+    "logic": "Each question requires a written current-state response. All 60 responses are mandatory. Where a question does not apply, state \"Not Applicable\" together with a one-line reason. Where the answer is not known, state \"Unknown, to be confirmed\" rather than leaving it blank."
+  },
+  "instructions": [
+    "Answer every question in the response box beneath it. All 60 questions are mandatory.",
+    "If a question does not apply to your organization, enter \"Not Applicable\" and a one-line reason.",
+    "If you do not know the answer, enter \"Unknown, to be confirmed\" rather than leaving it blank — that is itself useful information.",
+    "Where possible, reference or attach supporting documents rather than retyping their contents.",
+    "Attach supporting evidence against any question where a document, export or screenshot substantiates the answer."
+  ],
+  "sections": [
+    {
+      "id": "A",
+      "name": "Business, Scope & Current Environment Context",
+      "label": "A. Business, Scope & Current Environment Context"
+    },
+    {
+      "id": "B",
+      "name": "Cloud Account, Subscription & Organization Structure",
+      "label": "B. Cloud Account, Subscription & Organization Structure"
+    },
+    {
+      "id": "C",
+      "name": "Identity & Access Management",
+      "label": "C. Identity & Access Management"
+    },
+    {
+      "id": "D",
+      "name": "Network Security & Exposure",
+      "label": "D. Network Security & Exposure"
+    },
+    {
+      "id": "E",
+      "name": "Data Protection, Encryption & Key/Secrets Management",
+      "label": "E. Data Protection, Encryption & Key/Secrets Management"
+    },
+    {
+      "id": "F",
+      "name": "Logging, Monitoring & Threat Detection",
+      "label": "F. Logging, Monitoring & Threat Detection"
+    },
+    {
+      "id": "G",
+      "name": "Workload, Application, Container & API Security",
+      "label": "G. Workload, Application, Container & API Security"
+    },
+    {
+      "id": "H",
+      "name": "Incident Response & Business Continuity",
+      "label": "H. Incident Response & Business Continuity"
+    },
+    {
+      "id": "I",
+      "name": "Backup, Resilience & Disaster Recovery",
+      "label": "I. Backup, Resilience & Disaster Recovery"
+    },
+    {
+      "id": "J",
+      "name": "Governance, Policy & Regulatory Mapping",
+      "label": "J. Governance, Policy & Regulatory Mapping"
+    },
+    {
+      "id": "K",
+      "name": "Third-Party & Vendor Risk",
+      "label": "K. Third-Party & Vendor Risk"
+    },
+    {
+      "id": "L",
+      "name": "Leadership Priorities & Known Constraints",
+      "label": "L. Leadership Priorities & Known Constraints"
+    },
+    {
+      "id": "M",
+      "name": "Engagement Logistics",
+      "label": "M. Engagement Logistics"
+    }
+  ],
+  "total_questions": 60,
+  "disclaimer": {
+    "title": "CSPM - Acceptance",
+    "intro": "Please read the following disclaimers carefully. Acknowledgement is mandatory before the questionnaire can be submitted.",
+    "items": [
+      "The assessment is based solely on the {p} environment, configurations, and information made available by the client.",
+      "The assessment is advisory and consultative in nature and does not constitute an audit opinion or certification.",
+      "The findings represent the security posture as observed during the assessment period only.",
+      "Recommendations are based on recognised industry practices, applicable standards, and published {p} security guidance.",
+      "The assessment does not guarantee the complete identification or elimination of all security risks.",
+      "The assessment team is not responsible for implementing configuration or remediation changes; any impact arising from client-implemented changes remains the responsibility of the client.",
+      "The client is responsible for maintaining appropriate backups and recovery arrangements before making any changes arising from this assessment.",
+      "Assessment results depend on the accuracy and completeness of the information and access provided by the client.",
+      "Security findings may change as a result of modifications to {p} services, environment configurations, the threat landscape, or newly released platform security features.",
+      "The assessment does not constitute a guarantee of regulatory or contractual compliance.",
+      "Client data and assessment information will be handled as confidential information, subject to the agreed contractual terms.",
+      "Production resources will not be intentionally modified, deleted, or disrupted during the assessment.",
+      "Penetration testing, exploitation, and other intrusive security testing are excluded unless explicitly authorized and separately scoped in writing.",
+      "Third-party services and applications outside the {p} environment are excluded from the scope of this assessment.",
+      "Final risk acceptance and risk treatment decisions remain with the authorized management of the client.",
+      "Liability, confidentiality, data protection, and governing-law obligations are subject to the executed contract, non-disclosure agreement, or statement of work.",
+      "English shall be the default language for all communications, documentation, reports, deliverables, and correspondence related to this assessment, unless otherwise agreed in writing by both parties."
+    ],
+    "acknowledgement": "I confirm that I am authorized to submit this questionnaire on behalf of my organization, that the responses provided are accurate and complete to the best of my knowledge, and that I have read, understood and accept the disclaimers set out above."
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "reference": "A.1",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Organization profile and workloads in scope",
+      "question": {
+        "azure": "What does your organization do, and which business units or applications actually run on Azure?",
+        "aws": "What does your organization do, and which business units or applications actually run on AWS?",
+        "gcp": "What does your organization do, and which business units or applications actually run on Google Cloud?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q002",
+      "reference": "A.2",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Multi-cloud and hybrid footprint",
+      "question": {
+        "azure": "Is Azure your only cloud platform, or do you also run AWS, Google Cloud or on-premises data centres?",
+        "aws": "Is AWS your only cloud platform, or do you also run Microsoft Azure, Google Cloud or on-premises data centres?",
+        "gcp": "Is Google Cloud your only cloud platform, or do you also run AWS, Microsoft Azure or on-premises data centres?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q003",
+      "reference": "A.3",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Scale of the environment",
+      "question": {
+        "azure": "Approximately how many Azure subscriptions, resource groups, and employees or users does this cover?",
+        "aws": "Approximately how many AWS accounts, VPCs, and employees or users does this cover?",
+        "gcp": "Approximately how many Google Cloud projects, VPC networks, and employees or users does this cover?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q004",
+      "reference": "A.4",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Prior assessments of the environment",
+      "question": {
+        "azure": "Has this Azure environment been assessed before (internal audit, an external consultant, or a prior vulnerability assessment or penetration test)? If so, can that report be made available to the assessment team?",
+        "aws": "Has this AWS environment been assessed before (internal audit, an external consultant, or a prior vulnerability assessment or penetration test)? If so, can that report be made available to the assessment team?",
+        "gcp": "Has this Google Cloud environment been assessed before (internal audit, an external consultant, or a prior vulnerability assessment or penetration test)? If so, can that report be made available to the assessment team?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q005",
+      "reference": "A.5",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Trigger for this engagement",
+      "question": {
+        "azure": "What triggered this engagement — a specific incident, an audit finding, a board or regulatory mandate, a cyber-insurance renewal, or general due diligence?",
+        "aws": "What triggered this engagement — a specific incident, an audit finding, a board or regulatory mandate, a cyber-insurance renewal, or general due diligence?",
+        "gcp": "What triggered this engagement — a specific incident, an audit finding, a board or regulatory mandate, a cyber-insurance renewal, or general due diligence?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q006",
+      "reference": "A.6",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Definition of success",
+      "question": {
+        "azure": "What does success look like to you at the end of this engagement — an assessment report, a remediation roadmap, a re-assessment, or certification readiness?",
+        "aws": "What does success look like to you at the end of this engagement — an assessment report, a remediation roadmap, a re-assessment, or certification readiness?",
+        "gcp": "What does success look like to you at the end of this engagement — an assessment report, a remediation roadmap, a re-assessment, or certification readiness?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q007",
+      "reference": "A.7",
+      "part": "A",
+      "group": "A. Business, Scope & Current Environment Context",
+      "title": "Decision maker and technical point of contact",
+      "question": {
+        "azure": "Who is the ultimate decision-maker for this project, and who will be the day-to-day technical point of contact?",
+        "aws": "Who is the ultimate decision-maker for this project, and who will be the day-to-day technical point of contact?",
+        "gcp": "Who is the ultimate decision-maker for this project, and who will be the day-to-day technical point of contact?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q008",
+      "reference": "B.1",
+      "part": "B",
+      "group": "B. Cloud Account, Subscription & Organization Structure",
+      "title": "Current account and subscription hierarchy",
+      "question": {
+        "azure": "Could you walk us through the current Azure tenant, subscription and management-group structure, including how many of each you operate?",
+        "aws": "Could you walk us through the current AWS Organization, member-account and organizational-unit (OU) structure, including how many of each you operate?",
+        "gcp": "Could you walk us through the current Google Cloud organization, folder and project structure, including how many of each you operate?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q009",
+      "reference": "B.2",
+      "part": "B",
+      "group": "B. Cloud Account, Subscription & Organization Structure",
+      "title": "Identity tenants and cloud accounts operated",
+      "question": {
+        "azure": "How many Microsoft Entra ID (Azure AD) tenants and Azure subscriptions do you operate?",
+        "aws": "How many AWS Organizations (management accounts) and member accounts do you operate, and is AWS IAM Identity Center in use?",
+        "gcp": "How many Cloud Identity or Google Workspace domains and Google Cloud projects do you operate?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q010",
+      "reference": "B.3",
+      "part": "B",
+      "group": "B. Cloud Account, Subscription & Organization Structure",
+      "title": "Use of hierarchy for governance",
+      "question": {
+        "azure": "Do you use Management Groups to organize subscriptions, or is the structure flat?",
+        "aws": "Do you use Organizational Units (OUs) to organize member accounts, or is the structure flat?",
+        "gcp": "Do you use folders to organize projects beneath the organization node, or is the structure flat?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q011",
+      "reference": "B.4",
+      "part": "B",
+      "group": "B. Cloud Account, Subscription & Organization Structure",
+      "title": "Hybrid or federated identity setup",
+      "question": {
+        "azure": "Is there a hybrid identity setup (Microsoft Entra Connect / Azure AD Connect synchronising with an on-premises Active Directory)?",
+        "aws": "Is there a hybrid or federated identity setup (AWS IAM Identity Center, or SAML/OIDC federation with an on-premises Active Directory or an external identity provider)?",
+        "gcp": "Is there a hybrid or federated identity setup (Google Cloud Directory Sync, or SAML/OIDC federation with an on-premises Active Directory or an external identity provider)?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q012",
+      "reference": "C.1",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Highly privileged identities and their governance",
+      "question": {
+        "azure": "Which identities and roles hold Global Administrator, Owner-level or other highly privileged access, how many people hold each, and how is that privileged access governed and reviewed?",
+        "aws": "Which identities and roles hold root, AdministratorAccess or other highly privileged access, how many people hold each, and how is that privileged access governed and reviewed?",
+        "gcp": "Which identities and roles hold Organization Administrator, Owner or other highly privileged access, how many people hold each, and how is that privileged access governed and reviewed?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q013",
+      "reference": "C.2",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Multi-factor authentication coverage and methods",
+      "question": {
+        "azure": "Is Multi-Factor Authentication enforced for all users, only privileged users, or only some — and which methods are used (for example Microsoft Authenticator, FIDO2 security keys, SMS)?",
+        "aws": "Is Multi-Factor Authentication enforced for all users, only privileged users, or only some — and which methods are used (for example virtual MFA applications, FIDO2 security keys, hardware tokens)?",
+        "gcp": "Is Multi-Factor Authentication enforced for all users, only privileged users, or only some — and which methods are used (for example Google Authenticator, Titan or FIDO2 security keys, SMS)?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q014",
+      "reference": "C.3",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Conditional and context-aware access policies",
+      "question": {
+        "azure": "Are Conditional Access policies configured? Can you share the policy list or an export?",
+        "aws": "Are context-aware access controls configured (IAM condition keys, Service Control Policies, permission boundaries, IP or device restrictions)? Can you share the policy list or an export?",
+        "gcp": "Are Context-Aware Access policies and VPC Service Controls perimeters configured? Can you share the policy list or an export?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q015",
+      "reference": "C.4",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Just-in-time versus standing administrative access",
+      "question": {
+        "azure": "Do you use Privileged Identity Management for just-in-time administrative access, or are administrator roles standing and permanent?",
+        "aws": "Do you use just-in-time or time-bound role assumption for administrative access (for example short-lived STS sessions behind an approval workflow), or are administrator permissions standing and permanent?",
+        "gcp": "Do you use just-in-time privileged access (for example Privileged Access Manager or time-bound IAM bindings), or are administrator roles standing and permanent?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q016",
+      "reference": "C.5",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "External and guest identity management",
+      "question": {
+        "azure": "How are guest (B2B) users managed — do external vendors or contractors have access to your tenant?",
+        "aws": "How are external identities managed — do external vendors or contractors have access to your accounts through cross-account roles or federated sign-in?",
+        "gcp": "How are external identities managed — do external vendors or contractors hold IAM grants on your organization, folders or projects?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q017",
+      "reference": "C.6",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Joiner-mover-leaver deprovisioning process",
+      "question": {
+        "azure": "Is there a formal joiner-mover-leaver process for deprovisioning Azure access when employees change roles or leave the organization?",
+        "aws": "Is there a formal joiner-mover-leaver process for deprovisioning AWS access when employees change roles or leave the organization?",
+        "gcp": "Is there a formal joiner-mover-leaver process for deprovisioning Google Cloud access when employees change roles or leave the organization?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q018",
+      "reference": "C.7",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Workload and application-to-application identities",
+      "question": {
+        "azure": "Are service principals and managed identities used for application-to-application authentication, or are credentials and secrets hardcoded into applications?",
+        "aws": "Are IAM roles (instance profiles, IAM Roles for Service Accounts) used for application-to-application authentication, or are long-lived access keys and secrets hardcoded into applications?",
+        "gcp": "Are service accounts with Workload Identity Federation used for application-to-application authentication, or are service-account keys and secrets hardcoded into applications?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q019",
+      "reference": "C.8",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Legacy and weak authentication paths",
+      "question": {
+        "azure": "Are legacy or weaker authentication protocols (for example POP, IMAP, basic authentication) still permitted anywhere in the tenant?",
+        "aws": "Are long-lived IAM user access keys, or other weaker authentication methods, still permitted anywhere across the accounts?",
+        "gcp": "Are long-lived, user-managed service-account keys, or other weaker authentication methods, still permitted anywhere across the organization?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q020",
+      "reference": "C.9",
+      "part": "C",
+      "group": "C. Identity & Access Management",
+      "title": "Frequency and ownership of access reviews",
+      "question": {
+        "azure": "How often are access reviews performed across the Azure environment, and by whom?",
+        "aws": "How often are access reviews performed across the AWS environment, and by whom?",
+        "gcp": "How often are access reviews performed across the Google Cloud environment, and by whom?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q021",
+      "reference": "D.1",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Network topology and segmentation model",
+      "question": {
+        "azure": "What is the network topology — hub-and-spoke virtual networks, a single flat virtual network, or Virtual WAN?",
+        "aws": "What is the network topology — hub-and-spoke through Transit Gateway, a single flat VPC, or VPC peering between accounts?",
+        "gcp": "What is the network topology — Shared VPC with host and service projects, a single flat VPC, or Network Connectivity Center?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q022",
+      "reference": "D.2",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Firewall and rule-base review for permissive access",
+      "question": {
+        "azure": "Are Network Security Groups and Azure Firewall in place across the estate, and when was the rule base last reviewed for overly permissive inbound access (for example rules open to 0.0.0.0/0)?",
+        "aws": "Are Security Groups, Network ACLs and AWS Network Firewall in place across the estate, and when was the rule base last reviewed for overly permissive inbound access (for example rules open to 0.0.0.0/0)?",
+        "gcp": "Are VPC firewall rules and Cloud NGFW policies in place across the estate, and when was the rule base last reviewed for overly permissive inbound access (for example rules open to 0.0.0.0/0)?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q023",
+      "reference": "D.3",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Distributed denial-of-service protection",
+      "question": {
+        "azure": "Is a DDoS protection plan enabled (Azure DDoS Network Protection), and at which tier?",
+        "aws": "Is DDoS protection enabled beyond the default (AWS Shield Advanced in addition to AWS Shield Standard), and across which resources?",
+        "gcp": "Is DDoS protection enabled (Cloud Armor, including adaptive protection), and at which tier?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q024",
+      "reference": "D.4",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Administrative access to virtual machines",
+      "question": {
+        "azure": "Do you use Azure Bastion or Just-in-Time VM access, or are RDP and SSH ports exposed directly to the internet?",
+        "aws": "Do you use AWS Systems Manager Session Manager or a hardened bastion host, or are RDP and SSH ports exposed directly to the internet?",
+        "gcp": "Do you use Identity-Aware Proxy TCP forwarding with OS Login, or are RDP and SSH ports exposed directly to the internet?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q025",
+      "reference": "D.5",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Private connectivity to managed services",
+      "question": {
+        "azure": "Are Private Endpoints used for platform services (Storage, SQL, Key Vault), or are those services reachable over the public internet?",
+        "aws": "Are VPC endpoints (AWS PrivateLink) used for managed services (S3, RDS, Secrets Manager), or are those services reachable over the public internet?",
+        "gcp": "Are Private Service Connect or Private Google Access endpoints used for managed services (Cloud Storage, Cloud SQL, Secret Manager), or are those services reachable over the public internet?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q026",
+      "reference": "D.6",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Web application firewall coverage",
+      "question": {
+        "azure": "Is a Web Application Firewall (Azure WAF on Application Gateway or Front Door) deployed in front of public-facing applications?",
+        "aws": "Is a Web Application Firewall (AWS WAF on CloudFront or an Application Load Balancer) deployed in front of public-facing applications?",
+        "gcp": "Is a Web Application Firewall (Cloud Armor security policies on external load balancers) deployed in front of public-facing applications?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q027",
+      "reference": "D.7",
+      "part": "D",
+      "group": "D. Network Security & Exposure",
+      "title": "Internet-facing resources and exposure review",
+      "question": {
+        "azure": "Which Azure services are internet-facing or configured for public access (for example storage accounts, management ports), and how is that public exposure identified and reviewed?",
+        "aws": "Which AWS resources are internet-facing or configured for public access (for example S3 buckets, RDS instances, management ports), and how is that public exposure identified and reviewed?",
+        "gcp": "Which Google Cloud resources are internet-facing or configured for public access (for example Cloud Storage buckets, Cloud SQL instances, management ports), and how is that public exposure identified and reviewed?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q028",
+      "reference": "E.1",
+      "part": "E",
+      "group": "E. Data Protection, Encryption & Key/Secrets Management",
+      "title": "Data hosting locations and residency obligations",
+      "question": {
+        "azure": "Where is your data physically hosted (which Azure regions), and is there a regulatory or contractual requirement for data to remain within a specific country or jurisdiction?",
+        "aws": "Where is your data physically hosted (which AWS Regions), and is there a regulatory or contractual requirement for data to remain within a specific country or jurisdiction?",
+        "gcp": "Where is your data physically hosted (which Google Cloud regions), and is there a regulatory or contractual requirement for data to remain within a specific country or jurisdiction?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q029",
+      "reference": "E.2",
+      "part": "E",
+      "group": "E. Data Protection, Encryption & Key/Secrets Management",
+      "title": "Encryption key and application secret management",
+      "question": {
+        "azure": "How are sensitive data, encryption keys and application secrets classified, encrypted and managed — platform-managed keys, customer-managed keys in Azure Key Vault, or another secrets-management approach?",
+        "aws": "How are sensitive data, encryption keys and application secrets classified, encrypted and managed — AWS-managed keys, customer-managed keys in AWS KMS, secrets in AWS Secrets Manager, or another secrets-management approach?",
+        "gcp": "How are sensitive data, encryption keys and application secrets classified, encrypted and managed — Google-managed keys, customer-managed encryption keys in Cloud KMS, secrets in Secret Manager, or another secrets-management approach?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q030",
+      "reference": "E.3",
+      "part": "E",
+      "group": "E. Data Protection, Encryption & Key/Secrets Management",
+      "title": "Data classification and data-loss prevention",
+      "question": {
+        "azure": "Is data classified (public, internal, confidential, restricted), and is Microsoft Purview or an equivalent data-loss-prevention tool in use?",
+        "aws": "Is data classified (public, internal, confidential, restricted), and is Amazon Macie or an equivalent data-loss-prevention tool in use?",
+        "gcp": "Is data classified (public, internal, confidential, restricted), and is Sensitive Data Protection (Cloud DLP) or an equivalent data-loss-prevention tool in use?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q031",
+      "reference": "E.4",
+      "part": "E",
+      "group": "E. Data Protection, Encryption & Key/Secrets Management",
+      "title": "Control and audit of key and secret access",
+      "question": {
+        "azure": "How is access to Azure Key Vault controlled and audited?",
+        "aws": "How is access to AWS KMS keys and Secrets Manager secrets controlled and audited?",
+        "gcp": "How is access to Cloud KMS keys and Secret Manager secrets controlled and audited?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q032",
+      "reference": "F.1",
+      "part": "F",
+      "group": "F. Logging, Monitoring & Threat Detection",
+      "title": "Logging and SIEM architecture",
+      "question": {
+        "azure": "What is your current logging and SIEM architecture — is Microsoft Sentinel deployed, or is another SIEM or log-aggregation platform used — and which Azure resources or subscriptions are actually covered?",
+        "aws": "What is your current logging and SIEM architecture — is Amazon Security Lake or a third-party SIEM deployed — and which AWS accounts or resources are actually covered?",
+        "gcp": "What is your current logging and SIEM architecture — is Google Security Operations deployed, or is another SIEM or log-aggregation platform used — and which Google Cloud projects or resources are actually covered?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q033",
+      "reference": "F.2",
+      "part": "F",
+      "group": "F. Logging, Monitoring & Threat Detection",
+      "title": "Completeness of log collection",
+      "question": {
+        "azure": "Is Azure Monitor and Log Analytics collecting logs from all subscriptions, or only some?",
+        "aws": "Are AWS CloudTrail (including an organization trail), VPC Flow Logs and CloudWatch collecting logs from all accounts, or only some?",
+        "gcp": "Is Cloud Logging, including an organization-level log sink, collecting logs from all projects, or only some?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q034",
+      "reference": "F.3",
+      "part": "F",
+      "group": "F. Logging, Monitoring & Threat Detection",
+      "title": "Native cloud security posture and threat detection service",
+      "question": {
+        "azure": "Is Microsoft Defender for Cloud enabled, and at which plan tier?",
+        "aws": "Are AWS Security Hub and Amazon GuardDuty enabled, and across which accounts and Regions?",
+        "gcp": "Is Security Command Center enabled, and at which service tier (Standard, Premium or Enterprise)?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q035",
+      "reference": "F.4",
+      "part": "F",
+      "group": "F. Logging, Monitoring & Threat Detection",
+      "title": "Current posture score",
+      "question": {
+        "azure": "What is your current Secure Score in Microsoft Defender for Cloud, if known?",
+        "aws": "What is your current AWS Security Hub security score against the enabled security standards, if known?",
+        "gcp": "What is your current Security Command Center posture or CIS benchmark compliance score, if known?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q036",
+      "reference": "F.5",
+      "part": "F",
+      "group": "F. Logging, Monitoring & Threat Detection",
+      "title": "Log retention against regulatory requirements",
+      "question": {
+        "azure": "How long are logs retained across your Azure environment, and has this been benchmarked against the log-retention requirements of the regulations that apply to you?",
+        "aws": "How long are logs retained across your AWS environment, and has this been benchmarked against the log-retention requirements of the regulations that apply to you?",
+        "gcp": "How long are logs retained across your Google Cloud environment, and has this been benchmarked against the log-retention requirements of the regulations that apply to you?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q037",
+      "reference": "F.6",
+      "part": "F",
+      "group": "F. Logging, Monitoring & Threat Detection",
+      "title": "Security operations monitoring",
+      "question": {
+        "azure": "Is there a Security Operations Centre — in-house, outsourced, or none — actively monitoring alerts raised from the Azure environment?",
+        "aws": "Is there a Security Operations Centre — in-house, outsourced, or none — actively monitoring alerts raised from the AWS environment?",
+        "gcp": "Is there a Security Operations Centre — in-house, outsourced, or none — actively monitoring alerts raised from the Google Cloud environment?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q038",
+      "reference": "G.1",
+      "part": "G",
+      "group": "G. Workload, Application, Container & API Security",
+      "title": "CI/CD pipelines and pipeline security scanning",
+      "question": {
+        "azure": "Are applications deployed through CI/CD pipelines (Azure DevOps or GitHub Actions)? Is security scanning built into that pipeline (SAST, DAST, secrets scanning)?",
+        "aws": "Are applications deployed through CI/CD pipelines (AWS CodePipeline, GitHub Actions or similar)? Is security scanning built into that pipeline (SAST, DAST, secrets scanning)?",
+        "gcp": "Are applications deployed through CI/CD pipelines (Cloud Build, GitHub Actions or similar)? Is security scanning built into that pipeline (SAST, DAST, secrets scanning)?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q039",
+      "reference": "G.2",
+      "part": "G",
+      "group": "G. Workload, Application, Container & API Security",
+      "title": "Infrastructure as Code versus manual provisioning",
+      "question": {
+        "azure": "Is Infrastructure as Code (ARM templates, Bicep, Terraform) used, or is provisioning mostly manual and portal-based?",
+        "aws": "Is Infrastructure as Code (CloudFormation, AWS CDK, Terraform) used, or is provisioning mostly manual and console-based?",
+        "gcp": "Is Infrastructure as Code (Terraform, Config Connector, Deployment Manager) used, or is provisioning mostly manual and console-based?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q040",
+      "reference": "G.3",
+      "part": "G",
+      "group": "G. Workload, Application, Container & API Security",
+      "title": "Container workloads and division of security responsibility",
+      "question": {
+        "azure": "Are container workloads in use (for example Azure Kubernetes Service), and how are responsibilities for virtual machine, container, application and API security divided between your infrastructure, DevOps and application teams?",
+        "aws": "Are container workloads in use (for example Amazon EKS, ECS or Fargate), and how are responsibilities for virtual machine, container, application and API security divided between your infrastructure, DevOps and application teams?",
+        "gcp": "Are container workloads in use (for example Google Kubernetes Engine or Cloud Run), and how are responsibilities for virtual machine, container, application and API security divided between your infrastructure, DevOps and application teams?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q041",
+      "reference": "H.1",
+      "part": "H",
+      "group": "H. Incident Response & Business Continuity",
+      "title": "Cloud-specific incident response plan",
+      "question": {
+        "azure": "Do you have a documented Incident Response Plan specific to cloud incidents in the Azure environment?",
+        "aws": "Do you have a documented Incident Response Plan specific to cloud incidents in the AWS environment?",
+        "gcp": "Do you have a documented Incident Response Plan specific to cloud incidents in the Google Cloud environment?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q042",
+      "reference": "H.2",
+      "part": "H",
+      "group": "H. Incident Response & Business Continuity",
+      "title": "Breach notification obligations and timelines",
+      "question": {
+        "azure": "Who needs to be notified, internally and to regulators or supervisory authorities, in the event of a breach affecting the Azure environment, and within what timeframe?",
+        "aws": "Who needs to be notified, internally and to regulators or supervisory authorities, in the event of a breach affecting the AWS environment, and within what timeframe?",
+        "gcp": "Who needs to be notified, internally and to regulators or supervisory authorities, in the event of a breach affecting the Google Cloud environment, and within what timeframe?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q043",
+      "reference": "I.1",
+      "part": "I",
+      "group": "I. Backup, Resilience & Disaster Recovery",
+      "title": "Backup and disaster-recovery restoration testing",
+      "question": {
+        "azure": "How frequently are backups and disaster-recovery restorations actually tested for Azure workloads (Azure Backup and Azure Site Recovery), and when was the most recent test performed?",
+        "aws": "How frequently are backups and disaster-recovery restorations actually tested for AWS workloads (AWS Backup, cross-Region snapshots, pilot-light or warm-standby designs), and when was the most recent test performed?",
+        "gcp": "How frequently are backups and disaster-recovery restorations actually tested for Google Cloud workloads (Backup and DR Service, persistent-disk snapshots, cross-region replication), and when was the most recent test performed?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q044",
+      "reference": "I.2",
+      "part": "I",
+      "group": "I. Backup, Resilience & Disaster Recovery",
+      "title": "Recovery time and recovery point objectives",
+      "question": {
+        "azure": "What are your defined Recovery Time Objective and Recovery Point Objective targets for critical systems running on Azure?",
+        "aws": "What are your defined Recovery Time Objective and Recovery Point Objective targets for critical systems running on AWS?",
+        "gcp": "What are your defined Recovery Time Objective and Recovery Point Objective targets for critical systems running on Google Cloud?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q045",
+      "reference": "I.3",
+      "part": "I",
+      "group": "I. Backup, Resilience & Disaster Recovery",
+      "title": "Ransomware-resistant backups and storage redundancy",
+      "question": {
+        "azure": "Are Azure Backup vaults configured with immutability or soft-delete protection against ransomware, and is storage redundancy (LRS, ZRS, GRS) aligned to the criticality of each workload?",
+        "aws": "Are AWS Backup vaults configured with Vault Lock or S3 Object Lock immutability against ransomware, and is storage redundancy and cross-Region copying aligned to the criticality of each workload?",
+        "gcp": "Are backup vaults and Cloud Storage buckets configured with retention locks, object versioning or soft delete against ransomware, and is storage redundancy (regional, dual-region, multi-region) aligned to the criticality of each workload?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q046",
+      "reference": "J.1",
+      "part": "J",
+      "group": "J. Governance, Policy & Regulatory Mapping",
+      "title": "Preventive policy guardrails",
+      "question": {
+        "azure": "Do you have Azure Policy definitions or initiatives enforcing organizational standards across subscriptions?",
+        "aws": "Do you have Service Control Policies, AWS Config rules or AWS Control Tower guardrails enforcing organizational standards across accounts?",
+        "gcp": "Do you have Organization Policy constraints or Policy Controller rules enforcing organizational standards across projects?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q047",
+      "reference": "J.2",
+      "part": "J",
+      "group": "J. Governance, Policy & Regulatory Mapping",
+      "title": "Resource ownership tagging and configuration drift",
+      "question": {
+        "azure": "Is resource tagging and ownership consistently enforced across subscriptions, and is configuration drift from approved security baselines actively monitored?",
+        "aws": "Is resource tagging and ownership consistently enforced across accounts, and is configuration drift from approved security baselines actively monitored?",
+        "gcp": "Are resource labels and ownership consistently enforced across projects, and is configuration drift from approved security baselines actively monitored?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q048",
+      "reference": "J.3",
+      "part": "J",
+      "group": "J. Governance, Policy & Regulatory Mapping",
+      "title": "Existing cloud security or acceptable use policy",
+      "question": {
+        "azure": "Is there a cloud security policy or acceptable use policy document covering the Azure environment that predates this engagement?",
+        "aws": "Is there a cloud security policy or acceptable use policy document covering the AWS environment that predates this engagement?",
+        "gcp": "Is there a cloud security policy or acceptable use policy document covering the Google Cloud environment that predates this engagement?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q049",
+      "reference": "J.4",
+      "part": "J",
+      "group": "J. Governance, Policy & Regulatory Mapping",
+      "title": "Ownership of cloud security governance",
+      "question": {
+        "azure": "Who owns cloud security governance internally — is there a CISO, an IT Security Manager, or is it handled informally by the infrastructure team?",
+        "aws": "Who owns cloud security governance internally — is there a CISO, an IT Security Manager, or is it handled informally by the infrastructure team?",
+        "gcp": "Who owns cloud security governance internally — is there a CISO, an IT Security Manager, or is it handled informally by the infrastructure team?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q050",
+      "reference": "J.5",
+      "part": "J",
+      "group": "J. Governance, Policy & Regulatory Mapping",
+      "title": "Standards and regulations to map the assessment against",
+      "question": {
+        "azure": "Which security standards, regulatory obligations or internal policies should this assessment be mapped against (for example the CIS Microsoft Azure Foundations Benchmark, the Microsoft Cloud Security Benchmark, ISO/IEC 27001:2022 Annex A, or sector-specific regulations)?",
+        "aws": "Which security standards, regulatory obligations or internal policies should this assessment be mapped against (for example the CIS Amazon Web Services Foundations Benchmark, AWS Foundational Security Best Practices, ISO/IEC 27001:2022 Annex A, or sector-specific regulations)?",
+        "gcp": "Which security standards, regulatory obligations or internal policies should this assessment be mapped against (for example the CIS Google Cloud Platform Foundation Benchmark, the Google Cloud Architecture Framework security pillar, ISO/IEC 27001:2022 Annex A, or sector-specific regulations)?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q051",
+      "reference": "K.1",
+      "part": "K",
+      "group": "K. Third-Party & Vendor Risk",
+      "title": "Third-party and SaaS access into the environment",
+      "question": {
+        "azure": "Do any third-party vendors or SaaS integrations have access into your Azure environment, and how is that access scoped and monitored?",
+        "aws": "Do any third-party vendors or SaaS integrations have access into your AWS environment, and how is that access scoped and monitored?",
+        "gcp": "Do any third-party vendors or SaaS integrations have access into your Google Cloud environment, and how is that access scoped and monitored?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q052",
+      "reference": "K.2",
+      "part": "K",
+      "group": "K. Third-Party & Vendor Risk",
+      "title": "Vendor risk assessment of the cloud provider relationship",
+      "question": {
+        "azure": "Has a vendor risk assessment ever been carried out for the cloud service provider relationship itself?",
+        "aws": "Has a vendor risk assessment ever been carried out for the cloud service provider relationship itself?",
+        "gcp": "Has a vendor risk assessment ever been carried out for the cloud service provider relationship itself?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q053",
+      "reference": "L.1",
+      "part": "L",
+      "group": "L. Leadership Priorities & Known Constraints",
+      "title": "Leadership security concerns",
+      "question": {
+        "azure": "What are the most important security concerns your leadership already holds about the current Azure environment?",
+        "aws": "What are the most important security concerns your leadership already holds about the current AWS environment?",
+        "gcp": "What are the most important security concerns your leadership already holds about the current Google Cloud environment?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q054",
+      "reference": "L.2",
+      "part": "L",
+      "group": "L. Leadership Priorities & Known Constraints",
+      "title": "Known exceptions, legacy workloads and constraints",
+      "question": {
+        "azure": "Are there any known security exceptions, legacy workloads, or technical constraints in the Azure environment that should be accounted for in the assessment?",
+        "aws": "Are there any known security exceptions, legacy workloads, or technical constraints in the AWS environment that should be accounted for in the assessment?",
+        "gcp": "Are there any known security exceptions, legacy workloads, or technical constraints in the Google Cloud environment that should be accounted for in the assessment?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q055",
+      "reference": "M.1",
+      "part": "M",
+      "group": "M. Engagement Logistics",
+      "title": "Delivery mode of the assessment",
+      "question": {
+        "azure": "Do you require the assessment to be carried out onsite, remotely, or as a hybrid engagement?",
+        "aws": "Do you require the assessment to be carried out onsite, remotely, or as a hybrid engagement?",
+        "gcp": "Do you require the assessment to be carried out onsite, remotely, or as a hybrid engagement?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q056",
+      "reference": "M.2",
+      "part": "M",
+      "group": "M. Engagement Logistics",
+      "title": "Read-only access for evidence gathering",
+      "question": {
+        "azure": "Will you grant read-only access (for example the Security Reader role) to the Azure tenant for evidence gathering?",
+        "aws": "Will you grant read-only access (for example the SecurityAudit or ViewOnlyAccess policies) to the AWS accounts for evidence gathering?",
+        "gcp": "Will you grant read-only access (for example the Security Reviewer or Viewer roles) to the Google Cloud organization for evidence gathering?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q057",
+      "reference": "M.3",
+      "part": "M",
+      "group": "M. Engagement Logistics",
+      "title": "NDA and vendor onboarding prerequisites",
+      "question": {
+        "azure": "Is there an NDA or vendor onboarding process — a security questionnaire, background checks, or similar — to be completed before access is granted?",
+        "aws": "Is there an NDA or vendor onboarding process — a security questionnaire, background checks, or similar — to be completed before access is granted?",
+        "gcp": "Is there an NDA or vendor onboarding process — a security questionnaire, background checks, or similar — to be completed before access is granted?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q058",
+      "reference": "M.4",
+      "part": "M",
+      "group": "M. Engagement Logistics",
+      "title": "Expected timeline for the final report",
+      "question": {
+        "azure": "What is your expected timeline, specifically when the final assessment report needs to be delivered?",
+        "aws": "What is your expected timeline, specifically when the final assessment report needs to be delivered?",
+        "gcp": "What is your expected timeline, specifically when the final assessment report needs to be delivered?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q059",
+      "reference": "M.5",
+      "part": "M",
+      "group": "M. Engagement Logistics",
+      "title": "Scope of the deliverable",
+      "question": {
+        "azure": "Should the deliverable include a prioritized remediation roadmap with effort estimates, or only the gap findings?",
+        "aws": "Should the deliverable include a prioritized remediation roadmap with effort estimates, or only the gap findings?",
+        "gcp": "Should the deliverable include a prioritized remediation roadmap with effort estimates, or only the gap findings?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    },
+    {
+      "id": "Q060",
+      "reference": "M.6",
+      "part": "M",
+      "group": "M. Engagement Logistics",
+      "title": "Audience for the findings",
+      "question": {
+        "azure": "Will the findings need to be presented to a board or a regulator, or is the report for internal use only?",
+        "aws": "Will the findings need to be presented to a board or a regulator, or is the report for internal use only?",
+        "gcp": "Will the findings need to be presented to a board or a regulator, or is the report for internal use only?"
+      },
+      "response_type": "text",
+      "mandatory": true
+    }
+  ]
+}

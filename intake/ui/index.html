@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Schema Builder · CyberTrustWorks</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #18181b;
+      --muted: #71717a;
+      --line: #e4e4e7;
+      --field: #ffffff;
+      --accent: #2563eb;
+      --accent-text: #ffffff;
+      --danger: #dc2626;
+      --ok: #15803d;
+      --warn: #b45309;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f0f11;
+        --surface: #18181b;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --line: #2e2e33;
+        --field: #111113;
+        --accent: #3b82f6;
+        --danger: #f87171;
+        --ok: #4ade80;
+        --warn: #fbbf24;
+        color-scheme: dark;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    [hidden] { display: none !important; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+    header h1 { font-size: 15px; font-weight: 600; }
+    header h1 span { color: var(--muted); font-weight: 400; }
+    .actions { display: flex; gap: 8px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 40px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 8px 24px 64px;
+    }
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+      aside { position: static !important; }
+    }
+
+    section { padding: 28px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 12px; }
+    section:last-child { border-bottom: 0; }
+    h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; display: flex; gap: 10px; align-items: baseline; }
+    h2 .n { color: var(--muted); font-weight: 400; font-variant-numeric: tabular-nums; }
+    h2 .count { margin-left: auto; color: var(--muted); font-weight: 400; font-size: 13px; }
+    h3 { font-size: 13px; font-weight: 600; margin: 22px 0 10px; }
+    .lead { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+    .muted { color: var(--muted); }
+    .mono { font-family: var(--mono); font-size: 12px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 16px; }
+    .span2 { grid-column: span 2; }
+    @media (max-width: 520px) { .span2 { grid-column: auto; } }
+
+    .f { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .f > span { font-size: 12px; color: var(--muted); }
+    input[type="text"], input[type="number"], input[type="date"], input[type="email"], select {
+      width: 100%;
+      height: 34px;
+      padding: 0 10px;
+      font: inherit;
+      color: var(--text);
+      background: var(--field);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+    input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    ::placeholder { color: var(--muted); opacity: .6; }
+    input[readonly] { background: transparent; color: var(--muted); }
+    input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; flex: none; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 12px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn:hover { border-color: var(--muted); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); width: 100%; height: 36px; }
+    .btn.primary:disabled { opacity: .45; cursor: not-allowed; }
+    .link { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; color: var(--accent); cursor: pointer; }
+    .link.danger { color: var(--danger); }
+
+    .item { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px 14px; margin-bottom: 10px; background: var(--surface); }
+    .item-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; }
+
+    .check { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+    .check:last-child { border-bottom: 0; }
+    .check input { margin-top: 2px; }
+    .check .t { display: block; font-weight: 500; }
+    .check .d { display: block; font-size: 12px; color: var(--muted); }
+
+    .fw { border-bottom: 1px solid var(--line); }
+    .fw:last-child { border-bottom: 0; }
+    .fw .check { border-bottom: 0; align-items: center; }
+    .fw .check .t { flex: 1; }
+    .fw .check .d { text-align: right; }
+    .fw-opts { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 0 0 12px 25px; font-size: 12px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .inline { display: inline-flex; align-items: center; gap: 6px; }
+    .inline select { width: auto; height: 28px; padding: 0 6px; }
+
+    .tool-opts { display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; padding: 0 0 12px 25px; }
+
+    aside { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; padding: 28px 0 24px; display: flex; flex-direction: column; gap: 20px; }
+    .panel h2 { font-size: 13px; margin-bottom: 10px; }
+    dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 13px; }
+    dt { color: var(--muted); }
+    dd { text-align: right; overflow-wrap: anywhere; }
+    .issues { list-style: none; font-size: 13px; display: flex; flex-direction: column; gap: 6px; }
+    .issues li { padding-left: 14px; position: relative; }
+    .issues li::before { content: ""; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--danger); }
+    .issues a { color: inherit; text-decoration: none; }
+    .issues a:hover { text-decoration: underline; }
+    .ok { color: var(--ok); font-size: 13px; }
+    .warn { color: var(--warn); font-size: 13px; }
+    .row { display: flex; gap: 8px; }
+    .row .btn { flex: 1; }
+    details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+    pre {
+      margin-top: 8px;
+      max-height: 320px;
+      overflow: auto;
+      padding: 10px;
+      font: 11px/1.5 var(--mono);
+      background: var(--field);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CyberTrustWorks <span>· Client schema builder</span></h1>
+  <div class="actions">
+    <button type="button" class="btn" id="btn-sample">Load sample</button>
+    <button type="button" class="btn" id="btn-reset">Clear</button>
+  </div>
+</header>
+
+<div class="layout">
+  <main>
+
+    <section id="s-org">
+      <h2><span class="n">1</span>Organisation</h2>
+      <p class="lead">The customer ID becomes the tenant code and the prefix for every office and contact ID.</p>
+      <div class="grid">
+        <label class="f"><span>Customer ID</span><input type="text" id="cust_id" placeholder="Cust_00101" autocomplete="off"></label>
+        <label class="f span2"><span>Legal name</span><input type="text" id="cust_name"></label>
+        <label class="f"><span>Category</span>
+          <select id="cust_category">
+            <option>Enterprise</option><option>Mid-Market</option><option>SMB</option>
+            <option>Financial Institution</option><option>Government</option>
+          </select>
+        </label>
+        <label class="f"><span>Industry</span><input type="text" id="cust_industry"></label>
+        <label class="f"><span>Primary domain</span><input type="text" id="cust_domain" placeholder="example.com"></label>
+        <label class="f"><span>Deployment host</span><input type="text" id="cust_fqdn" placeholder="vciso.example.com"></label>
+      </div>
+
+      <h3>Offices</h3>
+      <div id="offices"></div>
+      <button type="button" class="link" id="add-office">+ Add office</button>
+    </section>
+
+    <section id="s-contract">
+      <h2><span class="n">2</span>Contract</h2>
+      <p class="lead">The contract term is also the licence term: the licence starts on the start date and expires on the end date.</p>
+      <div class="grid">
+        <label class="f"><span>Contract ID</span><input type="text" id="ctr_id"></label>
+        <label class="f"><span>Customer PO reference</span><input type="text" id="ctr_po"></label>
+        <label class="f"><span>Type</span>
+          <select id="ctr_type">
+            <option>Original</option><option>Extension</option><option>AMC</option><option>AR</option><option>CR</option>
+          </select>
+        </label>
+        <label class="f"><span>Financial year</span><input type="number" id="ctr_fy" min="2024" max="2050" step="1"></label>
+        <label class="f"><span>Start date</span><input type="date" id="ctr_start"></label>
+        <label class="f"><span>Duration (months)</span><input type="number" id="ctr_months" min="1" max="60" step="1"></label>
+        <label class="f"><span>End date</span><input type="date" id="ctr_end" readonly tabindex="-1"></label>
+        <label class="f"><span>Value</span><input type="number" id="ctr_value" min="0" step="0.01"></label>
+        <label class="f"><span>Currency</span>
+          <select id="ctr_currency"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option></select>
+        </label>
+        <label class="f"><span>Invoicing</span>
+          <select id="ctr_invoice">
+            <option value="M">Monthly</option><option value="Q">Quarterly</option>
+            <option value="H">Half-yearly</option><option value="Y">Yearly</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section id="s-licence">
+      <h2><span class="n">3</span>Licence limits</h2>
+      <p class="lead">Hard limits, enforced by database triggers. The client cannot add accounts beyond these.</p>
+      <div class="grid">
+        <label class="f"><span>Total users</span><input type="number" id="lim_users" min="1" step="1"></label>
+        <label class="f"><span>vCISO seats</span><input type="number" id="lim_vcisos" min="1" step="1"></label>
+        <label class="f"><span>Organisation owner seats</span><input type="number" id="lim_owners" min="1" step="1"></label>
+        <label class="f"><span>Control owner seats</span><input type="number" id="lim_control" min="1" step="1"></label>
+        <label class="f"><span>Scanner integrations</span><input type="number" id="lim_apis" min="0" step="1"></label>
+      </div>
+    </section>
+
+    <section id="s-frameworks">
+      <h2><span class="n">4</span>Frameworks <span class="count" id="fw-count"></span></h2>
+      <p class="lead">Only selected frameworks are seeded into the client database. The licence covers exactly this selection.</p>
+      <div id="fw-list"></div>
+    </section>
+
+    <section id="s-modules">
+      <h2><span class="n">5</span>Modules</h2>
+      <p class="lead">Modules that are not selected are left out of the client image.</p>
+      <div id="mod-list"></div>
+    </section>
+
+    <section id="s-integrations">
+      <h2><span class="n">5a</span>Scanner integrations</h2>
+      <p class="lead">Part of vulnerability management. Each enabled scanner uses one integration seat.</p>
+      <div id="tool-list"></div>
+    </section>
+
+    <section id="s-news">
+      <h2><span class="n">5b</span>News &amp; breach watch</h2>
+      <p class="lead">What to monitor for attacks on this organisation. Separate values with commas.</p>
+      <div class="grid">
+        <label class="f span2"><span>Names and brands</span><input type="text" id="watch_names"></label>
+        <label class="f span2"><span>Domains</span><input type="text" id="watch_domains"></label>
+        <label class="f span2"><span>Cities</span><input type="text" id="watch_cities"></label>
+        <label class="f span2"><span>Extra keywords</span><input type="text" id="watch_keywords"></label>
+      </div>
+    </section>
+
+    <section id="s-users">
+      <h2><span class="n">6</span>People</h2>
+      <p class="lead">These two accounts are created at install, each with its own one-time password (written to <span class="mono">initial_credentials.txt</span> in the client folder), and count towards the seat limits. They are also added as the client's executive and vCISO contacts.</p>
+      <div id="people"></div>
+
+      <h3>Other contacts</h3>
+      <p class="lead">Optional escalation, IT security or emergency contacts. Contacts do not get accounts.</p>
+      <div id="contacts"></div>
+      <button type="button" class="link" id="add-contact">+ Add contact</button>
+    </section>
+
+  </main>
+
+  <aside>
+    <div class="panel">
+      <h2>Summary</h2>
+      <dl id="summary"></dl>
+    </div>
+
+    <div class="panel">
+      <h2>Checks</h2>
+      <div id="issues"></div>
+    </div>
+
+    <div class="panel">
+      <button type="button" class="btn primary" id="btn-generate" disabled>Generate schema</button>
+    </div>
+
+    <div class="panel" id="result" hidden>
+      <h2>Generated</h2>
+      <p class="warn" id="stale" hidden>The form has changed since this was generated. Generate again to update it.</p>
+      <dl id="result-meta"></dl>
+      <div class="row" style="margin-top: 12px;">
+        <a class="btn" id="dl-sql">Download SQL</a>
+        <a class="btn" id="dl-spec">Download spec</a>
+      </div>
+      <p class="muted" style="font-size: 12px; margin: 10px 0;" id="result-files"></p>
+      <details>
+        <summary>SQL preview</summary>
+        <pre id="sql-preview"></pre>
+      </details>
+    </div>
+  </aside>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const pad = (n, w) => String(n).padStart(w, '0');
+  const list = s => s.split(',').map(x => x.trim()).filter(Boolean);
+  const val = id => $(id).value.trim();
+  const int = id => (/^\d+$/.test(val(id)) ? Number(val(id)) : null);
+  const today = () => new Date().toISOString().slice(0, 10);
+
+  const ID_RE = /^[A-Za-z0-9_-]{3,32}$/;
+  const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const OFFICE_TYPES = ['Primary', 'Secondary', 'Data Center', 'Regional Office'];
+  const CONTACT_TYPES = ['Escalation', 'IT Security', 'Emergency'];
+  const ROLES = [
+    { key: 'vciso', role: 'vCISO', title: 'Primary vCISO', contactType: 'Primary vCISO', department: 'Information Security' },
+    { key: 'owner', role: 'Organisation Owner', title: 'Organisation owner', contactType: 'Executive', department: 'Executive Board' },
+  ];
+  const MODULES = [
+    { id: 'compliance', name: 'Compliance core', desc: 'GRC, clause–control map, RCSA and evidence cycles. Always included.', locked: true },
+    { id: 'vulnerabilities', name: 'Vulnerability management', desc: 'Scanner ingestion, CVSS normalisation, de-duplication and SLA tracking.' },
+    { id: 'alerting', name: 'Alerting & escalation', desc: 'Website and email alerts with an escalation ladder.' },
+    { id: 'incidents', name: 'Incident management', desc: 'Incident tracking with regulatory reporting clocks.' },
+    { id: 'news_breach_watch', name: 'News & breach watch', desc: 'AI-verified monitoring of news for attacks on the organisation.' },
+    { id: 'onprem_ai_assessment', name: 'On-premise AI evidence assessment', desc: 'Offline model that assesses uploaded evidence for the vCISO.' },
+  ];
+  const TOOLS = [
+    { name: 'Tenable', endpoint: 'https://cloud.tenable.com' },
+    { name: 'Qualys', endpoint: 'https://qualysapi.qualys.com' },
+    { name: 'Rapid7', endpoint: 'https://insight.rapid7.com' },
+    { name: 'Greenbone', endpoint: '' },
+    { name: 'McAfee', endpoint: '' },
+    { name: 'Zscaler', endpoint: '' },
+  ];
+  const SECTION = { org: 's-org', contract: 's-contract', licence: 's-licence', frameworks: 's-frameworks',
+                    integrations: 's-integrations', news: 's-news', users: 's-users' };
+
+  let catalogue = [];      // frameworks from /api/frameworks
+  let offices = [];        // { key, type, address, city, state, country, pincode }
+  let contacts = [];       // { key, type, priority, name, title, department, email, phone, office }
+  let people = {};         // role key -> { office }
+  let fwSel = new Map();   // framework_id -> { offices: Set<office key>, review }
+  let tools = {};          // tool name -> { on, endpoint, freq }
+  let nextKey = 1;
+  let generated = null;    // { id, json } of the last successful generation
+  let busy = false;
+
+  // ---------- small render helpers ----------
+  const field = (label, input, cls = '') => `<label class="f ${cls}"><span>${label}</span>${input}</label>`;
+  const textInput = (attrs, v, type = 'text') => `<input type="${type}" ${attrs} value="${esc(v)}">`;
+  const optionsHtml = (options, v) => options.map(o => {
+    const [value, label] = Array.isArray(o) ? o : [o, o];
+    return `<option value="${esc(value)}"${String(value) === String(v) ? ' selected' : ''}>${esc(label)}</option>`;
+  }).join('');
+  const selectInput = (attrs, options, v) => `<select ${attrs}>${optionsHtml(options, v)}</select>`;
+
+  const officeIndex = key => offices.findIndex(o => o.key === key);
+  const officeId = key => `${val('cust_id') || 'ID'}_${pad(officeIndex(key) + 1, 3)}`;
+  const officeLabel = o => officeId(o.key) + (o.city ? ` · ${o.city}` : '');
+  const officeOptions = () => offices.map(o => [o.key, officeLabel(o)]);
+  const fwName = id => (catalogue.find(f => f.id === id) || {}).standard || `Framework ${id}`;
+
+  function addMonths(start, months) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || !months || months < 1) return '';
+    const [y, m, d] = start.split('-').map(Number);
+    const last = new Date(Date.UTC(y, m - 1 + months + 1, 0)).getUTCDate();
+    const end = new Date(Date.UTC(y, m - 1 + months, Math.min(d, last)));
+    end.setUTCDate(end.getUTCDate() - 1);
+    return end.toISOString().slice(0, 10);
+  }
+
+  // ---------- rendering ----------
+  function renderOffices() {
+    $('offices').innerHTML = offices.map(o => {
+      const a = f => `data-office="${o.key}" data-field="${f}"`;
+      return `<div class="item">
+        <div class="item-head">
+          <span class="mono" data-oid="${o.key}">${esc(officeId(o.key))}</span>
+          ${offices.length > 1 ? `<button type="button" class="link danger" data-remove-office="${o.key}">Remove</button>` : ''}
+        </div>
+        <div class="grid">
+          ${field('Type', selectInput(a('type'), OFFICE_TYPES, o.type))}
+          ${field('Address', textInput(a('address'), o.address), 'span2')}
+          ${field('City', textInput(a('city'), o.city))}
+          ${field('State / region', textInput(a('state'), o.state))}
+          ${field('Country', textInput(a('country'), o.country))}
+          ${field('Postcode', textInput(a('pincode'), o.pincode))}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderPeople() {
+    $('people').innerHTML = ROLES.map(r => `<div class="item">
+      <div class="item-head"><strong>${r.title}</strong><span class="muted">${r.role}</span></div>
+      <div class="grid">
+        ${field('Full name', `<input type="text" id="${r.key}_name">`)}
+        ${field('Email', `<input type="email" id="${r.key}_email">`)}
+        ${field('Username', `<input type="text" id="${r.key}_login" autocomplete="off">`)}
+        ${field('Job title', `<input type="text" id="${r.key}_title">`)}
+        ${field('Phone', `<input type="text" id="${r.key}_phone">`)}
+        ${field('Office', `<select id="${r.key}_office"></select>`)}
+      </div>
+    </div>`).join('');
+  }
+
+  function renderPeopleOffices() {
+    ROLES.forEach(r => {
+      if (officeIndex(people[r.key].office) < 0) people[r.key].office = offices[0].key;
+      $(`${r.key}_office`).innerHTML = optionsHtml(officeOptions(), people[r.key].office);
+    });
+  }
+
+  function renderContacts() {
+    $('contacts').innerHTML = contacts.map(c => {
+      const a = f => `data-contact="${c.key}" data-field="${f}"`;
+      return `<div class="item">
+        <div class="item-head">
+          <span class="muted">Contact</span>
+          <button type="button" class="link danger" data-remove-contact="${c.key}">Remove</button>
+        </div>
+        <div class="grid">
+          ${field('Type', selectInput(a('type'), CONTACT_TYPES, c.type))}
+          ${field('Priority', selectInput(a('priority'), [1, 2, 3, 4, 5], c.priority))}
+          ${field('Full name', textInput(a('name'), c.name))}
+          ${field('Job title', textInput(a('title'), c.title))}
+          ${field('Department', textInput(a('department'), c.department))}
+          ${field('Email', textInput(a('email'), c.email, 'email'))}
+          ${field('Phone', textInput(a('phone'), c.phone))}
+          ${field('Office', selectInput(a('office'), officeOptions(), c.office))}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderFrameworks() {
+    $('fw-list').innerHTML = catalogue.map(fw => {
+      const s = fwSel.get(fw.id);
+      const opts = s ? `<div class="fw-opts">
+          <span class="muted">Applies to</span>
+          ${offices.map(o => `<label class="chip"><input type="checkbox" data-fw-office="${fw.id}" value="${o.key}"${s.offices.has(o.key) ? ' checked' : ''}>${esc(officeLabel(o))}</label>`).join('')}
+          <label class="inline"><span class="muted">Review every</span>${selectInput(`data-fw-review="${fw.id}"`, [3, 6, 12, 24], s.review)}<span class="muted">months</span></label>
+        </div>` : '';
+      return `<div class="fw">
+        <label class="check"><input type="checkbox" data-fw="${fw.id}"${s ? ' checked' : ''}>
+          <span class="t">${esc(fw.standard)}</span><span class="d">${esc(fw.category)}</span></label>
+        ${opts}
+      </div>`;
+    }).join('');
+    $('fw-count').textContent = fwSel.size ? `${fwSel.size} selected` : '';
+  }
+
+  function renderModules() {
+    $('mod-list').innerHTML = MODULES.map(m => `<label class="check">
+      <input type="checkbox" id="mod_${m.id}"${m.locked ? ' checked disabled' : ''}>
+      <span><span class="t">${esc(m.name)}</span><span class="d">${esc(m.desc)}</span></span>
+    </label>`).join('');
+  }
+
+  function renderTools() {
+    $('tool-list').innerHTML = TOOLS.map(t => {
+      const s = tools[t.name];
+      const a = f => `data-tool="${t.name}" data-field="${f}"`;
+      return `<div class="fw">
+        <label class="check"><input type="checkbox" ${a('on')}${s.on ? ' checked' : ''}><span class="t">${t.name}</span></label>
+        ${s.on ? `<div class="tool-opts">
+          ${field('API endpoint', textInput(a('endpoint'), s.endpoint))}
+          ${field('Pulls per day', textInput(a('freq'), s.freq, 'number'))}
+        </div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function syncModuleSections() {
+    $('s-integrations').hidden = !$('mod_vulnerabilities').checked;
+    $('s-news').hidden = !$('mod_news_breach_watch').checked;
+  }
+
+  // Everything that displays an office ID or label.
+  function renderOfficeRefs() {
+    document.querySelectorAll('[data-oid]').forEach(el => { el.textContent = officeId(Number(el.dataset.oid)); });
+    renderPeopleOffices();
+    renderContacts();
+    renderFrameworks();
+  }
+
+  function renderAll() {
+    renderOffices();
+    renderOfficeRefs();
+    renderTools();
+    syncModuleSections();
+  }
+
+  // ---------- spec <-> form ----------
+  function collectSpec() {
+    const cid = val('cust_id');
+    const oid = key => `${cid}_${pad(officeIndex(key) + 1, 3)}`;
+    const modules = MODULES.filter(m => $(`mod_${m.id}`).checked).map(m => m.id);
+    const person = r => ({
+      name: val(`${r.key}_name`), email: val(`${r.key}_email`), login: val(`${r.key}_login`),
+      title: val(`${r.key}_title`), phone: val(`${r.key}_phone`), office: oid(people[r.key].office),
+    });
+    const ppl = ROLES.map(r => ({ ...r, ...person(r) }));
+
+    const contactRows = [
+      ...ppl.slice().reverse().map(p => ({
+        office_id: p.office, contact_type: p.contactType, contact_priority: 1, contact_person: p.name,
+        designation: p.title, department: p.department, contact_email: p.email, contact_phone: p.phone,
+      })),
+      ...contacts.map(c => ({
+        office_id: oid(c.office), contact_type: c.type, contact_priority: c.priority, contact_person: c.name.trim(),
+        designation: c.title.trim(), department: c.department.trim(), contact_email: c.email.trim(), contact_phone: c.phone.trim(),
+      })),
+    ].map((c, i) => ({ contact_id: `${c.office_id}_${pad(i + 1, 4)}`, ...c }));
+
+    const start = $('ctr_start').value;
+    const end = addMonths(start, int('ctr_months'));
+    const spec = {
+      organization: {
+        customer_id: cid,
+        customer_name: val('cust_name'),
+        category: $('cust_category').value,
+        industry: val('cust_industry'),
+        primary_domain: val('cust_domain'),
+        deployment_fqdn: val('cust_fqdn'),
+        offices: offices.map(o => ({
+          office_id: oid(o.key), office_type: o.type, office_address: o.address.trim(),
+          city: o.city.trim(), state: o.state.trim(), country: o.country.trim(), pincode: o.pincode.trim(),
+        })),
+        contacts: contactRows,
+      },
+      contract: {
+        contract_id: val('ctr_id'),
+        customer_ref_po: val('ctr_po'),
+        contract_type: $('ctr_type').value,
+        financial_year: int('ctr_fy'),
+        contract_period_months: int('ctr_months'),
+        contract_start_date: start,
+        contract_end_date: end,
+        contract_value: val('ctr_value') === '' ? 0 : Number(val('ctr_value')),
+        currency: $('ctr_currency').value,
+        invoicing_frequency: $('ctr_invoice').value,
+      },
+      licensing_limits: {
+        max_users: int('lim_users'),
+        max_vcisos: int('lim_vcisos'),
+        max_org_owners: int('lim_owners'),
+        max_control_owners: int('lim_control'),
+        max_api_integrations: int('lim_apis'),
+        max_frameworks: fwSel.size,
+        valid_to: end,
+      },
+      selected_frameworks: [...fwSel.keys()].sort((a, b) => a - b).map(id => ({
+        framework_id: id,
+        office_ids: offices.filter(o => fwSel.get(id).offices.has(o.key)).map(o => oid(o.key)),
+        review_frequency_months: fwSel.get(id).review,
+      })),
+      enabled_modules: modules,
+      integrations: {
+        tools: modules.includes('vulnerabilities')
+          ? TOOLS.filter(t => tools[t.name].on).map(t => ({
+              tool_name: t.name, enabled: true, target_endpoint: tools[t.name].endpoint.trim(),
+              pull_frequency_per_day: /^\d+$/.test(String(tools[t.name].freq).trim()) ? Number(tools[t.name].freq) : null,
+            }))
+          : [],
+      },
+      security_policies: { sso_type: 'LOCAL', mfa_enforced: true, password_expiry_days: 90, session_timeout_minutes: 15 },
+      initial_users: ppl.map((p, i) => ({
+        user_id: `User_${pad(i + 1, 4)}`, login_id: p.login, user_name: p.name, user_email: p.email,
+        user_mobile: p.phone, designation: p.title, department: p.department, role_type: p.role, office_id: p.office,
+      })),
+    };
+    if (modules.includes('news_breach_watch')) {
+      spec.news_watch_profile = {
+        monitored_names: list($('watch_names').value),
+        monitored_domains: list($('watch_domains').value),
+        monitored_cities: list($('watch_cities').value),
+        custom_keywords: list($('watch_keywords').value),
+      };
+    }
+    return spec;
+  }
+
+  function blankSpec() {
+    return {
+      organization: { category: 'Enterprise', offices: [{ office_type: 'Primary' }], contacts: [] },
+      contract: { contract_type: 'Original', financial_year: new Date().getFullYear(), contract_period_months: 12, currency: 'INR', invoicing_frequency: 'M' },
+      licensing_limits: { max_users: 25, max_vcisos: 1, max_org_owners: 1, max_control_owners: 10, max_api_integrations: 5 },
+      selected_frameworks: [],
+      enabled_modules: ['compliance', 'vulnerabilities', 'alerting', 'incidents'],
+      integrations: { tools: [] },
+      initial_users: [],
+    };
+  }
+
+  function applySpec(s) {
+    const org = s.organization || {}, ctr = s.contract || {}, lim = s.licensing_limits || {};
+    const set = (id, v) => { $(id).value = v ?? ''; };
+
+    set('cust_id', org.customer_id); set('cust_name', org.customer_name); set('cust_category', org.category || 'Enterprise');
+    set('cust_industry', org.industry); set('cust_domain', org.primary_domain); set('cust_fqdn', org.deployment_fqdn);
+
+    nextKey = 1;
+    const keyOf = {};
+    offices = (org.offices && org.offices.length ? org.offices : [{ office_type: 'Primary' }]).map(o => {
+      const key = nextKey++;
+      if (o.office_id) keyOf[o.office_id] = key;
+      return { key, type: o.office_type || 'Secondary', address: o.office_address || '', city: o.city || '',
+               state: o.state || '', country: o.country || '', pincode: o.pincode || '' };
+    });
+    const firstKey = offices[0].key;
+
+    set('ctr_id', ctr.contract_id); set('ctr_po', ctr.customer_ref_po); set('ctr_type', ctr.contract_type || 'Original');
+    set('ctr_fy', ctr.financial_year); set('ctr_start', ctr.contract_start_date); set('ctr_months', ctr.contract_period_months);
+    set('ctr_value', ctr.contract_value); set('ctr_currency', ctr.currency || 'INR'); set('ctr_invoice', ctr.invoicing_frequency || 'M');
+
+    set('lim_users', lim.max_users); set('lim_vcisos', lim.max_vcisos); set('lim_owners', lim.max_org_owners);
+    set('lim_control', lim.max_control_owners); set('lim_apis', lim.max_api_integrations);
+
+    fwSel = new Map((s.selected_frameworks || []).map(f => [f.framework_id, {
+      offices: new Set((f.office_ids || []).map(id => keyOf[id]).filter(Boolean)),
+      review: f.review_frequency_months || 12,
+    }]));
+
+    const mods = s.enabled_modules || [];
+    MODULES.forEach(m => { $(`mod_${m.id}`).checked = m.locked || mods.includes(m.id); });
+
+    const configured = (s.integrations && s.integrations.tools) || [];
+    TOOLS.forEach(t => {
+      const c = configured.find(x => x.tool_name === t.name);
+      tools[t.name] = { on: !!(c && c.enabled), endpoint: c ? c.target_endpoint || '' : t.endpoint, freq: c ? c.pull_frequency_per_day ?? 1 : 1 };
+    });
+
+    const watch = s.news_watch_profile || {};
+    set('watch_names', (watch.monitored_names || []).join(', '));
+    set('watch_domains', (watch.monitored_domains || []).join(', '));
+    set('watch_cities', (watch.monitored_cities || []).join(', '));
+    set('watch_keywords', (watch.custom_keywords || []).join(', '));
+
+    const allContacts = org.contacts || [];
+    const contactFor = email => allContacts.find(c => email && (c.contact_email || '').toLowerCase() === email.toLowerCase()) || {};
+    const used = new Set();
+    ROLES.forEach(r => {
+      const u = (s.initial_users || []).find(x => x.role_type === r.role) || {};
+      const c = contactFor(u.user_email);
+      if (u.user_email) used.add(u.user_email.toLowerCase());
+      set(`${r.key}_name`, u.user_name || c.contact_person);
+      set(`${r.key}_email`, u.user_email);
+      set(`${r.key}_login`, u.login_id);
+      $(`${r.key}_login`).dataset.auto = u.login_id ? '0' : '1';
+      set(`${r.key}_title`, c.designation || u.designation);
+      set(`${r.key}_phone`, u.user_mobile || c.contact_phone);
+      people[r.key] = { office: keyOf[u.office_id] || firstKey };
+    });
+
+    contacts = allContacts.filter(c => !used.has((c.contact_email || '').toLowerCase())).map(c => ({
+      key: nextKey++, type: CONTACT_TYPES.includes(c.contact_type) ? c.contact_type : 'Escalation',
+      priority: c.contact_priority || 2, name: c.contact_person || '', title: c.designation || '',
+      department: c.department || '', email: c.contact_email || '', phone: c.contact_phone || '',
+      office: keyOf[c.office_id] || firstKey,
+    }));
+
+    generated = null;
+    $('result').hidden = true;
+    renderAll();
+    refresh();
+  }
+
+  // ---------- checks (mirror of intake/client_intake.py validate_spec; the server has the final say) ----------
+  function localChecks(s) {
+    const out = [];
+    const add = (sec, msg) => out.push({ sec, msg });
+    const o = s.organization, c = s.contract, l = s.licensing_limits;
+
+    if (!ID_RE.test(o.customer_id)) add('org', 'Customer ID: 3–32 letters, digits, _ or -');
+    if (!o.customer_name) add('org', 'Legal name is required');
+    o.offices.forEach((f, i) => {
+      if (!f.office_address || !f.city || !f.state || !f.country) add('org', `Office ${i + 1}: address, city, state and country are required`);
+    });
+    if (o.offices.filter(f => f.office_type === 'Primary').length !== 1) add('org', 'Exactly one office must be Primary');
+
+    if (!c.contract_id) add('contract', 'Contract ID is required');
+    if (!c.customer_ref_po) add('contract', 'Customer PO reference is required');
+    if (!(c.financial_year >= 2024 && c.financial_year <= 2050)) add('contract', 'Financial year must be between 2024 and 2050');
+    if (!c.contract_start_date) add('contract', 'Start date is required');
+    if (!(c.contract_period_months >= 1 && c.contract_period_months <= 60)) add('contract', 'Duration must be 1–60 whole months');
+    if (!(Number.isFinite(c.contract_value) && c.contract_value >= 0)) add('contract', 'Value must be a number ≥ 0');
+    if (l.valid_to && l.valid_to < today()) add('contract', `Contract ends ${l.valid_to}, so the licence would already be expired`);
+
+    const seats = [['max_users', 'Total users', 1], ['max_vcisos', 'vCISO seats', 1], ['max_org_owners', 'Owner seats', 1],
+                   ['max_control_owners', 'Control owner seats', 1], ['max_api_integrations', 'Scanner integrations', 0]];
+    let seatsOk = true;
+    seats.forEach(([k, label, min]) => {
+      if (!(Number.isInteger(l[k]) && l[k] >= min)) { add('licence', `${label} must be a whole number ≥ ${min}`); seatsOk = false; }
+    });
+    if (seatsOk) {
+      if (l.max_vcisos + l.max_org_owners > l.max_users) add('licence', 'vCISO + owner seats exceed total users');
+      if (l.max_control_owners > l.max_users) add('licence', 'Control owner seats exceed total users');
+      const n = s.integrations.tools.length;
+      if (n > l.max_api_integrations) add('integrations', `${n} scanners enabled but ${l.max_api_integrations} integration seat(s) licensed`);
+    }
+
+    if (!s.selected_frameworks.length) add('frameworks', 'Select at least one framework');
+    s.selected_frameworks.forEach(f => { if (!f.office_ids.length) add('frameworks', `${fwName(f.framework_id)}: choose at least one office`); });
+
+    s.integrations.tools.forEach(t => {
+      if (!t.target_endpoint) add('integrations', `${t.tool_name}: API endpoint is required`);
+      if (!(t.pull_frequency_per_day >= 1)) add('integrations', `${t.tool_name}: pulls per day must be a whole number ≥ 1`);
+    });
+
+    const w = s.news_watch_profile;
+    if (w && !w.monitored_names.length && !w.monitored_domains.length) add('news', 'News watch needs at least one name or domain');
+
+    s.initial_users.forEach(u => {
+      const who = u.role_type === 'vCISO' ? 'vCISO' : 'Owner';
+      if (!u.user_name) add('users', `${who}: full name is required`);
+      if (!u.login_id) add('users', `${who}: username is required`);
+      if (!EMAIL_RE.test(u.user_email)) add('users', `${who}: a valid email is required`);
+      if (!u.user_mobile) add('users', `${who}: phone is required`);
+    });
+    const [a, b] = s.initial_users;
+    if (a.login_id && a.login_id.toLowerCase() === b.login_id.toLowerCase()) add('users', 'vCISO and owner need different usernames');
+    if (a.user_email && a.user_email.toLowerCase() === b.user_email.toLowerCase()) add('users', 'vCISO and owner need different emails');
+
+    o.contacts.slice(ROLES.length).forEach((ct, i) => {
+      const who = ct.contact_person || `Contact ${i + 1}`;
+      if (!ct.contact_person) add('users', `${who}: name is required`);
+      if (!EMAIL_RE.test(ct.contact_email)) add('users', `${who}: a valid email is required`);
+      if (!ct.contact_phone) add('users', `${who}: phone is required`);
+    });
+    return out;
+  }
+
+  // ---------- sidebar ----------
+  function renderSummary(s) {
+    const l = s.licensing_limits, c = s.contract;
+    const mods = s.enabled_modules.map(id => MODULES.find(m => m.id === id).name);
+    const fws = s.selected_frameworks.map(f => (catalogue.find(x => x.id === f.framework_id) || {}).code || f.framework_id);
+    const rows = [
+      ['Customer', s.organization.customer_name || '—'],
+      ['Licence', c.contract_start_date && l.valid_to ? `${c.contract_start_date} → ${l.valid_to}` : '—'],
+      ['Seats', [l.max_users, l.max_vcisos, l.max_org_owners].every(Number.isInteger)
+        ? `${l.max_users} users · ${l.max_vcisos} vCISO · ${l.max_org_owners} owner` : '—'],
+      ['Offices', s.organization.offices.length],
+      ['Frameworks', fws.length ? fws.join(', ') : '—'],
+      ['Modules', mods.length],
+      ['Scanners', s.integrations.tools.length ? s.integrations.tools.map(t => t.tool_name).join(', ') : '—'],
+    ];
+    $('summary').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+  }
+
+  function renderIssues(issues, serverErrors) {
+    if (serverErrors) {
+      $('issues').innerHTML = `<p class="warn" style="margin-bottom:6px">The server rejected the spec:</p>
+        <ul class="issues">${serverErrors.map(e => `<li>${esc(e)}</li>`).join('')}</ul>`;
+    } else if (!issues.length) {
+      $('issues').innerHTML = '<p class="ok">All checks pass.</p>';
+    } else {
+      $('issues').innerHTML = `<ul class="issues">${issues.map(i => `<li><a href="#${SECTION[i.sec]}">${esc(i.msg)}</a></li>`).join('')}</ul>`;
+    }
+  }
+
+  function refresh() {
+    const spec = collectSpec();
+    $('ctr_end').value = spec.contract.contract_end_date;
+    const issues = localChecks(spec);
+    renderIssues(issues);
+    renderSummary(spec);
+    $('btn-generate').disabled = busy || issues.length > 0;
+    $('stale').hidden = !generated || generated.json === JSON.stringify(spec);
+  }
+
+  async function generate() {
+    const spec = collectSpec();
+    busy = true;
+    $('btn-generate').textContent = 'Generating…';
+    $('btn-generate').disabled = true;
+    let serverErrors = null;
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(spec),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        serverErrors = data.details || [data.error || `Request failed (${res.status})`];
+      } else {
+        generated = { id: data.customer_id, json: JSON.stringify(spec) };
+        showResult(data);
+      }
+    } catch (err) {
+      serverErrors = [`Request failed: ${err.message}`];
+    } finally {
+      busy = false;
+      $('btn-generate').textContent = 'Generate schema';
+      refresh();
+      if (serverErrors) renderIssues([], serverErrors);
+    }
+  }
+
+  function showResult(d) {
+    const id = encodeURIComponent(d.customer_id);
+    $('result-meta').innerHTML = [
+      ['Customer ID', d.customer_id],
+      ['SQL', `${d.sql_lines.toLocaleString()} lines`],
+      ['Seal', `${d.license_seal.slice(0, 16)}…`],
+      ...(d.replaced ? [['Note', 'Replaced the previous bundle']] : []),
+    ].map(([k, v]) => `<dt>${k}</dt><dd${k === 'Seal' ? ` class="mono" title="${esc(d.license_seal)}"` : ''}>${esc(v)}</dd>`).join('');
+    $('dl-sql').href = `/api/download-sql?customer_id=${id}`;
+    $('dl-spec').href = `/api/download-spec?customer_id=${id}`;
+    $('result-files').textContent = `Written to dist_client/${d.customer_id}/ (spec, SQL, docker-compose.yml, README.md).`;
+    $('sql-preview').textContent = d.sql_preview;
+    $('result').hidden = false;
+  }
+
+  // ---------- events ----------
+  function onEdit(e) {
+    const t = e.target, d = t.dataset;
+    const isToggle = t.type === 'checkbox';
+    if (isToggle && e.type !== 'change') return;   // checkboxes fire both input and change
+
+    if (d.office) {
+      offices.find(o => o.key === Number(d.office))[d.field] = t.value;
+      renderOfficeRefs();
+    } else if (d.contact) {
+      const c = contacts.find(x => x.key === Number(d.contact));
+      c[d.field] = d.field === 'office' || d.field === 'priority' ? Number(t.value) : t.value;
+    } else if (d.fwOffice) {
+      const s = fwSel.get(Number(d.fwOffice));
+      t.checked ? s.offices.add(Number(t.value)) : s.offices.delete(Number(t.value));
+    } else if (d.fwReview) {
+      fwSel.get(Number(d.fwReview)).review = Number(t.value);
+    } else if (d.fw) {
+      if (t.checked) fwSel.set(Number(d.fw), { offices: new Set(offices.map(o => o.key)), review: 12 });
+      else fwSel.delete(Number(d.fw));
+      renderFrameworks();
+    } else if (d.tool) {
+      if (d.field === 'on') { tools[d.tool].on = t.checked; renderTools(); }
+      else tools[d.tool][d.field] = t.value;
+    } else if (t.id === 'cust_id') {
+      renderOfficeRefs();
+    } else if (t.id.startsWith('mod_')) {
+      syncModuleSections();
+    } else if (/_office$/.test(t.id)) {
+      people[t.id.split('_')[0]].office = Number(t.value);
+    } else if (/_email$/.test(t.id)) {
+      const login = $(t.id.replace('_email', '_login'));
+      if (login.dataset.auto !== '0') login.value = t.value.split('@')[0].trim();
+    } else if (/_login$/.test(t.id)) {
+      t.dataset.auto = t.value ? '0' : '1';
+    }
+    refresh();
+  }
+
+  document.addEventListener('input', onEdit);
+  document.addEventListener('change', onEdit);
+
+  document.addEventListener('click', e => {
+    const t = e.target;
+    if (t.dataset.removeOffice) {
+      const key = Number(t.dataset.removeOffice);
+      offices = offices.filter(o => o.key !== key);
+      fwSel.forEach(s => s.offices.delete(key));
+      contacts.forEach(c => { if (c.office === key) c.office = offices[0].key; });
+      renderOffices(); renderOfficeRefs(); refresh();
+    } else if (t.dataset.removeContact) {
+      contacts = contacts.filter(c => c.key !== Number(t.dataset.removeContact));
+      renderContacts(); refresh();
+    }
+  });
+
+  $('add-office').onclick = () => {
+    offices.push({ key: nextKey++, type: 'Secondary', address: '', city: '', state: '', country: '', pincode: '' });
+    renderOffices(); renderOfficeRefs(); refresh();
+  };
+  $('add-contact').onclick = () => {
+    contacts.push({ key: nextKey++, type: 'Escalation', priority: 2, name: '', title: '', department: '', email: '', phone: '', office: offices[0].key });
+    renderContacts(); refresh();
+  };
+  $('btn-generate').onclick = generate;
+  $('btn-reset').onclick = () => { if (confirm('Clear the form?')) applySpec(blankSpec()); };
+  $('btn-sample').onclick = async () => {
+    try {
+      const res = await fetch('/api/sample');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      applySpec(await res.json());
+    } catch (err) {
+      renderIssues([], [`Could not load the sample: ${err.message}`]);
+    }
+  };
+
+  (async () => {
+    renderModules();
+    renderPeople();
+    try {
+      const res = await fetch('/api/frameworks');
+      catalogue = (await res.json()).frameworks;
+    } catch (err) {
+      catalogue = [];
+    }
+    applySpec(blankSpec());
+    if (!catalogue.length) renderIssues([], ['Could not load the framework catalogue from the server.']);
+  })();
+</script>
+</body>
+</html>

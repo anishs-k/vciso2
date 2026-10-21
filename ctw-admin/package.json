@@ -1,0 +1,34 @@
+{
+  "name": "ctw-admin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CyberTrustWorks admin: client onboarding and per-client image generation",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "seed": "node scripts/seed.js",
+    "ui:install": "npm --prefix ui install",
+    "ui:build": "npm --prefix ui run build",
+    "ui:dev": "npm --prefix ui run dev",
+    "db:migrate": "node scripts/migrate.js",
+    "db:geo": "node scripts/load-geo.js",
+    "test": "node --test --test-concurrency=2 \"test/unit/*.test.js\" \"test/integration/*.test.js\"",
+    "test:unit": "node --test \"test/unit/*.test.js\"",
+    "test:e2e": "node --test \"test/e2e/*.test.js\""
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.22.3",
+    "pg": "^8.13.1"
+  },
+  "main": "src/index.js",
+  "devDependencies": {
+    "country-state-city": "^3.2.1",
+    "libphonenumber-js": "^1.11.17"
+  }
+}

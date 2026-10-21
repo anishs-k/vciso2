@@ -1,0 +1,4202 @@
+{
+  "framework": "ISO/IEC 27001:2022",
+  "description": "vCISO client questionnaire covering all management-system clauses (4-10) and all Annex A controls (93). One question per clause/sub-clause/control.",
+  "scoring_model": {
+    "status_values": [
+      "PASS",
+      "PARTIAL",
+      "FAIL",
+      "N/A"
+    ],
+    "logic": "Each question's selected option carries a 'status'. Roll up per clause/control: PASS if 'yes', PARTIAL if 'partial', FAIL if 'no', N/A if 'na' (excluded from scoring, requires justification). Overall theme/domain score = (sum of scores of answered, non-N/A questions) / (2 * count of answered, non-N/A questions) * 100."
+  },
+  "total_questions": 123,
+  "counts": {
+    "clauses": 30,
+    "controls": 93
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "reference": "4.1",
+      "category": "Clause",
+      "theme": "Context of the Organization",
+      "title": "Understanding the organization and its context",
+      "question": "Has your organization identified and documented the internal and external issues (e.g. legal, regulatory, market, cultural, technological) that are relevant to its purpose and that affect its ability to achieve the intended outcomes of its information security management system (ISMS)?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q002",
+      "reference": "4.2",
+      "category": "Clause",
+      "theme": "Context of the Organization",
+      "title": "Understanding the needs and expectations of interested parties",
+      "question": "Has your organization identified the interested parties relevant to the ISMS (e.g. customers, regulators, employees, suppliers, shareholders) and documented their requirements and expectations related to information security?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q003",
+      "reference": "4.3",
+      "category": "Clause",
+      "theme": "Context of the Organization",
+      "title": "Determining the scope of the ISMS",
+      "question": "Has your organization defined and documented the scope of its ISMS (boundaries, applicability, interfaces and dependencies), and is this scope maintained as available documented information?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q004",
+      "reference": "4.4",
+      "category": "Clause",
+      "theme": "Context of the Organization",
+      "title": "Information security management system",
+      "question": "Has your organization established, implemented, maintained, and does it continually improve an ISMS — including the necessary processes and their interactions — in line with ISO/IEC 27001 requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q005",
+      "reference": "5.1",
+      "category": "Clause",
+      "theme": "Leadership",
+      "title": "Leadership and commitment",
+      "question": "Does top management demonstrate leadership and commitment to the ISMS (e.g. ensuring the policy and objectives are established and aligned with strategic direction, ensuring resources are available, promoting continual improvement, and communicating the importance of information security)?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q006",
+      "reference": "5.2",
+      "category": "Clause",
+      "theme": "Leadership",
+      "title": "Information security policy",
+      "question": "Has top management established an information security policy that is appropriate to the organization's purpose, includes security objectives (or a framework for setting them), commits to satisfying applicable requirements and continual improvement, and is communicated internally and made available to interested parties as appropriate?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q007",
+      "reference": "5.3",
+      "category": "Clause",
+      "theme": "Leadership",
+      "title": "Organizational roles, responsibilities and authorities",
+      "question": "Has top management assigned and communicated responsibilities and authorities for information-security-relevant roles, including responsibility for ISMS conformance to ISO/IEC 27001 and for reporting on ISMS performance to top management?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q008",
+      "reference": "6.1.1",
+      "category": "Clause",
+      "theme": "Planning",
+      "title": "Actions to address risks and opportunities (general)",
+      "question": "When planning the ISMS, has your organization determined the risks and opportunities that need to be addressed to ensure the ISMS achieves its intended outcomes, prevents or reduces undesired effects, and achieves continual improvement?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q009",
+      "reference": "6.1.2",
+      "category": "Clause",
+      "theme": "Planning",
+      "title": "Information security risk assessment",
+      "question": "Has your organization defined and applied an information security risk assessment process — including risk identification, risk owners, analysis (likelihood/impact) and evaluation against defined criteria — that produces consistent, valid and comparable results, with documented information retained as evidence?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q010",
+      "reference": "6.1.3",
+      "category": "Clause",
+      "theme": "Planning",
+      "title": "Information security risk treatment",
+      "question": "Has your organization defined and applied a risk treatment process, selected and justified appropriate controls, produced a Statement of Applicability (SoA), formulated a risk treatment plan, and obtained risk owner approval of the plan and acceptance of residual risks?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q011",
+      "reference": "6.2",
+      "category": "Clause",
+      "theme": "Planning",
+      "title": "Information security objectives and planning to achieve them",
+      "question": "Has your organization established measurable information security objectives at relevant functions and levels, with supporting plans defining what will be done, resources required, responsible parties, completion timelines, and how results will be evaluated?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q012",
+      "reference": "6.3",
+      "category": "Clause",
+      "theme": "Planning",
+      "title": "Planning of changes",
+      "question": "When your organization determines a need for changes to the ISMS, are those changes carried out in a planned manner rather than ad hoc?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q013",
+      "reference": "7.1",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Resources",
+      "question": "Has your organization determined and provided the resources needed for the establishment, implementation, maintenance and continual improvement of the ISMS?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q014",
+      "reference": "7.2",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Competence",
+      "question": "Has your organization determined the necessary competence of persons doing work under its control that affects information security performance, ensured they are competent (education, training, or experience), and retained appropriate records?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q015",
+      "reference": "7.3",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Awareness",
+      "question": "Are persons doing work under the organization's control made aware of the information security policy, their contribution to ISMS effectiveness, and the implications of not conforming to ISMS requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q016",
+      "reference": "7.4",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Communication",
+      "question": "Has your organization determined the need for internal and external communications relevant to the ISMS, including what to communicate, when, with whom, and how?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q017",
+      "reference": "7.5.1",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Documented information — general",
+      "question": "Does your organization's ISMS include the documented information required by ISO/IEC 27001, plus any additional documented information the organization has determined is necessary for the ISMS to be effective?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q018",
+      "reference": "7.5.2",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Creating and updating documented information",
+      "question": "When creating or updating documented information, does your organization ensure appropriate identification/description (title, date, author, reference), format, and review/approval for suitability and adequacy?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q019",
+      "reference": "7.5.3",
+      "category": "Clause",
+      "theme": "Support",
+      "title": "Control of documented information",
+      "question": "Is documented information required by the ISMS controlled to ensure availability and suitability where/when needed, and adequate protection (e.g. from loss of confidentiality, improper use, loss of integrity) — including its distribution, storage, retention and disposition?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q020",
+      "reference": "8.1",
+      "category": "Clause",
+      "theme": "Operation",
+      "title": "Operational planning and control",
+      "question": "Does your organization plan, implement and control the processes needed to meet information security requirements and to carry out the actions from clause 6 — including controlling outsourced/externally provided processes — and keep documented information confirming processes were carried out as planned?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q021",
+      "reference": "8.2",
+      "category": "Clause",
+      "theme": "Operation",
+      "title": "Information security risk assessment (ongoing)",
+      "question": "Does your organization perform information security risk assessments at planned intervals, or when significant changes are proposed or occur, retaining documented information of the results?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q022",
+      "reference": "8.3",
+      "category": "Clause",
+      "theme": "Operation",
+      "title": "Information security risk treatment (ongoing)",
+      "question": "Does your organization implement the information security risk treatment plan and retain documented information of the results?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q023",
+      "reference": "9.1",
+      "category": "Clause",
+      "theme": "Performance Evaluation",
+      "title": "Monitoring, measurement, analysis and evaluation",
+      "question": "Has your organization determined what needs to be monitored/measured (including security processes and controls), the methods, timing and responsible parties, and does it evaluate ISMS performance and effectiveness with results retained as documented information?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q024",
+      "reference": "9.2.1",
+      "category": "Clause",
+      "theme": "Performance Evaluation",
+      "title": "Internal audit — general",
+      "question": "Does your organization conduct internal audits at planned intervals to determine whether the ISMS conforms to the organization's own requirements and to ISO/IEC 27001, and is effectively implemented and maintained?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q025",
+      "reference": "9.2.2",
+      "category": "Clause",
+      "theme": "Performance Evaluation",
+      "title": "Internal audit programme",
+      "question": "Has your organization planned, established, implemented and maintained an internal audit programme (frequency, methods, responsibilities, planning requirements, reporting), defined audit criteria/scope for each audit, selected auditors to ensure an objective and impartial process, reported results to relevant management, and retained documented evidence?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q026",
+      "reference": "9.3.1",
+      "category": "Clause",
+      "theme": "Performance Evaluation",
+      "title": "Management review — general",
+      "question": "Does top management review the organization's ISMS at planned intervals to ensure its continuing suitability, adequacy and effectiveness?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q027",
+      "reference": "9.3.2",
+      "category": "Clause",
+      "theme": "Performance Evaluation",
+      "title": "Management review inputs",
+      "question": "Do management reviews consider status of actions from prior reviews, changes in external/internal issues relevant to the ISMS, ISMS performance trends (nonconformities/corrective actions, monitoring results, audit results, objective achievement), interested party feedback, risk assessment/treatment plan status, and continual improvement opportunities?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q028",
+      "reference": "9.3.3",
+      "category": "Clause",
+      "theme": "Performance Evaluation",
+      "title": "Management review results",
+      "question": "Do the outputs of management review include decisions on continual improvement opportunities and any need for changes to the ISMS, retained as documented information?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q029",
+      "reference": "10.1",
+      "category": "Clause",
+      "theme": "Improvement",
+      "title": "Continual improvement",
+      "question": "Does your organization continually improve the suitability, adequacy and effectiveness of the ISMS?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q030",
+      "reference": "10.2",
+      "category": "Clause",
+      "theme": "Improvement",
+      "title": "Nonconformity and corrective action",
+      "question": "When a nonconformity occurs, does your organization react to it, evaluate the need for action to eliminate its root cause(s), implement corrective action, review its effectiveness, and retain documented information as evidence of nonconformities and actions taken?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q031",
+      "reference": "A.5.1",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Policies for information security",
+      "question": "Has an information security policy and topic-specific policies been defined, approved by management, published, communicated to relevant personnel and interested parties, and reviewed at planned intervals or upon significant change?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q032",
+      "reference": "A.5.2",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information security roles and responsibilities",
+      "question": "Are information security roles and responsibilities defined and allocated according to organizational needs?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q033",
+      "reference": "A.5.3",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Segregation of duties",
+      "question": "Are conflicting duties and areas of responsibility segregated to reduce opportunities for unauthorized or unintentional modification or misuse of the organization's assets?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q034",
+      "reference": "A.5.4",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Management responsibilities",
+      "question": "Does management require all personnel to apply information security in accordance with the established policy, topic-specific policies and procedures?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q035",
+      "reference": "A.5.5",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Contact with authorities",
+      "question": "Has the organization established and maintained appropriate contact with relevant authorities (e.g. law enforcement, regulators, supervisory bodies)?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q036",
+      "reference": "A.5.6",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Contact with special interest groups",
+      "question": "Has the organization established and maintained contact with special interest groups, security forums or professional associations relevant to information security?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q037",
+      "reference": "A.5.7",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Threat intelligence",
+      "question": "Does the organization collect and analyze information relating to information security threats to produce actionable threat intelligence?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q038",
+      "reference": "A.5.8",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information security in project management",
+      "question": "Is information security integrated into the organization's project management, regardless of project type?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q039",
+      "reference": "A.5.9",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Inventory of information and other associated assets",
+      "question": "Has the organization developed and maintained an inventory of information and other associated assets, including designated owners?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q040",
+      "reference": "A.5.10",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Acceptable use of information and other associated assets",
+      "question": "Have rules for acceptable use, and procedures for handling, information and other associated assets been identified, documented and implemented?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q041",
+      "reference": "A.5.11",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Return of assets",
+      "question": "Do personnel and other interested parties return all organizational assets in their possession upon change or termination of employment, contract or agreement?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q042",
+      "reference": "A.5.12",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Classification of information",
+      "question": "Is information classified according to the organization's information security needs, based on confidentiality, integrity, availability and relevant requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q043",
+      "reference": "A.5.13",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Labelling of information",
+      "question": "Has an appropriate set of procedures for information labelling been developed and implemented in accordance with the organization's classification scheme?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q044",
+      "reference": "A.5.14",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information transfer",
+      "question": "Are information transfer rules, procedures or agreements in place for all types of transfer facilities (electronic, physical, verbal) within the organization and with external parties?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q045",
+      "reference": "A.5.15",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Access control",
+      "question": "Are rules to control physical and logical access to information and other associated assets established and implemented, based on business and information security requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q046",
+      "reference": "A.5.16",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Identity management",
+      "question": "Is the full lifecycle of identities (creation, modification, deactivation) managed to ensure only authorized entities have access?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q047",
+      "reference": "A.5.17",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Authentication information",
+      "question": "Is the allocation and management of authentication information (e.g. passwords, tokens) controlled by a management process, including guidance to personnel on proper handling?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q048",
+      "reference": "A.5.18",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Access rights",
+      "question": "Are access rights to information and other associated assets provisioned, reviewed, modified and removed in accordance with the organization's access control policy and rules?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q049",
+      "reference": "A.5.19",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information security in supplier relationships",
+      "question": "Are processes and procedures defined and implemented to manage the information security risks associated with the use of a supplier's products or services?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q050",
+      "reference": "A.5.20",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Addressing information security within supplier agreements",
+      "question": "Are relevant information security requirements established and agreed with each supplier, based on the type of supplier relationship?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q051",
+      "reference": "A.5.21",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Managing information security in the ICT supply chain",
+      "question": "Are processes and procedures defined and implemented to manage information security risks associated with the ICT products and services supply chain?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q052",
+      "reference": "A.5.22",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Monitoring, review and change management of supplier services",
+      "question": "Does the organization regularly monitor, review, evaluate and manage change in supplier information security practices and service delivery?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q053",
+      "reference": "A.5.23",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information security for use of cloud services",
+      "question": "Have processes for the acquisition, use, management and exit from cloud services been established in accordance with the organization's information security requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q054",
+      "reference": "A.5.24",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information security incident management planning and preparation",
+      "question": "Has the organization planned and prepared for managing information security incidents by defining, establishing and communicating incident management processes, roles and responsibilities?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q055",
+      "reference": "A.5.25",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Assessment and decision on information security events",
+      "question": "Does the organization assess information security events and decide whether they are to be categorized as information security incidents?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q056",
+      "reference": "A.5.26",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Response to information security incidents",
+      "question": "Are information security incidents responded to in accordance with documented procedures?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q057",
+      "reference": "A.5.27",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Learning from information security incidents",
+      "question": "Is knowledge gained from analyzing and resolving information security incidents used to reduce the likelihood or impact of future incidents?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q058",
+      "reference": "A.5.28",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Collection of evidence",
+      "question": "Has the organization established and implemented procedures for the identification, collection, acquisition and preservation of evidence related to information security events?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q059",
+      "reference": "A.5.29",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Information security during disruption",
+      "question": "Has the organization planned how to maintain information security at an appropriate level during a disruption (e.g. a business continuity event)?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q060",
+      "reference": "A.5.30",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "ICT readiness for business continuity",
+      "question": "Is ICT readiness planned, implemented, maintained and tested based on business continuity objectives and ICT continuity requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q061",
+      "reference": "A.5.31",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Legal, statutory, regulatory and contractual requirements",
+      "question": "Are legal, statutory, regulatory and contractual requirements relevant to information security identified, documented and kept up to date, along with the organization's approach to meeting them?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q062",
+      "reference": "A.5.32",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Intellectual property rights",
+      "question": "Has the organization implemented appropriate procedures to protect intellectual property rights while ensuring compliance with legal, statutory, regulatory and contractual requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q063",
+      "reference": "A.5.33",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Protection of records",
+      "question": "Are records protected from loss, destruction, falsification, unauthorized access and unauthorized release, in accordance with legal, regulatory, contractual and business requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q064",
+      "reference": "A.5.34",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Privacy and protection of PII",
+      "question": "Has the organization identified and met requirements regarding the preservation of privacy and protection of personally identifiable information (PII), in accordance with applicable laws, regulations and contracts?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q065",
+      "reference": "A.5.35",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Independent review of information security",
+      "question": "Is the organization's approach to managing information security, and its implementation (people, processes, technologies), independently reviewed at planned intervals or when significant changes occur?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q066",
+      "reference": "A.5.36",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Compliance with policies, rules and standards for information security",
+      "question": "Is compliance with the organization's information security policy, topic-specific policies, rules and standards regularly reviewed?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q067",
+      "reference": "A.5.37",
+      "category": "Control",
+      "theme": "A.5 Organizational Controls",
+      "title": "Documented operating procedures",
+      "question": "Are operating procedures for information processing facilities documented and made available to the personnel who need them?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q068",
+      "reference": "A.6.1",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Screening",
+      "question": "Are background verification checks on candidates carried out prior to joining, and on an ongoing basis, in accordance with applicable laws, regulations and ethics, and proportional to business requirements, information classification and risk?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q069",
+      "reference": "A.6.2",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Terms and conditions of employment",
+      "question": "Do employment contractual agreements state personnel's and the organization's responsibilities for information security?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q070",
+      "reference": "A.6.3",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Information security awareness, education and training",
+      "question": "Do personnel and relevant interested parties receive appropriate information security awareness, education and training, with regular updates on organizational policies and procedures relevant to their job function?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q071",
+      "reference": "A.6.4",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Disciplinary process",
+      "question": "Is a formalized and communicated disciplinary process in place to take action against personnel and other relevant parties who have committed an information security policy violation?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q072",
+      "reference": "A.6.5",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Responsibilities after termination or change of employment",
+      "question": "Are information security responsibilities and duties that remain valid after termination or change of employment defined, enforced and communicated to relevant personnel and other interested parties?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q073",
+      "reference": "A.6.6",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Confidentiality or non-disclosure agreements",
+      "question": "Are confidentiality or non-disclosure agreements reflecting the organization's needs for protection of information identified, documented, regularly reviewed, and signed by personnel and relevant interested parties?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q074",
+      "reference": "A.6.7",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Remote working",
+      "question": "Have security measures been implemented when personnel work remotely, to protect information accessed, processed or stored outside the organization's premises?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q075",
+      "reference": "A.6.8",
+      "category": "Control",
+      "theme": "A.6 People Controls",
+      "title": "Information security event reporting",
+      "question": "Does the organization provide a mechanism for personnel to report observed or suspected information security events through appropriate channels in a timely manner?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q076",
+      "reference": "A.7.1",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Physical security perimeters",
+      "question": "Are security perimeters defined and used to protect areas that contain information and other associated assets?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q077",
+      "reference": "A.7.2",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Physical entry",
+      "question": "Are secure areas protected by appropriate entry controls and access points?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q078",
+      "reference": "A.7.3",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Securing offices, rooms and facilities",
+      "question": "Has physical security been designed and implemented for offices, rooms and facilities?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q079",
+      "reference": "A.7.4",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Physical security monitoring",
+      "question": "Are premises continuously monitored for unauthorized physical access?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q080",
+      "reference": "A.7.5",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Protecting against physical and environmental threats",
+      "question": "Is protection against physical and environmental threats (e.g. natural disasters, malicious attack, accidents) designed and implemented?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q081",
+      "reference": "A.7.6",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Working in secure areas",
+      "question": "Have security measures for working in secure areas been designed and implemented?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q082",
+      "reference": "A.7.7",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Clear desk and clear screen",
+      "question": "Are clear desk rules for papers and removable storage media, and clear screen rules for information processing facilities, defined and appropriately enforced?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q083",
+      "reference": "A.7.8",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Equipment siting and protection",
+      "question": "Is equipment sited securely and protected to reduce risks from environmental threats/hazards and opportunities for unauthorized access?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q084",
+      "reference": "A.7.9",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Security of assets off-premises",
+      "question": "Are off-site assets protected?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q085",
+      "reference": "A.7.10",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Storage media",
+      "question": "Are storage media managed through their lifecycle (acquisition, use, transportation, disposal) in accordance with the organization's classification scheme and handling requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q086",
+      "reference": "A.7.11",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Supporting utilities",
+      "question": "Are information processing facilities protected from power failures and other disruptions caused by failures in supporting utilities?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q087",
+      "reference": "A.7.12",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Cabling security",
+      "question": "Are cables carrying power, data or supporting information services protected from interception, interference or damage?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q088",
+      "reference": "A.7.13",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Equipment maintenance",
+      "question": "Is equipment maintained correctly to ensure the availability, integrity and confidentiality of information?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q089",
+      "reference": "A.7.14",
+      "category": "Control",
+      "theme": "A.7 Physical Controls",
+      "title": "Secure disposal or re-use of equipment",
+      "question": "Are items of equipment containing storage media verified to ensure sensitive data and licensed software have been removed or securely overwritten prior to disposal or re-use?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q090",
+      "reference": "A.8.1",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "User endpoint devices",
+      "question": "Is information stored on, processed by, or accessible via user endpoint devices protected through appropriate security measures?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q091",
+      "reference": "A.8.2",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Privileged access rights",
+      "question": "Is the allocation and use of privileged access rights restricted and managed?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q092",
+      "reference": "A.8.3",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Information access restriction",
+      "question": "Is access to information and other associated assets restricted in accordance with the established access control policy?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q093",
+      "reference": "A.8.4",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Access to source code",
+      "question": "Is read and write access to source code, development tools and software libraries appropriately managed?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q094",
+      "reference": "A.8.5",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Secure authentication",
+      "question": "Are secure authentication technologies and procedures implemented based on information access restrictions and the access control policy?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q095",
+      "reference": "A.8.6",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Capacity management",
+      "question": "Is the use of resources monitored and adjusted, with projections of future capacity requirements, to ensure required system performance?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q096",
+      "reference": "A.8.7",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Protection against malware",
+      "question": "Is protection against malware implemented and supported by appropriate user awareness?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q097",
+      "reference": "A.8.8",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Management of technical vulnerabilities",
+      "question": "Is information about technical vulnerabilities of systems in use obtained, is the organization's exposure to such vulnerabilities evaluated, and are appropriate measures taken?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q098",
+      "reference": "A.8.9",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Configuration management",
+      "question": "Are configurations (including security configurations) of hardware, software, services and networks established, documented, implemented, monitored and reviewed?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q099",
+      "reference": "A.8.10",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Information deletion",
+      "question": "Is information stored in information systems, devices, or on any other storage media deleted when no longer required?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q100",
+      "reference": "A.8.11",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Data masking",
+      "question": "Is data masking used in accordance with the organization's access control policy, related topic-specific policies, and business requirements, taking applicable legislation into account?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q101",
+      "reference": "A.8.12",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Data leakage prevention",
+      "question": "Are data leakage prevention measures applied to systems, networks and other devices that process, store or transmit sensitive information?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q102",
+      "reference": "A.8.13",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Information backup",
+      "question": "Are backup copies of information, software and systems maintained and regularly tested in accordance with an agreed backup policy?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q103",
+      "reference": "A.8.14",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Redundancy of information processing facilities",
+      "question": "Are information processing facilities implemented with sufficient redundancy to meet availability requirements?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q104",
+      "reference": "A.8.15",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Logging",
+      "question": "Are logs recording activities, exceptions, faults and other relevant events produced, stored, protected and analyzed?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q105",
+      "reference": "A.8.16",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Monitoring activities",
+      "question": "Are networks, systems and applications monitored for anomalous behavior, with appropriate action taken to evaluate potential information security incidents?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q106",
+      "reference": "A.8.17",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Clock synchronization",
+      "question": "Are the clocks of information processing systems within the organization or security domain synchronized to an approved time source?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q107",
+      "reference": "A.8.18",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Use of privileged utility programs",
+      "question": "Is the use of utility programs that could override system and application controls restricted and tightly controlled?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q108",
+      "reference": "A.8.19",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Installation of software on operational systems",
+      "question": "Are procedures and measures implemented to securely manage software installation on operational systems?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q109",
+      "reference": "A.8.20",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Networks security",
+      "question": "Are networks and network devices secured, managed and controlled to protect information in systems and applications?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q110",
+      "reference": "A.8.21",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Security of network services",
+      "question": "Are security mechanisms, service levels and service requirements of network services identified, implemented and monitored?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q111",
+      "reference": "A.8.22",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Segregation of networks",
+      "question": "Are groups of information services, users and information systems segregated on the organization's networks?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q112",
+      "reference": "A.8.23",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Web filtering",
+      "question": "Is access to external websites managed to reduce exposure to malicious content?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q113",
+      "reference": "A.8.24",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Use of cryptography",
+      "question": "Are rules for the effective use of cryptography, including cryptographic key management, defined and implemented?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q114",
+      "reference": "A.8.25",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Secure development life cycle",
+      "question": "Are rules for the secure development of software and systems established and applied?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q115",
+      "reference": "A.8.26",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Application security requirements",
+      "question": "Are information security requirements identified, specified and approved when developing or acquiring applications?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q116",
+      "reference": "A.8.27",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Secure system architecture and engineering principles",
+      "question": "Are principles for engineering secure systems established, documented, maintained and applied to information system development activities?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q117",
+      "reference": "A.8.28",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Secure coding",
+      "question": "Are secure coding principles applied to software development?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q118",
+      "reference": "A.8.29",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Security testing in development and acceptance",
+      "question": "Are security testing processes defined and implemented within the development life cycle?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q119",
+      "reference": "A.8.30",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Outsourced development",
+      "question": "Does the organization direct, monitor and review the activities related to outsourced system development?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q120",
+      "reference": "A.8.31",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Separation of development, test and production environments",
+      "question": "Are development, testing and production environments separated and secured?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q121",
+      "reference": "A.8.32",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Change management",
+      "question": "Are changes to information processing facilities and information systems subject to formal change management procedures?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q122",
+      "reference": "A.8.33",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Test information",
+      "question": "Is test information appropriately selected, protected and managed?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    },
+    {
+      "id": "Q123",
+      "reference": "A.8.34",
+      "category": "Control",
+      "theme": "A.8 Technological Controls",
+      "title": "Protection of information systems during audit testing",
+      "question": "Are audit tests and other assurance activities involving assessment of operational systems planned and agreed between the tester and appropriate management to minimize disruption?",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes – fully implemented, documented, and operating effectively",
+          "status": "PASS",
+          "score": 2
+        },
+        {
+          "value": "partial",
+          "label": "Partially – in place but not fully documented, consistently applied, or effective",
+          "status": "PARTIAL",
+          "score": 1
+        },
+        {
+          "value": "no",
+          "label": "No – not implemented",
+          "status": "FAIL",
+          "score": 0
+        },
+        {
+          "value": "na",
+          "label": "Not Applicable – (justification required in Statement of Applicability)",
+          "status": "N/A",
+          "score": null
+        }
+      ]
+    }
+  ]
+}
