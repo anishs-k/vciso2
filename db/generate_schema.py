@@ -120,9 +120,10 @@ PK_DECISIONS = {
 UNIQUE_DECISIONS = {
     'customer_fy_invoices': ([['invoice_number']], 'Invoice numbers must not repeat (blank allowed until generated)'),
 }
-# Columns that are not in the sheet: table -> [(after column, new column, type, reason)]
+# Columns that are not in the sheet: table -> [(after column, new column, type, reason)]. They go after the
+# sheet's last column, so a table's columns stand in the sheet's order (side by side, nothing looks shifted).
 COLUMNS_ADDED = {
-    'master_clause_control_map': [('clause_control_id', 'source_clause_control_id', 'text',
+    'master_clause_control_map': [('updated_by', 'source_clause_control_id', 'text',
         'The sheet\'s own Clause_Control_ID. It repeats (10201 for 4.1, 4.2, 4.3...) and DPDPA uses text codes '
         '(DPDP-CN-01), so client builds number controls <Framework_ID><3-digit sequence> (102001, 102002...) '
         'and keep the sheet\'s ID here')],
@@ -204,10 +205,11 @@ def load_schema(xlsx):
     rcsa = tables.pop('rcsa')
     audit = [c for c in rcsa['cols'] if c['name'] in ('active', 'created_at', 'created_by', 'updated_at', 'updated_by')]
     area_cols = [col_ for col_ in rcsa['cols'] if col_['name'] in ('control_area_id', 'major_control_area')] + audit
-    sub_cols = [dict(name='sub_control_id', **{k: v for k, v in next(c for c in rcsa['cols'] if c['name'] == 'sub_control_id').items() if k != 'name'}),
-                dict(name='control_area_id', header='(new)', why=None, marked_pk=False, marked_fk=False, fk=None, idx=None)] \
+    # The new control_area_id link goes last, after the sheet's own columns.
+    sub_cols = [dict(name='sub_control_id', **{k: v for k, v in next(c for c in rcsa['cols'] if c['name'] == 'sub_control_id').items() if k != 'name'})] \
         + [c for c in rcsa['cols'] if c['name'] in ('sub_control_area', 'framework_id', 'control_id', 'document_id')] \
-        + [dict(c) for c in audit]
+        + [dict(c) for c in audit] \
+        + [dict(name='control_area_id', header='(new)', why=None, marked_pk=False, marked_fk=False, fk=None, idx=None)]
     tables['rcsa_control_area'] = dict(sheet='RCSA', cols=area_cols, pk=[], uniques=[],
                                        note='Area rows of the RCSA sheet (rows with "Major Control Area" filled)')
     tables['rcsa_sub_control'] = dict(sheet='RCSA', cols=sub_cols, pk=[], uniques=[],

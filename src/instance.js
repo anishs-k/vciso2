@@ -55,7 +55,7 @@ async function readDatabase(db) {
   } catch (err) {
     if (err.code === '42P01') {
       throw new LinkError(`database "${await db.query('SELECT current_database() d').then((r) => r.rows[0].d)}" ` +
-        'is not a vCISO client database (no platform_instance table); load the client\'s 001_client_init.sql into an empty database');
+        'is not a vCISO client database (no platform_instance table); load the client\'s <customer ID>_init.sql into an empty database');
     }
     throw err;
   }

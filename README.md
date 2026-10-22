@@ -9,7 +9,7 @@ CTW staff onboarding real clients: **[ctw-admin/README.md](ctw-admin/README.md)*
 | `Dockerfile`, `Dockerfile.dockerignore` | The per-client image: UI + API, the client's `instance.json` built in, only its licensed modules |
 | `intake/` | The intake validator (`client_intake.py`, used by CTW Admin) and the older stand-alone intake UI (`python3 intake/server.py`) |
 | `db/` | Schema generators: `generate_schema.py` (workbook → master schema, `SCHEMA_DIFF.md`), `generate_client_schema.py` (one client's database) |
-| `scripts/build_client_bundle.py` | Spec → `dist_client/<Cust>/`: `001_client_init.sql`, `instance.json`, `initial_credentials.txt`, compose file, README |
+| `scripts/build_client_bundle.py` | Spec → `dist_client/<Cust>/`: `<Cust>_init.sql`, `instance.json`, `initial_credentials.txt`, compose file, README |
 | `src/` | The client's API (Express); also serves the built UI |
 | `vciso-platform/vciso-app/` | The UI (React / Vite) |
 

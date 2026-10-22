@@ -12,7 +12,7 @@ const STEPS = {
 
 const FILE_INFO = {
   'vciso-platform': 'Docker image (docker load -i …)',
-  '001_client_init.sql': 'Database: tables, licence, catalogue, users (passwords hashed)',
+  '_init.sql': 'Database: tables, licence, catalogue, users (passwords hashed)',
   'docker-compose.yml': 'Starts the database and the platform',
   'README.md': 'Deployment guide for the client',
   'UPGRADE.md': 'How to apply this update',
@@ -20,7 +20,8 @@ const FILE_INFO = {
   'client_spec.json': 'The sealed spec this was built from (CTW record)',
   'build.log': 'Full build log (CTW record)',
 };
-const describe = (name) => FILE_INFO[name] || FILE_INFO[Object.keys(FILE_INFO).find((k) => name.startsWith(k))] || '';
+const describe = (name) =>
+  FILE_INFO[name] || FILE_INFO[Object.keys(FILE_INFO).find((k) => name.startsWith(k) || name.endsWith(k))] || '';
 
 function LogView({ text, live }) {
   const ref = useRef(null);

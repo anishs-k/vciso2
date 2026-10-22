@@ -5,7 +5,7 @@ Serves the graphical intake interface and provides REST endpoints to:
 - Load sample client configurations
 - Validate intake parameters and licensing limits
 - Generate sealed client specifications (client_spec.json)
-- Generate turnkey client PostgreSQL database schemas (001_client_init.sql)
+- Generate turnkey client PostgreSQL database schemas (<customer ID>_init.sql)
 - Package deployment bundles with docker-compose.yml and deployment instructions
 
 Usage:
@@ -30,7 +30,7 @@ from intake.client_intake import (
     compute_license_signature,
     validate_spec,
 )
-from db.generate_client_schema import build_client_schema
+from db.generate_client_schema import build_client_schema, sql_file_name
 from scripts.build_client_bundle import write_deployment_files
 
 CUSTOMER_ID_RE = re.compile(r"^[A-Za-z0-9_-]{3,32}$")
@@ -186,7 +186,7 @@ class IntakeApiHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json_response(400, {"error": "Invalid customer_id"})
                 return
             if path == "/api/download-sql":
-                name, ctype, filename = "001_client_init.sql", "application/sql", f"001_{cust_id}_init.sql"
+                name, ctype, filename = sql_file_name(cust_id), "application/sql", sql_file_name(cust_id)
             else:
                 name, ctype, filename = "client_spec.json", "application/json", f"{cust_id}_spec.json"
             target = os.path.join(DIST_DIR, cust_id, name)
@@ -278,7 +278,7 @@ class IntakeApiHandler(http.server.SimpleHTTPRequestHandler):
                 os.makedirs(cust_dir, exist_ok=True)
                 with open(os.path.join(cust_dir, "client_spec.json"), "w", encoding="utf-8") as f:
                     json.dump(body, f, indent=2)
-                sql_file = os.path.join(cust_dir, "001_client_init.sql")
+                sql_file = os.path.join(cust_dir, sql_file_name(cust_id))
                 build_client_schema(body, EXCEL_PATH, sql_file)
                 write_deployment_files(body, cust_dir)
             except Exception as exc:
@@ -301,7 +301,7 @@ class IntakeApiHandler(http.server.SimpleHTTPRequestHandler):
                 "sql_preview": sql_preview,
                 "files_generated": [
                     f"dist_client/{cust_id}/{name}"
-                    for name in ("client_spec.json", "001_client_init.sql", "initial_credentials.txt",
+                    for name in ("client_spec.json", sql_file_name(cust_id), "initial_credentials.txt",
                                  "instance.json", "docker-compose.yml", "README.md")
                 ],
             })

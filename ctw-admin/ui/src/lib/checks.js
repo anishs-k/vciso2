@@ -135,9 +135,11 @@ export function checkSpec(spec, countries = []) {
   });
   const vcisos = users.filter((u) => u.role_type === 'vCISO').length;
   const owners = users.filter((u) => u.role_type === 'Organisation Owner').length;
-  if (users.length && !vcisos) add('users', 'At least one user must be a vCISO');
+  if (users.length && !users.some((u) => u.role_type === 'IT Admin')) add('users', 'At least one user must be an IT Admin');
   if (int(l.max_vcisos) && vcisos > l.max_vcisos) add('users', `${vcisos} vCISOs, licence allows ${l.max_vcisos}`);
-  if (int(l.max_org_owners) && owners > l.max_org_owners) add('users', `${owners} Org Owners, licence allows ${l.max_org_owners}`);
+  if (int(l.max_org_owners) && owners !== l.max_org_owners) {
+    add('users', `Organisation Owners: ${owners} added, the licence sets ${l.max_org_owners}: add exactly ${l.max_org_owners}`);
+  }
 
   return out;
 }

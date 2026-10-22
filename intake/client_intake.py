@@ -98,7 +98,7 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 CATEGORIES = {"Enterprise", "Mid-Market", "SMB", "Government", "Financial Institution"}
 OFFICE_TYPES = {"Primary", "Secondary", "Data Center", "Regional Office"}
 CONTACT_TYPES = {"Executive", "Primary vCISO", "IT Security", "Escalation", "Emergency"}
-ROLE_TYPES = {"vCISO", "Organisation Owner", "Control Owner", "Auditor", "Viewer"}
+ROLE_TYPES = {"vCISO", "Organisation Owner", "IT Admin", "Control Owner", "Auditor", "Viewer"}
 
 
 def _parse_date(value):
@@ -309,14 +309,16 @@ def validate_spec(spec):
             errors.append(f"Initial user {who} references unknown office_id: {u.get('office_id')}")
 
     vciso_users = [u for u in users if u.get("role_type") == "vCISO"]
-    if users and not vciso_users:
-        errors.append("At least one initial user must be a vCISO")
     if max_vcisos is not None and len(vciso_users) > max_vcisos:
         errors.append(f"Initial vCISO users ({len(vciso_users)}) exceed max_vcisos quota ({max_vcisos})")
 
+    if users and not any(u.get("role_type") == "IT Admin" for u in users):
+        errors.append("At least one initial user must be an IT Admin")
+
+    # Every licensed Organisation Owner seat is filled at onboarding: exactly max_org_owners of them.
     org_owner_users = [u for u in users if u.get("role_type") == "Organisation Owner"]
-    if max_org_owners is not None and len(org_owner_users) > max_org_owners:
-        errors.append(f"Initial Organisation Owner users ({len(org_owner_users)}) exceed max_org_owners quota ({max_org_owners})")
+    if max_org_owners is not None and len(org_owner_users) != max_org_owners:
+        errors.append(f"Initial Organisation Owner users ({len(org_owner_users)}) must equal max_org_owners ({max_org_owners})")
 
     return errors
 

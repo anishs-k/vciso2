@@ -30,8 +30,10 @@ const IMAGE_REPO = process.env.CTW_IMAGE_REPO || 'cybertrustworks/vciso-platform
 const CREDENTIALS_TTL_MS = 60 * 60_000;
 
 // Files of a build that may be downloaded, by name. Nothing else under the build folder is served.
-const BUNDLE_FILES = ['001_client_init.sql', 'docker-compose.yml', 'README.md', 'instance.json', 'client_spec.json',
-  'UPGRADE.md'];
+// The client's database file is <customer ID>_init.sql (001_client_init.sql in builds made before).
+const sqlName = (customerId) => `${customerId}_init.sql`;
+const BUNDLE_FILES = (customerId) => [sqlName(customerId), '001_client_init.sql', 'docker-compose.yml', 'README.md',
+  'instance.json', 'client_spec.json', 'UPGRADE.md'];
 const tarName = (customerId) => `vciso-platform-${customerId.toLowerCase()}.tar.gz`;
 
 // Spec sections that live in the client's database, not in the image: an image-only build leaves them as
@@ -266,7 +268,7 @@ only the platform (UI + API) changes.
 1. Back up the database and the \`vciso_data\` volume.
 2. \`docker load -i ${tarName(cust)}\`
 3. Use the \`docker-compose.yml\` that comes with this update (only the \`api\` image changed) and keep your
-   existing \`001_client_init.sql\` next to it.
+   existing \`${sqlName(cust)}\` next to it.
 4. \`docker compose up -d api\`
 5. \`curl http://localhost:4000/api/health\` shows \`"linked": true\`.
 ${later}`;
@@ -418,7 +420,7 @@ function takeCredentials(buildId) {
 function files(build) {
   if (!build.artifact_dir || build.files_removed_at) return {};
   const out = {};
-  for (const name of BUNDLE_FILES) out[name] = path.join(build.artifact_dir, 'bundle', name);
+  for (const name of BUNDLE_FILES(build.customer_id)) out[name] = path.join(build.artifact_dir, 'bundle', name);
   out[tarName(build.customer_id)] = path.join(build.artifact_dir, tarName(build.customer_id));
   out['build.log'] = path.join(build.artifact_dir, 'build.log');
   return Object.fromEntries(Object.entries(out).filter(([, p]) => fs.existsSync(p)));

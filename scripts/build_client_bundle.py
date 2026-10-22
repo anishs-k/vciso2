@@ -41,10 +41,10 @@ def build_bundle(spec_path, out_dir, reseal=False, write_credentials=True, log=p
     """Validates and seals the spec, then writes the bundle to out_dir. Returns what was built,
     including the initial users' one-time passwords."""
     # Imported here: it loads openpyxl, which validating alone does not need.
-    from db.generate_client_schema import bcrypt, build_client_schema
+    from db.generate_client_schema import bcrypt, build_client_schema, sql_file_name
 
     if not write_credentials and bcrypt is None:
-        # Without bcrypt the passwords would sit in plain text in 001_client_init.sql, so keeping them out
+        # Without bcrypt the passwords would sit in plain text in the client SQL file, so keeping them out
         # of initial_credentials.txt would protect nothing.
         raise BundleError("schema", "--no-credentials-file needs the bcrypt package (pip install bcrypt): "
                                     "without it the one-time passwords end up in plain text in the SQL file")
@@ -84,7 +84,7 @@ def build_bundle(spec_path, out_dir, reseal=False, write_credentials=True, log=p
     log("[2/4] Generating tailored database schema & filtered seed...")
     if not os.path.exists(EXCEL_PATH):
         raise BundleError("schema", f"master workbook not found: {os.path.relpath(EXCEL_PATH, ROOT)}")
-    sql_out = os.path.join(out_dir, "001_client_init.sql")
+    sql_out = os.path.join(out_dir, sql_file_name(cust_id))
     try:
         # The generator reports on stdout; with a custom log (--json) that output must not reach stdout.
         with contextlib.redirect_stdout(sys.stdout if log is print else sys.stderr):
@@ -121,6 +121,7 @@ def default_image_tag(cust_id):
 def write_deployment_files(spec, out_dir, log=print, image_tag=None):
     """Writes the client docker-compose.yml and README.md for an already-validated spec.
     image_tag: the client image the compose file runs (default: default_image_tag)."""
+    from db.generate_client_schema import sql_file_name  # loads openpyxl, as build_bundle does
     cust_id = spec['organization']['customer_id']
     cust_name = spec['organization']['customer_name']
     image = image_tag or default_image_tag(cust_id)
@@ -147,7 +148,7 @@ services:
     volumes:
       - vciso_pgdata:/var/lib/postgresql/data
       # Turnkey initial schema runs automatically on empty volume:
-      - ./001_client_init.sql:/docker-entrypoint-initdb.d/001_client_init.sql:ro
+      - ./{sql_file_name(cust_id)}:/docker-entrypoint-initdb.d/001_client_init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U vciso_admin -d vciso_{cust_id.lower()}"]
       interval: 5s
@@ -221,7 +222,7 @@ Run Docker Compose:
 ```bash
 docker compose up -d
 ```
-The PostgreSQL container runs `001_client_init.sql` once, on first start with an empty data volume: it creates the
+The PostgreSQL container runs `{sql_file_name(cust_id)}` once, on first start with an empty data volume: it creates the
 tables, the licence guard and the licensed catalogue, and the initial users. If it fails, the container stops and
 `docker compose logs db` shows the error; fix it, then `docker compose down -v` and start again.
 

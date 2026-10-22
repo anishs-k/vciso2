@@ -240,7 +240,7 @@
           "user_mobile": { "type": "string" },
           "designation": { "type": "string" },
           "department": { "type": "string" },
-          "role_type": { "type": "string", "enum": ["vCISO", "Organisation Owner", "Control Owner", "Auditor", "Viewer"] },
+          "role_type": { "type": "string", "enum": ["vCISO", "Organisation Owner", "IT Admin", "Control Owner", "Auditor", "Viewer"] },
           "office_id": { "type": "string" }
         }
       }

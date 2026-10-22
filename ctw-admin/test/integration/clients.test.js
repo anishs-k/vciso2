@@ -92,6 +92,28 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
     assert.equal((await api.call('DELETE', '/clients/Cust_00609')).status, 200);
   });
 
+  await t.test('IT Admin users, and exactly as many Organisation Owners as the licence sets', async () => {
+    const s = freshSample('Cust_00610');
+    assert.equal((await api.call('POST', '/clients', s)).status, 201);
+    const back = (await api.call('GET', '/clients/Cust_00610')).body.spec.initial_users;
+    assert.equal(back.find((u) => u.login_id === 'rohan.iyer').role_type, 'IT Admin');
+    assert.deepEqual((await api.call('POST', '/clients/Cust_00610/validate')).body.errors, []);
+    s.licensing_limits.max_org_owners = 2;
+    await api.call('PUT', '/clients/Cust_00610', s);
+    const r = (await api.call('POST', '/clients/Cust_00610/validate')).body;
+    assert.ok(r.errors.some((e) => /Organisation Owner users \(1\) must equal max_org_owners \(2\)/.test(e)), JSON.stringify(r.errors));
+    // A client without a vCISO user is fine.
+    s.licensing_limits.max_org_owners = 1;
+    s.initial_users = s.initial_users.filter((u) => u.role_type !== 'vCISO');
+    await api.call('PUT', '/clients/Cust_00610', s);
+    assert.deepEqual((await api.call('POST', '/clients/Cust_00610/validate')).body.errors, []);
+    // At least one IT Admin.
+    s.initial_users = s.initial_users.map((u) => (u.role_type === 'IT Admin' ? { ...u, role_type: 'Viewer' } : u));
+    await api.call('PUT', '/clients/Cust_00610', s);
+    assert.ok((await api.call('POST', '/clients/Cust_00610/validate')).body.errors.includes('At least one initial user must be an IT Admin'));
+    assert.equal((await api.call('DELETE', '/clients/Cust_00610')).status, 200);
+  });
+
   await t.test('editing a ready client makes it a draft again; the ID cannot change', async () => {
     const spec = freshSample('Cust_00202');
     spec.organization.customer_name = 'Renamed Ltd';

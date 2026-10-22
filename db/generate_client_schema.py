@@ -2,10 +2,10 @@
 """Generate one client's database: schema, licence guard and seed data.
 
     python3 db/generate_client_schema.py --spec dist_client/<Cust>/client_spec.json \
-        --out dist_client/<Cust>/001_client_init.sql
+        --out dist_client/<Cust>/<Cust>_init.sql
 
 Reads a validated client intake spec (intake/client_intake.py) and the master workbook, and writes:
-  001_client_init.sql        runs once when the client's Postgres starts with an empty volume
+  <Cust>_init.sql            runs once when the client's Postgres starts with an empty volume
   initial_credentials.txt    one-time passwords of the initial users (next to the SQL file)
   instance.json              this client instance's identity, read by the API (later baked into the image)
 
@@ -66,10 +66,12 @@ CLIENT_EXCLUDED_TABLES = {
 
 # Intake role type -> Role_ID in the Roles sheet. The sheet has no role names, so this mapping is
 # an assumption to confirm: vCISO gets the only role with Access_Admin (Role_0004), Organisation
-# Owner the blank Role_0005, Control Owner read + write (Role_0002), Auditor and Viewer read only.
+# Owner the blank Role_0005, IT Admin read + write + all without admin (Role_0003, otherwise unused),
+# Control Owner read + write (Role_0002), Auditor and Viewer read only.
 ROLE_IDS = {
     'vCISO': 'Role_0004',
     'Organisation Owner': 'Role_0005',
+    'IT Admin': 'Role_0003',
     'Control Owner': 'Role_0002',
     'Auditor': 'Role_0001',
     'Viewer': 'Role_0001',
@@ -850,25 +852,31 @@ CREATE TRIGGER enforce_control_owner_limits BEFORE INSERT OR UPDATE OF owner_use
 
     # ---- 5. client register
     w('-- SECTION 5: Client register')
+    # The client is on board for the contract: on-boarding is its first day, off-boarding its last.
+    def boarding(t):
+        d = {'on_boarding_date': contract['contract_start_date']}
+        if 'off_boarding_date' in types[t]:
+            d['off_boarding_date'] = contract['contract_end_date']
+        return d
     insert('master_customer_details', dict(customer_id=cust_id, customer_name=org['customer_name'],
-                                           category=org.get('category'), active=True, on_boarding_date=Raw('CURRENT_DATE')))
+                                           category=org.get('category'), active=True, **boarding('master_customer_details')))
     for o in offices:
         insert('master_customer_address_details', dict(
             customer_id=cust_id, office_id=o['office_id'], office_type=o['office_type'], office_address=o['office_address'],
             city=o['city'], state=o['state'], country=o['country'], pincode=o.get('pincode'),
-            category=org.get('category'), industry=org.get('industry'), active=True, on_boarding_date=Raw('CURRENT_DATE')))
+            category=org.get('category'), industry=org.get('industry'), active=True, **boarding('master_customer_address_details')))
     for c in org.get('contacts', []):
         insert('master_customer_contact_details', dict(
             customer_id=cust_id, office_id=c['office_id'], contact_id=c['contact_id'], contact_type=c['contact_type'],
             contact_priority=c.get('contact_priority'), contact_person=c.get('contact_person'),
             designation=c.get('designation'), department=c.get('department'), contact_phone=c.get('contact_phone'),
-            contact_email=c.get('contact_email'), active=True, on_boarding_date=Raw('CURRENT_DATE')))
+            contact_email=c.get('contact_email'), active=True, **boarding('master_customer_contact_details')))
     insert('master_customer_contract_detail', dict(
         customer_id=cust_id, office_id=primary_office, fy_id=fy_id, customer_ref_po=contract.get('customer_ref_po'),
         contract_id=ctr_id, contract_type=contract.get('contract_type', 'Original'),
         contract_period_months=contract.get('contract_period_months'), contract_start_date=contract['contract_start_date'],
         contract_end_date=contract['contract_end_date'], contract_value=contract.get('contract_value'),
-        invoicing_frequency=contract.get('invoicing_frequency'), active=True, on_boarding_date=Raw('CURRENT_DATE')))
+        invoicing_frequency=contract.get('invoicing_frequency'), active=True, **boarding('master_customer_contract_detail')))
 
     w(f"""INSERT INTO client_license (license_id, customer_id, valid_from, valid_to, max_users, max_vcisos, max_org_owners,
   max_control_owners, max_api_integrations, max_frameworks, licensed_frameworks, licensed_modules, license_seal)
@@ -967,19 +975,28 @@ CREATE TRIGGER protect_platform_instance_truncate BEFORE TRUNCATE ON platform_in
                     user_id=u['user_id'], ui_id=ui, for_customer_or_internal='C'))
 
     # Control register (architecture Diagram 2, step 5): every licensed control, per office it applies to.
+    # One INSERT ... VALUES per row (not INSERT ... SELECT), so the file itself shows every row, as a table
+    # viewer reading the file sees it.
     w('-- Control register: one row per licensed control and office; the client scopes it after install')
+
+    def first_filled(*values):
+        return next((v for v in values if v is not None and str(v).strip()), None)
+
     for f in selected:
         for off in f['office_ids']:
-            months = review_months(f, off)
-            w(f"""INSERT INTO customer_clause_control_map (customer_id, office_id, fy_id, contract_id, framework_id,
-  clause_control_id, clause_control_ref, clause_control_desc, requirement, type_pre_defined_custom, active, mandatory,
-  applicable, primary_document_required, search_keyword, objective_evidence, review_frequency_months,
-  collection_frequency, current_collection_no, validation_method, status)
-SELECT {q(cust_id)}, {q(off)}, {fy_id}, {q(ctr_id)}, m.framework_id, m.clause_control_id,
-  COALESCE(m.clause_control_sub_ref_no, m.clause_control_ref_no), COALESCE(m.clause_control_sub_ref_desc, m.clause_control_ref_desc),
-  m.requirement, 'Pre-defined', TRUE, m.mandatory, TRUE, m.primary_document_required, m.search_keyword, m.objective_evidence,
-  {int(months)}, {q(COLLECTION_FREQUENCY.get(int(months), f'Every {int(months)} months'))}, 0, m.review_method, 'Not Started'
-FROM master_clause_control_map m WHERE m.framework_id = {int(f['framework_id'])} ORDER BY m.clause_control_id;""")
+            months = int(review_months(f, off))
+            for m in (c for c in controls if c['framework_id'] == f['framework_id']):
+                insert('customer_clause_control_map', dict(
+                    customer_id=cust_id, office_id=off, fy_id=fy_id, contract_id=ctr_id, framework_id=m['framework_id'],
+                    clause_control_id=m['clause_control_id'],
+                    clause_control_ref=first_filled(m['clause_control_sub_ref_no'], m['clause_control_ref_no']),
+                    clause_control_desc=first_filled(m['clause_control_sub_ref_desc'], m['clause_control_ref_desc']),
+                    requirement=m['requirement'], type_pre_defined_custom='Pre-defined', active=True,
+                    mandatory=m['mandatory'], applicable=True, primary_document_required=m['primary_document_required'],
+                    search_keyword=m['search_keyword'], objective_evidence=m['objective_evidence'],
+                    review_frequency_months=months,
+                    collection_frequency=COLLECTION_FREQUENCY.get(months, f'Every {months} months'),
+                    current_collection_no=0, validation_method=m['review_method'], status='Not Started'))
 
     # Default delivery rules (architecture 8.3; SOW v1.1: website and email, app push only with mobile access).
     if 'alerting' in mods:
@@ -1078,6 +1095,11 @@ def onboarded_tool_row(row, tool):
     return row
 
 
+def sql_file_name(customer_id):
+    """The client database file of a bundle: <customer ID>_init.sql, e.g. Cust_00301_init.sql."""
+    return f'{customer_id}_init.sql'
+
+
 def review_months(framework, office_id):
     """How often an office reviews a licensed framework: its own interval, else the framework's, else yearly."""
     return (framework.get('office_review_months') or {}).get(office_id) or framework.get('review_frequency_months') or 12
@@ -1087,7 +1109,7 @@ def main():
     parser = argparse.ArgumentParser(description='CyberTrustWorks client database generator')
     parser.add_argument('--spec', required=True, help='Validated client intake spec (client_spec.json)')
     parser.add_argument('--excel', default=DEFAULT_XLSX, help='Master workbook')
-    parser.add_argument('--out', help='Output SQL file (default: dist_client/<customer_id>/001_client_init.sql)')
+    parser.add_argument('--out', help='Output SQL file (default: dist_client/<customer_id>/<customer_id>_init.sql)')
     args = parser.parse_args()
 
     for path in (args.spec, args.excel):
@@ -1095,7 +1117,8 @@ def main():
             sys.exit(f'Error: file not found: {path}')
     with open(args.spec, encoding='utf-8') as fh:
         spec = json.load(fh)
-    out = args.out or os.path.join(ROOT, 'dist_client', spec['organization']['customer_id'], '001_client_init.sql')
+    cust = spec['organization']['customer_id']
+    out = args.out or os.path.join(ROOT, 'dist_client', cust, sql_file_name(cust))
     try:
         build_client_schema(spec, args.excel, out)
     except ValueError as exc:

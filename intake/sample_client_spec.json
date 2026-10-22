@@ -173,6 +173,17 @@
       "department": "Executive Board",
       "role_type": "Organisation Owner",
       "office_id": "Cust_00101_001"
+    },
+    {
+      "user_id": "User_0003",
+      "login_id": "rohan.iyer",
+      "user_name": "Rohan Iyer",
+      "user_email": "rohan.iyer@acmefinance.com",
+      "user_mobile": "+91-98200-55667",
+      "designation": "IT Administrator",
+      "department": "IT",
+      "role_type": "IT Admin",
+      "office_id": "Cust_00101_001"
     }
   ]
 }

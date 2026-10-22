@@ -19,7 +19,7 @@ const OPTIONS = {
   ],
   tools: ['Tenable', 'Qualys', 'Rapid7', 'Greenbone', 'McAfee', 'Zscaler'],
   sso_types: ['LOCAL', 'SAML_2_0', 'OIDC', 'AZURE_AD', 'OKTA'],
-  role_types: ['vCISO', 'Organisation Owner', 'Control Owner', 'Auditor', 'Viewer'],
+  role_types: ['vCISO', 'Organisation Owner', 'IT Admin', 'Control Owner', 'Auditor', 'Viewer'],
   client_statuses: ['draft', 'ready', 'generated', 'live', 'suspended'],
 };
 

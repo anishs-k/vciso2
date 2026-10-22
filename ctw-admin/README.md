@@ -10,7 +10,7 @@ keeps it out of client images.
  ───────────────────────                                          ───────────────────────
  Browser ─► UI + API :4500 ─► CTW database :5440                  docker load  vciso-platform-<cust>.tar.gz
                 │              (clients, licences, builds, audit) docker compose up -d
-                │                                                   ├ db   PostgreSQL ← 001_client_init.sql (first start)
+                │                                                   ├ db   PostgreSQL ← <Cust>_init.sql (first start)
                 └─ Generate Docker Image                            └ api  UI + API :4000, links itself to db on
                      spec → validate → seal → schema (Python)              first start; link.json + evidence on /data
                      → docker build → docker save | gzip
@@ -91,7 +91,7 @@ When it says *Image ready*:
 
 1. **Show passwords** (once) and copy the initial users' one-time passwords into the handover. CTW Admin
    does not keep them; if they are lost, only a new full build makes new ones.
-2. Download the files for the client: `vciso-platform-<customer>.tar.gz` (the image), `001_client_init.sql`,
+2. Download the files for the client: `vciso-platform-<customer>.tar.gz` (the image), `<Customer ID>_init.sql`,
    `docker-compose.yml`, `README.md`.
 
 ### Hand over

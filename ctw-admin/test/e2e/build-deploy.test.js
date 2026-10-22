@@ -74,13 +74,13 @@ test('build and deploy like a client', { skip: !dockerAvailable() && 'Docker is 
     v1 = await runBuild({ build_type: 'full' });
     assert.equal(v1.image_tag, `${REPO}:${CUST.toLowerCase()}-v1`);
     passwords = (await api.call('POST', `/builds/${v1.build_id}/credentials`)).body.credentials;
-    assert.equal(passwords.length, 2);
+    assert.equal(passwords.length, 3);
     assert.equal((await api.call('POST', `/builds/${v1.build_id}/credentials`)).status, 410);
     assert.ok(!docker('images', '-q', v1.image_tag), 'the build machine keeps only the .tar.gz');
   });
 
   await t.test('the image holds the platform for this client and nothing private', async () => {
-    for (const f of ['001_client_init.sql', 'docker-compose.yml', 'README.md']) await fetchFile(v1, f);
+    for (const f of [`${CUST}_init.sql`, 'docker-compose.yml', 'README.md']) await fetchFile(v1, f);
     await fetchFile(v1, `vciso-platform-${CUST.toLowerCase()}.tar.gz`, 'image-v1.tar.gz');
     assert.match(docker('load', '-i', path.join(clientDir, 'image-v1.tar.gz')), /Loaded image: ctw-test\/vciso-platform:cust_00606-v1/);
     // No shell inside: each tool runs as the entrypoint with plain arguments (no quoting to get wrong).
@@ -156,7 +156,7 @@ test('build and deploy like a client', { skip: !dockerAvailable() && 'Docker is 
     await api.call('PUT', `/clients/${CUST}`, s);
     const v2 = await runBuild({ build_type: 'image_only' });
     assert.equal(v2.instance_id, v1.instance_id);
-    assert.ok(!v2.files.includes('001_client_init.sql'));
+    assert.ok(!v2.files.includes(`${CUST}_init.sql`));
     assert.ok(v2.files.includes('UPGRADE.md'));
     assert.equal((await api.call('POST', `/builds/${v2.build_id}/credentials`)).status, 410);
     await fetchFile(v2, 'UPGRADE.md');

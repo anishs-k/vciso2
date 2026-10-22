@@ -576,8 +576,10 @@ export function Users({ spec, edit, catalogue }) {
   return (
     <div className="stack">
       <Alert>
-        The first people to sign in. Each gets a one-time password when the image is generated, shown once to you.
-        At least one vCISO.
+        The first people to sign in. Each gets a one-time password when the image is generated, shown once to you.{' '}
+        {Number.isInteger(spec.licensing_limits.max_org_owners)
+          ? `At least one IT Admin, and exactly ${spec.licensing_limits.max_org_owners} Organisation Owner(s), as set in Licence limits; a vCISO is optional.`
+          : 'At least one IT Admin, and as many Organisation Owners as Licence limits sets; a vCISO is optional.'}
       </Alert>
       {users.map((u, i) => {
         const set = (k) => (v) => edit((s) => (s.initial_users[i][k] = v));

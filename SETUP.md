@@ -7,7 +7,7 @@ How the pieces fit:
  ───────────────────                                          ────────────────────────────
  CTW Admin (ctw-admin/, browser, :4500)                        docker load vciso-platform-<cust>.tar.gz
    clients, contracts, licences, builds, audit                docker compose up -d
-   in the CTW database (:5440)                                  ├ db   PostgreSQL ← 001_client_init.sql (runs once)
+   in the CTW database (:5440)                                  ├ db   PostgreSQL ← <Cust>_init.sql (runs once)
         │ Generate Docker Image                                 └ api  Platform: UI + API (src/ + vciso-platform/vciso-app)
         ▼                                                              instance.json built in; links itself to db
  spec → intake validator → bundle builder ─► files ───────────►        on first start (link.json on /data)
@@ -99,7 +99,7 @@ Either way you get `dist_client/<CustomerID>/`:
 | File | What it is |
 |---|---|
 | `client_spec.json` | The sealed spec the bundle was built from |
-| `001_client_init.sql` | The client's whole database: tables, licence guard, licensed catalogue, users |
+| `<Cust>_init.sql` | The client's whole database: tables, licence guard, licensed catalogue, users |
 | `instance.json` | Which client / licence this platform instance is |
 | `initial_credentials.txt` | One-time passwords of the initial users (keep private) |
 | `docker-compose.yml` | Starts the client's PostgreSQL and loads the SQL |

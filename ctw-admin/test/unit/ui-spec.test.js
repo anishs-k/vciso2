@@ -63,7 +63,11 @@ test('checks follow the validator rules', async () => {
   assert.match(messages((s) => (s.contract.financial_year = 2020)), /Financial year should be/);
   assert.match(messages((s) => (s.enabled_modules = s.enabled_modules.filter((m) => m !== 'alerting'))), /needs Alerting/);
   assert.match(messages((s) => (s.enabled_modules = ['compliance'])), /Scanner tools need the Vulnerabilities module/);
-  assert.match(messages((s) => (s.initial_users[0].role_type = 'Viewer')), /At least one user must be a vCISO/);
+  assert.doesNotMatch(messages((s) => (s.initial_users[0].role_type = 'Viewer')), /vCISO/, 'a vCISO is optional');
+  assert.match(messages((s) => (s.initial_users[2].role_type = 'Viewer')), /At least one user must be an IT Admin/);
+  assert.match(messages((s) => (s.initial_users[1].role_type = 'IT Admin')), /Organisation Owners: 0 added, the licence sets 1/);
+  assert.match(messages((s) => (s.licensing_limits.max_org_owners = 2)), /Organisation Owners: 1 added, the licence sets 2: add exactly 2/);
+  assert.doesNotMatch(messages((s) => s.initial_users.push({ ...s.initial_users[0], user_id: 'User_0009', login_id: 'it.admin', user_email: 'it@x.in', role_type: 'IT Admin' })), /role|Organisation Owners/);
   assert.match(messages((s) => (s.initial_users[1].login_id = s.initial_users[0].login_id)), /Login IDs must be unique/);
   assert.match(messages((s) => (s.licensing_limits.valid_to = '2020-01-01')), /Licence end date is in the past/);
   assert.match(messages((s) => (s.organization.customer_id = 'a b')), /Customer ID/);
@@ -141,9 +145,9 @@ test('a user ID is the office ID and the user number, and follows the office', a
   s.initial_users[0].user_id = userIdFor('Cust_00101_001', s.initial_users[0].user_id);
   s.initial_users[1].office_id = 'Cust_00101_002';
   s.initial_users[1].user_id = userIdFor('Cust_00101_002', s.initial_users[1].user_id);
-  assert.equal(newUser(s).user_id, 'User_0003', 'numbers count across offices');
+  assert.equal(newUser(s).user_id, 'User_0004', 'numbers count across offices');
   renameCustomer(s, 'Cust_00101', 'Cust_00777');
-  assert.deepEqual(s.initial_users.map((u) => u.user_id), ['Cust_00777_001_User_0001', 'Cust_00777_002_User_0002']);
+  assert.deepEqual(s.initial_users.map((u) => u.user_id), ['Cust_00777_001_User_0001', 'Cust_00777_002_User_0002', 'User_0003'], 'an ID without an office stays');
   removeOffice(s, 'Cust_00777_002');
   assert.equal(s.initial_users[1].user_id, 'Cust_00777_001_User_0002', 'moved to the remaining office');
 });
@@ -153,7 +157,7 @@ test('new rows get the next free ID', async () => {
   const s = normalize(freshSample());
   assert.equal(newOffice(s).office_id, 'Cust_00101_003');
   assert.equal(newOffice(s).office_type, '', 'chosen by the admin, not pre-filled');
-  assert.equal(newUser(s).user_id, 'User_0003');
+  assert.equal(newUser(s).user_id, 'User_0004');
   assert.equal(newContact(s).contact_id, 'Cust_00101_001_0004');
 });
 
