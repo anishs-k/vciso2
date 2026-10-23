@@ -104,7 +104,32 @@ export default function ClientEditPage() {
   }, []);
 
   const countries = useCountries();
-  const checks = useMemo(() => (spec ? checkSpec(spec, countries || []) : []), [spec, countries]);
+  // A new client's customer ID, checked against the CTW database as it is typed: { id, usedBy } when another
+  // client has it.
+  const typedId = isNew && !createdId ? spec?.organization.customer_id?.trim() || '' : '';
+  const [idTaken, setIdTaken] = useState(null);
+  useEffect(() => {
+    setIdTaken(null);
+    if (!/^[A-Za-z0-9_-]{3,32}$/.test(typedId)) return undefined;
+    let stale = false;
+    const t = setTimeout(() => {
+      api(`/clients/id-check?customer_id=${encodeURIComponent(typedId)}`)
+        .then((r) => !stale && r.taken && setIdTaken({ id: typedId, usedBy: r.used_by }))
+        .catch(() => {}); // the save refuses a taken ID anyway
+    }, 400);
+    return () => {
+      stale = true;
+      clearTimeout(t);
+    };
+  }, [typedId]);
+  const checks = useMemo(() => {
+    const out = spec ? checkSpec(spec, countries || []) : [];
+    if (idTaken && idTaken.id === typedId) {
+      const u = idTaken.usedBy;
+      out.unshift({ section: 'organization', message: `Customer ID ${typedId} is already used by ${u.customer_name} (${u.customer_id}): choose another` });
+    }
+    return out;
+  }, [spec, countries, idTaken, typedId]);
   const bySection = useMemo(() => {
     const m = {};
     checks.forEach((c) => (m[c.section] = (m[c.section] || 0) + 1));
@@ -116,7 +141,7 @@ export default function ClientEditPage() {
   if (!spec || !catalogue) return <Loading what="Loading the client" />;
 
   const cid = spec.organization.customer_id;
-  const canSave = /^[A-Za-z0-9_-]{3,32}$/.test(cid) && spec.organization.customer_name.trim();
+  const canSave = /^[A-Za-z0-9_-]{3,32}$/.test(cid) && spec.organization.customer_name.trim() && !(idTaken && idTaken.id === typedId);
 
   // Saves the spec; returns the customer ID it is stored under. A new client is created once: if a later
   // step fails (validation, the network), the next save updates it instead of creating it again.
@@ -341,7 +366,7 @@ export default function ClientEditPage() {
               )}
               {!canSave && <span className="muted small">A customer ID and a company name are needed to save.</span>}
               {/* Once created, the customer ID is fixed even before the page moves to the edit address. */}
-              <Section spec={spec} edit={edit} catalogue={catalogue} isNew={isNew && !createdId} />
+              <Section spec={spec} edit={edit} catalogue={catalogue} isNew={isNew && !createdId} idError={idTaken && idTaken.id === typedId ? checks[0].message : null} />
               {sectionChecks.length > 0 && (
                 <Alert tone="warn" title="Fill in or correct these to go to the next step">
                   <ul>

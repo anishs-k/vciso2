@@ -47,6 +47,23 @@ router.get('/', wrap(async (_req, res) => {
   res.json(rows);
 }));
 
+// The client that already has this customer ID (letter case aside: Cust_00101 and cust_00101 are one), or
+// null. The form checks a new ID with it as it is typed.
+async function clientWithId(q, customerId) {
+  const { rows } = await q.query(
+    'SELECT customer_id, customer_name FROM ctw_client WHERE lower(customer_id) = lower($1) LIMIT 1',
+    [customerId],
+  );
+  return rows[0] || null;
+}
+
+router.get('/id-check', wrap(async (req, res) => {
+  const customerId = String(req.query.customer_id || '').trim();
+  if (!customerId) throw httpError(400, 'customer_id is required');
+  const taken = await clientWithId(db, customerId);
+  res.json({ customer_id: customerId, taken: Boolean(taken), ...(taken && { used_by: taken }) });
+}));
+
 router.get('/:id', wrap(async (req, res) => {
   const { rows } = await db.query(
     'SELECT customer_id, status, created_at, updated_at FROM ctw_client WHERE customer_id = $1',
@@ -64,13 +81,15 @@ router.post('/', wrap(async (req, res) => {
   assignContractIds(spec);
   try {
     await db.tx(async (c) => {
-      const { rows } = await c.query('SELECT 1 FROM ctw_client WHERE customer_id = $1', [id]);
-      if (rows.length) throw Object.assign(new Error('exists'), { code: 'exists' });
+      const taken = await clientWithId(c, id);
+      if (taken) throw Object.assign(new Error('exists'), { code: 'exists', taken });
       await checkContractIds(c, id, spec.contracts);
       await importSpec(c, spec, { adminId: req.admin.admin_id, status: 'draft' });
     });
   } catch (err) {
-    if (err.code === 'exists') throw httpError(409, `Client ${id} already exists`);
+    if (err.code === 'exists') {
+      throw httpError(409, `Customer ID ${id} is already used by ${err.taken.customer_name} (${err.taken.customer_id})`);
+    }
     if (err.code === 'contract_taken') throw httpError(409, err.message);
     throw err;
   }

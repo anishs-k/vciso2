@@ -44,6 +44,19 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
     assert.equal((await api.call('POST', '/clients', spec)).status, 409);
   });
 
+  await t.test('a customer ID already in use is reported while typing and refused on create, letter case aside', async () => {
+    let r = await api.call('GET', '/clients/id-check?customer_id=Cust_00101');
+    assert.deepEqual(r.body, { customer_id: 'Cust_00101', taken: true, used_by: { customer_id: 'Cust_00101', customer_name: 'Acme Financial Services International Ltd.' } });
+    r = await api.call('GET', '/clients/id-check?customer_id=cust_00101');
+    assert.equal(r.body.taken, true, 'cust_00101 is the same ID');
+    r = await api.call('GET', '/clients/id-check?customer_id=Cust_99999');
+    assert.deepEqual(r.body, { customer_id: 'Cust_99999', taken: false });
+    assert.equal((await api.call('GET', '/clients/id-check')).status, 400);
+    r = await api.call('POST', '/clients', freshSample('cust_00101'));
+    assert.equal(r.status, 409);
+    assert.match(r.body.error, /Customer ID cust_00101 is already used by Acme Financial Services International Ltd\. \(Cust_00101\)/);
+  });
+
   await t.test('contracts: one per office, IDs <office ID>_C<NNN>, given when missing, never shared', async () => {
     // A contract without an ID gets the next number after the client's highest.
     const a = freshSample('Cust_00606');

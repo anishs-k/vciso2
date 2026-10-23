@@ -32,7 +32,7 @@ function OfficeSelect({ spec, value, onChange, label = 'Office' }) {
 }
 
 // ─── 1. Organisation ────────────────────────────────────────────────────────────────────────
-export function Organisation({ spec, edit, catalogue, isNew }) {
+export function Organisation({ spec, edit, catalogue, isNew, idError }) {
   const o = spec.organization;
   const set = (k) => (v) => edit((s) => (s.organization[k] = v));
   return (
@@ -45,6 +45,7 @@ export function Organisation({ spec, edit, catalogue, isNew }) {
           disabled={!isNew}
           placeholder="Letters, digits, _ or -"
           hint={isNew ? 'Cannot be changed later. 3–32 letters, digits, _ or -' : 'Fixed once the client exists'}
+          error={idError}
           onChange={(v) => edit((s) => {
             renameCustomer(s, s.organization.customer_id, v);
             s.organization.customer_id = v;

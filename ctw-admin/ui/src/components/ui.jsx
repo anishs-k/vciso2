@@ -48,7 +48,8 @@ export function Card({ title, subtitle, actions, children, padded = true, classN
   );
 }
 
-export function Field({ label, required, hint, children, className = '' }) {
+// `error` shows in red in place of the hint.
+export function Field({ label, required, hint, error, children, className = '' }) {
   return (
     <div className={`field ${className}`}>
       {label && (
@@ -58,14 +59,14 @@ export function Field({ label, required, hint, children, className = '' }) {
         </label>
       )}
       {children}
-      {hint && <span className="hint">{hint}</span>}
+      {error ? <span className="hint bad" role="alert">{error}</span> : hint && <span className="hint">{hint}</span>}
     </div>
   );
 }
 
-export function Text({ label, required, hint, value, onChange, type = 'text', ...rest }) {
+export function Text({ label, required, hint, error, value, onChange, type = 'text', ...rest }) {
   return (
-    <Field label={label} required={required} hint={hint}>
+    <Field label={label} required={required} hint={hint} error={error}>
       <input type={type} value={value ?? ''} onChange={(e) => onChange(e.target.value)} {...rest} />
     </Field>
   );
