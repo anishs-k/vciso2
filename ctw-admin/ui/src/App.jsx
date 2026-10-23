@@ -12,7 +12,7 @@ import AdminsPage from './pages/Admins';
 import AuditPage from './pages/Audit';
 
 const icon = (d) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     {d}
   </svg>
 );
@@ -54,10 +54,7 @@ function Shell({ children }) {
       <aside className="sidebar">
         <Link to={setUp ? '/clients' : '/account'} className="side-brand" aria-label="CTW Admin home">
           <span className="side-logo">
-            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2.5 4.5 5.5v5.8c0 4.7 3.2 8.8 7.5 10.2 4.3-1.4 7.5-5.5 7.5-10.2V5.5L12 2.5Z" fill="#bfdbfe" />
-              <path d="M12 2.5v19c4.3-1.4 7.5-5.5 7.5-10.2V5.5L12 2.5Z" fill="#60a5fa" />
-            </svg>
+            <Icon name="shield" size={22} />
           </span>
           <span>
             <strong>vCISO</strong>
@@ -85,8 +82,8 @@ function Shell({ children }) {
               <small>{admin.email}</small>
             </div>
           </Link>
-          <button type="button" className="logout" onClick={signOut}>
-            Logout
+          <button type="button" className="logout" onClick={signOut} title="Logout" aria-label="Logout">
+            <Icon name="logout" size={18} />
           </button>
         </div>
       </aside>
