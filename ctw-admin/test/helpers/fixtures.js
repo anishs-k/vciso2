@@ -11,8 +11,8 @@ function financialYear(date) {
   return d.getUTCMonth() >= 3 ? d.getUTCFullYear() : d.getUTCFullYear() - 1;
 }
 
-// The sample spec, renamed to `customerId`, with a contract and licence running a year from today. Its
-// contract ID is left empty for the API to generate (no two clients may share one).
+// The sample spec, renamed to `customerId`, with its contracts (one per office, IDs <office ID>_C<NNN>) and
+// licence running a year from today.
 function freshSample(customerId = 'Cust_00101') {
   const raw = fs.readFileSync(path.join(ROOT, 'intake', 'sample_client_spec.json'), 'utf8');
   const spec = JSON.parse(raw.replaceAll('Cust_00101', customerId));
@@ -21,10 +21,11 @@ function freshSample(customerId = 'Cust_00101') {
   const end = new Date(start);
   end.setUTCFullYear(end.getUTCFullYear() + 1);
   end.setUTCDate(end.getUTCDate() - 1);
-  spec.contract.contract_id = '';
-  spec.contract.contract_start_date = iso(start);
-  spec.contract.contract_end_date = iso(end);
-  spec.contract.financial_year = financialYear(iso(start));
+  for (const k of spec.contracts) {
+    k.contract_start_date = iso(start);
+    k.contract_end_date = iso(end);
+    k.financial_year = financialYear(iso(start));
+  }
   spec.licensing_limits.valid_to = iso(end);
   return spec;
 }

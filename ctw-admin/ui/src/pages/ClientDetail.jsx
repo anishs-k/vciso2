@@ -9,7 +9,7 @@ const FREQ = { M: 'Monthly', Q: 'Quarterly', H: 'Half-yearly', Y: 'Yearly' };
 
 function Overview({ spec, catalogue }) {
   const o = spec.organization;
-  const k = spec.contract;
+  const contracts = spec.contracts || [];
   const l = spec.licensing_limits;
   const names = new Map(catalogue.frameworks.map((f) => [f.framework_id, f.framework_name]));
   const offices = new Map(o.offices.map((x) => [x.office_id, x.city || x.office_id]));
@@ -29,26 +29,28 @@ function Overview({ spec, catalogue }) {
           <dd>{o.contacts.length}</dd>
         </dl>
       </Card>
-      <Card title="Contract">
-        {k ? (
-          <dl className="facts">
-            <dt>Contract</dt>
-            <dd>
-              {k.contract_id} <span className="muted">({k.contract_type})</span>
-            </dd>
-            <dt>PO</dt>
-            <dd>{k.customer_ref_po}</dd>
-            <dt>Period</dt>
-            <dd>
-              {fmtDate(k.contract_start_date)} – {fmtDate(k.contract_end_date)}
-            </dd>
-            <dt>Value</dt>
-            <dd>
-              {Number(k.contract_value || 0).toLocaleString('en-IN')} {k.currency}
-            </dd>
-            <dt>Invoicing</dt>
-            <dd>{FREQ[k.invoicing_frequency] || k.invoicing_frequency}</dd>
-          </dl>
+      <Card title={contracts.length > 1 ? `Contracts (${contracts.length})` : 'Contract'}>
+        {contracts.length ? (
+          contracts.map((k) => (
+            <dl className="facts" key={k.contract_id}>
+              <dt>Contract</dt>
+              <dd>
+                <span className="mono">{k.contract_id}</span> <span className="muted">({offices.get(k.office_id) || k.office_id}{k.contract_type ? `, ${k.contract_type}` : ''})</span>
+              </dd>
+              <dt>PO</dt>
+              <dd>{k.customer_ref_po}</dd>
+              <dt>Period</dt>
+              <dd>
+                {fmtDate(k.contract_start_date)} – {fmtDate(k.contract_end_date)}
+              </dd>
+              <dt>Value</dt>
+              <dd>
+                {Number(k.contract_value || 0).toLocaleString('en-IN')} {k.currency}
+              </dd>
+              <dt>Invoicing</dt>
+              <dd>{FREQ[k.invoicing_frequency] || k.invoicing_frequency}</dd>
+            </dl>
+          ))
         ) : (
           <span className="muted">No contract yet.</span>
         )}
@@ -58,7 +60,7 @@ function Overview({ spec, catalogue }) {
           <dl className="facts">
             <dt>Users</dt>
             <dd>
-              {l.max_users} (vCISOs {l.max_vcisos}, Org Owners {l.max_org_owners})
+              {l.max_users} (vCISOs {l.max_vcisos}, Org Owners {l.max_org_owners}, IT Admins {l.max_it_admins ?? '—'})
             </dd>
             <dt>Control owners</dt>
             <dd>{l.max_control_owners ?? '—'}</dd>

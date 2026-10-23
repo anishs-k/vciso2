@@ -2,13 +2,14 @@
 // "Save" stores whatever is there (a draft); "Save & validate", on the last step, also runs the intake
 // validator on the server, which is what makes a client ready to build. It is enabled only once every
 // check passes.
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api';
-import { Alert, Card, ErrorList, Loading, StatusBadge, fmtDate } from '../components/ui';
+import { applyQuestionnaire } from '../lib/questionnaire';
+import { Alert, Card, ErrorList, Icon, Loading, StatusBadge, fmtDate } from '../components/ui';
 import { SECTION_COMPONENTS } from '../components/sections';
 import { SECTIONS, checkSpec } from '../lib/checks';
-import { emptySpec, normalize, toPayload } from '../lib/spec';
+import { emptySpec, firstContractStart, lastContractEnd, normalize, toPayload } from '../lib/spec';
 import { useCatalogue } from '../lib/catalogue';
 import { useCountries } from '../lib/geo';
 
@@ -26,9 +27,9 @@ function Summary({ spec, catalogue }) {
       <dd>{o.offices.length}</dd>
       <dt>Contacts</dt>
       <dd>{o.contacts.length}</dd>
-      <dt>Contract</dt>
+      <dt>Contracts</dt>
       <dd>
-        {fmtDate(spec.contract.contract_start_date)} – {fmtDate(spec.contract.contract_end_date)}
+        {spec.contracts.length ? `${spec.contracts.length}: ${fmtDate(firstContractStart(spec))} – ${fmtDate(lastContractEnd(spec))}` : '—'}
       </dd>
       <dt>Licence</dt>
       <dd>
@@ -50,16 +51,24 @@ export default function ClientEditPage() {
   const { id } = useParams();
   const isNew = !id;
   const navigate = useNavigate();
+  // After a new client's first save the page moves to its edit address (a new page): the step on screen and
+  // the steps passed come along.
+  const carried = useLocation().state?.wizard;
   const { catalogue, error: catError } = useCatalogue();
   const [spec, setSpec] = useState(isNew ? emptySpec() : null);
   const [status, setStatus] = useState(isNew ? null : undefined);
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(carried?.section || 0);
+  const fileInput = useRef(null);
+  const [imported, setImported] = useState(null); // { file, notes } after a questionnaire upload
   // Steps the admin has opened. A step counts as complete only once opened and free of problems, so a new
   // client starts at 0%; a saved client's steps hold what was entered, so they all count as opened.
   const [opened, setOpened] = useState(() => new Set(isNew ? [] : SECTIONS.map((x) => x.key)));
   useEffect(() => {
     setOpened((o) => (o.has(SECTIONS[section].key) ? o : new Set([...o, SECTIONS[section].key])));
   }, [section]);
+  // Steps left with "Next" while free of problems. Only these count as complete and open the step after
+  // them, for a saved client too: every step is confirmed with "Next", however much is already filled in.
+  const [passed, setPassed] = useState(() => new Set(carried?.passed || []));
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(null); // 'save' | 'validate'
   const [error, setError] = useState(null);
@@ -118,8 +127,9 @@ export default function ClientEditPage() {
       ? await api(`/clients/${encodeURIComponent(existing)}`, { method: 'PUT', body })
       : await api('/clients', { method: 'POST', body });
     if (!existing) setCreatedId(cid);
-    // The API generates the contract ID.
-    setSpec((s) => (s.contract.contract_id === r.contract_id ? s : { ...s, contract: { ...s.contract, contract_id: r.contract_id } }));
+    // The API gives a contract without an ID its <office ID>_C<NNN>.
+    const ids = new Map((r.contracts || []).map((k) => [k.office_id, k.contract_id]));
+    setSpec((s) => ({ ...s, contracts: s.contracts.map((k) => ({ ...k, contract_id: ids.get(k.office_id) || k.contract_id })) }));
     setDirty(false);
     return existing || cid;
   };
@@ -141,7 +151,9 @@ export default function ClientEditPage() {
       } else {
         setStatus((s) => (s === 'ready' || !s ? 'draft' : s));
       }
-      if (isNew) navigate(`/clients/${encodeURIComponent(saved)}/edit`, { replace: true });
+      if (isNew) {
+        navigate(`/clients/${encodeURIComponent(saved)}/edit`, { replace: true, state: { wizard: { section, passed: [...passed] } } });
+      }
     } catch (err) {
       setError(err);
     } finally {
@@ -151,11 +163,51 @@ export default function ClientEditPage() {
 
   const Section = SECTION_COMPONENTS[SECTIONS[section].key];
   const here = SECTIONS[section];
-  const stepState = (key) => (!opened.has(key) ? 'todo' : bySection[key] ? 'fix' : 'done');
+  // done: confirmed with Next (the last step, which has no Next: opened) and free of problems.
+  const confirmed = (key) => (key === SECTIONS.at(-1).key ? opened.has(key) : passed.has(key));
+  const stepState = (key) => (!opened.has(key) ? 'todo' : bySection[key] ? 'fix' : confirmed(key) ? 'done' : 'open');
   const done = SECTIONS.filter((x) => stepState(x.key) === 'done').length;
   const percent = Math.round((done / SECTIONS.length) * 100);
   const sectionChecks = checks.filter((c) => c.section === here.key);
   const title = spec.organization.customer_name || (isNew ? 'New client' : id);
+  // The steps are filled in order: a step opens only once every step before it is done.
+  const reachable = (i) => SECTIONS.slice(0, i).every((x) => stepState(x.key) === 'done');
+  const next = () => {
+    setPassed((p) => new Set([...p, here.key]));
+    setSection(section + 1);
+  };
+
+  // A filled-in client questionnaire replaces what the form holds (not the customer or contract ID).
+  // Nothing counts as done afterwards: each step is still checked and confirmed with Next.
+  const canImport = /^[A-Za-z0-9_-]{3,32}$/.test(cid);
+  const upload = async (file) => {
+    if (!file) return;
+    const filled = spec.organization.customer_name || spec.organization.offices.length || spec.initial_users.length;
+    if (filled && !window.confirm('The questionnaire replaces the details already in the form. Go on?')) return;
+    setBusy('upload');
+    setError(null);
+    setImported(null);
+    try {
+      const base64 = await new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result).split(',')[1] || '');
+        r.onerror = () => reject(new Error('The file could not be read'));
+        r.readAsDataURL(file);
+      });
+      const { answers, warnings } = await api('/questionnaire/read', { method: 'POST', body: { file: base64 } });
+      const { spec: filledIn, notes } = applyQuestionnaire(spec, answers, catalogue);
+      setSpec(filledIn);
+      setDirty(true);
+      setResult(null);
+      setPassed(new Set());
+      setSection(0);
+      setImported({ file: file.name, notes: [...warnings, ...notes] });
+    } catch (err) {
+      setError(err);
+    } finally {
+      setBusy(null);
+    }
+  };
 
   return (
     <>
@@ -172,7 +224,7 @@ export default function ClientEditPage() {
       <div className="wizard">
         <aside className="wizard-side">
           <div className="wizard-title">
-            <span className="rocket" aria-hidden="true">🚀</span>
+            <span className="rocket" aria-hidden="true"><Icon name="clipboard" size={20} /></span>
             <span>
               <strong>Client Onboarding</strong>
               <small>{title}</small>
@@ -199,15 +251,23 @@ export default function ClientEditPage() {
             {SECTIONS.map((x, i) => {
               const n = bySection[x.key] || 0;
               const st = stepState(x.key);
+              const locked = !reachable(i);
               return (
-                <button type="button" key={x.key} className={i === section ? 'active' : ''} onClick={() => setSection(i)}>
-                  <span className={`n${i === section ? '' : st === 'fix' ? ' err' : st === 'done' ? ' done' : ''}`}>
-                    {i === section || st === 'todo' ? i + 1 : st === 'fix' ? '!' : '✓'}
+                <button
+                  type="button"
+                  key={x.key}
+                  className={i === section ? 'active' : ''}
+                  disabled={locked}
+                  title={locked ? 'Complete the steps before this one first' : undefined}
+                  onClick={() => setSection(i)}
+                >
+                  <span className={`n${i === section ? '' : st === 'fix' && !locked ? ' err' : st === 'done' && !locked ? ' done' : ''}`}>
+                    {i === section ? i + 1 : locked ? <Icon name="lock" size={13} /> : st === 'done' ? '✓' : st === 'fix' ? '!' : i + 1}
                   </span>
                   <span>
                     {x.label}
-                    <span className={`step-sub${st === 'done' ? ' ok' : st === 'todo' ? ' todo' : ''}`}>
-                      {st === 'todo' ? 'Not started' : st === 'fix' ? `${n} to fix` : 'Complete'}
+                    <span className={`step-sub${st === 'done' && !locked ? ' ok' : st === 'fix' && !locked ? '' : ' todo'}`}>
+                      {locked ? 'Locked' : { todo: 'Not started', open: 'Press Next to complete', fix: `${n} to fix`, done: 'Complete' }[st]}
                     </span>
                   </span>
                 </button>
@@ -228,6 +288,24 @@ export default function ClientEditPage() {
             </span>
             <span className="grow" />
             {status && <StatusBadge status={status} />}
+            <input
+              ref={fileInput}
+              type="file"
+              accept=".xlsx"
+              hidden
+              onChange={(e) => {
+                upload(e.target.files[0]);
+                e.target.value = '';
+              }}
+            />
+            <button
+              type="button"
+              disabled={!canImport || busy}
+              title={canImport ? 'Fill the form from a client questionnaire (.xlsx)' : 'Enter the customer ID first (Organisation step)'}
+              onClick={() => fileInput.current?.click()}
+            >
+              {busy === 'upload' ? 'Uploading…' : '⬆ Upload'}
+            </button>
             <button type="button" className="primary" disabled={!canSave || busy || (!dirty && !isNew)} onClick={() => run('save')}>
               {busy === 'save' ? 'Saving…' : 'Save'}
             </button>
@@ -240,6 +318,18 @@ export default function ClientEditPage() {
             </p>
             <div className="stack">
               {error && <ErrorList error={error} />}
+              {imported && (
+                <Alert tone={imported.notes.length ? 'warn' : 'ok'} title={`Filled in from ${imported.file}`}>
+                  Check each step and press Next to confirm it.
+                  {imported.notes.length > 0 && (
+                    <ul>
+                      {imported.notes.map((n) => (
+                        <li key={n}>{n}</li>
+                      ))}
+                    </ul>
+                  )}
+                </Alert>
+              )}
               {result && !result.valid && (
                 <Alert tone="bad" title="The validator found problems">
                   <ul>
@@ -253,7 +343,7 @@ export default function ClientEditPage() {
               {/* Once created, the customer ID is fixed even before the page moves to the edit address. */}
               <Section spec={spec} edit={edit} catalogue={catalogue} isNew={isNew && !createdId} />
               {sectionChecks.length > 0 && (
-                <Alert tone="warn" title="To fix in this section">
+                <Alert tone="warn" title="Fill in or correct these to go to the next step">
                   <ul>
                     {sectionChecks.map((c) => (
                       <li key={c.message}>{c.message}</li>
@@ -269,7 +359,13 @@ export default function ClientEditPage() {
               ← Previous
             </button>
             {section < SECTIONS.length - 1 ? (
-              <button type="button" className="primary" onClick={() => setSection(section + 1)}>
+              <button
+                type="button"
+                className="primary"
+                disabled={sectionChecks.length > 0}
+                title={sectionChecks.length ? `${sectionChecks.length} to fix in this step first` : undefined}
+                onClick={next}
+              >
                 Next: {SECTIONS[section + 1].label} →
               </button>
             ) : (

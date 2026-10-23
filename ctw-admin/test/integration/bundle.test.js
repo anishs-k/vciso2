@@ -10,12 +10,8 @@ const { spawnSync } = require('child_process');
 const { pythonPath, ROOT } = require('../../lib/python');
 const { freshSample } = require('../helpers/fixtures');
 
-// These specs go straight to the Python builder, not through the API that generates contract IDs.
-const sample = (customerId) => {
-  const spec = freshSample(customerId);
-  spec.contract.contract_id = `Contract_${customerId.replace(/\D/g, '')}_001`;
-  return spec;
-};
+// These specs go straight to the Python builder; their contract IDs come with the sample.
+const sample = (customerId) => freshSample(customerId);
 
 const SECRET = crypto.randomBytes(32).toString('hex');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ctw-bundle-test-'));
@@ -72,7 +68,7 @@ test('bundle builder', { skip, timeout: 240_000 }, async (t) => {
 
   await t.test('--json --no-credentials-file: one JSON line on stdout, passwords only there', () => {
     const out = path.join(tmp, 'ok');
-    const r = build(specFile, out, ['--no-credentials-file', '--image-tag', 'ctw-test/vciso-platform:cust_00505-v1']);
+    const r = build(specFile, out, ['--no-credentials-file', '--image-tag', 'ctw-test/vciso-platform:cust_00505-v1', '--created-by', 'Anita Rao']);
     assert.equal(r.status, 0, r.stderr);
     assert.equal(r.stdoutLines, 1, 'progress goes to stderr');
     ok = { ...r.result, out };
@@ -105,10 +101,23 @@ test('bundle builder', { skip, timeout: 240_000 }, async (t) => {
     assert.match(sql, /'Role_0003', 'User_0003', 'UI_RD_0003'/);
   });
 
+  await t.test('every control is stamped with when the SQL was made and the CTW admin who onboarded the client', () => {
+    const sql = fs.readFileSync(path.join(ok.out, 'Cust_00505_init.sql'), 'utf8');
+    // Each row's text up to the next one: a requirement may run over several lines and hold ");".
+    const rows = sql.split(/^INSERT INTO master_clause_control_map /m).slice(1);
+    assert.ok(rows.length > 0);
+    const month = new Date().toISOString().slice(0, 7);
+    const stamp = new RegExp(`, '${month}-\\d\\dT\\d\\d:\\d\\d:\\d\\d[+-]\\d\\d:\\d\\d', 'Anita Rao', '[^']+'\\);\\r?\\n`);
+    for (const r of rows) {
+      assert.match(r, /^\([^)]*, created_at, created_by, source_clause_control_id\) VALUES /);
+      assert.ok(stamp.test(r), r.slice(0, 120));
+    }
+  });
+
   await t.test("on-boarding and off-boarding dates are the contract's first and last day", () => {
     const sql = fs.readFileSync(path.join(ok.out, 'Cust_00505_init.sql'), 'utf8');
     assert.ok(!/on_boarding_date[^;]*CURRENT_DATE/.test(sql), 'a real date, not the day the SQL runs');
-    const { contract_start_date: start, contract_end_date: end } = okSpec.contract;
+    const { contract_start_date: start, contract_end_date: end } = okSpec.contracts[0];
     for (const t of ['master_customer_details', 'master_customer_address_details', 'master_customer_contract_detail']) {
       const line = sql.split(/\r?\n/).find((l) => l.startsWith(`INSERT INTO ${t} `));
       assert.match(line, /, on_boarding_date, off_boarding_date\) VALUES /, t);

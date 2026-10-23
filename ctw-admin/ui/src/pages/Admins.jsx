@@ -22,7 +22,7 @@ function TemporaryPassword({ who, password, onClose }) {
         change it, and set up multi-factor sign-in, when they first sign in.
       </Alert>
       <div className="row">
-        <span className="secret" style={{ fontSize: 15 }}>{password}</span>
+        <span className="secret" style={{ fontSize: 14 }}>{password}</span>
         <button
           type="button"
           className="sm"

@@ -37,7 +37,7 @@ class BundleError(Exception):
         self.errors = errors or []
 
 
-def build_bundle(spec_path, out_dir, reseal=False, write_credentials=True, log=print, image_tag=None):
+def build_bundle(spec_path, out_dir, reseal=False, write_credentials=True, log=print, image_tag=None, created_by=None):
     """Validates and seals the spec, then writes the bundle to out_dir. Returns what was built,
     including the initial users' one-time passwords."""
     # Imported here: it loads openpyxl, which validating alone does not need.
@@ -88,7 +88,8 @@ def build_bundle(spec_path, out_dir, reseal=False, write_credentials=True, log=p
     try:
         # The generator reports on stdout; with a custom log (--json) that output must not reach stdout.
         with contextlib.redirect_stdout(sys.stdout if log is print else sys.stderr):
-            schema = build_client_schema(spec, EXCEL_PATH, sql_out, write_credentials=write_credentials)
+            schema = build_client_schema(spec, EXCEL_PATH, sql_out, write_credentials=write_credentials,
+                                         created_by=created_by)
     except Exception as exc:
         raise BundleError("schema", f"schema generation failed: {exc}")
     log(f"  OK  Database schema created: {sql_out}")
@@ -195,6 +196,7 @@ volumes:
 - **Total User Accounts:** Up to {limits.get('max_users')} active users
 - **vCISO Quota:** Up to {limits.get('max_vcisos')} vCISO account(s)
 - **Organisation Owner Quota:** Up to {limits.get('max_org_owners')} account(s)
+- **IT Admin Quota:** Up to {limits.get('max_it_admins')} account(s)
 - **Control Owners:** Up to {limits.get('max_control_owners', limits.get('max_users'))} user(s)
 - **Frameworks:** Up to {limits.get('max_frameworks')}
 - **API Tool Integrations:** Up to {limits.get('max_api_integrations')} scanner connections
@@ -278,6 +280,7 @@ def main():
     parser.add_argument("--json", action="store_true",
                         help="Print only a JSON result on stdout (progress goes to stderr); for the CTW admin API")
     parser.add_argument("--image-tag", help="Client image the compose file runs (default cybertrustworks/vciso-platform:<customer id>)")
+    parser.add_argument("--created-by", help="Name of the CTW admin who onboarded the client (stamped on its controls)")
     parser.add_argument("--no-credentials-file", action="store_true",
                         help="Do not write initial_credentials.txt; the passwords are only in the --json result")
     args = parser.parse_args()
@@ -290,7 +293,8 @@ def main():
     log = (lambda *a: print(*a, file=sys.stderr)) if args.json else print
     try:
         result = build_bundle(args.spec, args.out, reseal=args.reseal,
-                              write_credentials=not args.no_credentials_file, log=log, image_tag=args.image_tag)
+                              write_credentials=not args.no_credentials_file, log=log, image_tag=args.image_tag,
+                              created_by=args.created_by)
     except BundleError as exc:
         if args.json:
             print(json.dumps({"ok": False, "stage": exc.stage, "error": str(exc), "errors": exc.errors}))

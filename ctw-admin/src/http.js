@@ -5,7 +5,7 @@ const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).cat
 // Constraints whose Postgres message would not tell an admin what to fix.
 const CONSTRAINT_MESSAGES = {
   ctw_client_office_one_primary: 'A client can have only one Primary office',
-  ctw_contract_one_current: 'A client can have only one current contract',
+  ctw_contract_one_current_per_office: 'An office can have only one current contract',
   ctw_client_office_pkey: 'Office IDs must be unique',
   ctw_client_contact_pkey: 'Contact IDs must be unique',
   ctw_client_initial_user_pkey: 'Initial user IDs must be unique',

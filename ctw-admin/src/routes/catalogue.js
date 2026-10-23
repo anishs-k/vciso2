@@ -3,6 +3,7 @@
 const express = require('express');
 const db = require('../db');
 const { wrap } = require('../http');
+const { lookupPincode } = require('../pincode');
 
 const router = express.Router();
 
@@ -10,6 +11,19 @@ const OPTIONS = {
   categories: ['Enterprise', 'Mid-Market', 'SMB', 'Government', 'Financial Institution'],
   office_types: ['Primary', 'Secondary', 'Data Center', 'Regional Office'],
   contact_types: ['Executive', 'Primary vCISO', 'IT Security', 'Escalation', 'Emergency'],
+  // Suggestions for a contact's designation and department; anything else can still be typed in.
+  designations: [
+    'CEO / Managing Director', 'CTO', 'CIO', 'CFO', 'COO', 'Chief Risk Officer',
+    'CISO', 'vCISO', 'Head of Information Security', 'Security Manager', 'Security Analyst', 'SOC Lead',
+    'IT Head / Director IT', 'IT Manager', 'IT Administrator', 'System Administrator', 'Network Engineer',
+    'Compliance Manager', 'Risk Manager', 'Data Protection Officer (DPO)', 'Auditor',
+    'Project Manager',
+  ],
+  departments: [
+    'Management / Board', 'Information Technology (IT)', 'Information Security', 'Security Operations (SOC)',
+    'Risk & Compliance', 'Internal Audit', 'Legal', 'Finance', 'Human Resources (HR)', 'Operations',
+    'Engineering / Development', 'Administration',
+  ],
   contract_types: ['Original', 'Extension', 'AMC', 'AR', 'CR'],
   invoicing_frequencies: [
     { value: 'M', label: 'Monthly' },
@@ -63,4 +77,10 @@ router.get('/geo/countries/:country/states/:state/cities', wrap(async (req, res)
   res.json(rows.map((r) => r.name));
 }));
 
+// An Indian pincode's country, state and city (src/pincode.js), to fill in an office.
+router.get('/geo/pincode/:pincode', wrap(async (req, res) => {
+  res.json(await lookupPincode(req.params.pincode));
+}));
+
 module.exports = router;
+module.exports.OPTIONS = OPTIONS;

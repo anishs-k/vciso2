@@ -83,6 +83,9 @@ def compute_license_signature(customer_id, limits, frameworks, modules):
         "frameworks": sorted([f["framework_id"] for f in frameworks]),
         "modules": sorted(modules),
     }
+    # Licences sealed before IT Admin seats existed have no max_it_admins and keep their seal.
+    if limits.get("max_it_admins") is not None:
+        payload["max_it_admins"] = limits["max_it_admins"]
     encoded = json.dumps(payload, sort_keys=True).encode("utf-8")
     return hmac.new(license_secret().encode("utf-8"), encoded, hashlib.sha256).hexdigest()
 
@@ -91,6 +94,18 @@ def spec_seal(spec):
     """The seal of a validated spec's licence (customer, limits, frameworks, modules)."""
     return compute_license_signature(spec["organization"]["customer_id"], spec["licensing_limits"],
                                      spec["selected_frameworks"], spec["enabled_modules"])
+
+
+def contracts_of(spec):
+    """The spec's contracts, one per office. A spec from before per-office contracts has one "contract":
+    it is the Primary office's."""
+    if spec.get("contracts") is not None:
+        return list(spec["contracts"])
+    if spec.get("contract"):
+        offices = spec.get("organization", {}).get("offices", [])
+        primary = next((o.get("office_id") for o in offices if o.get("office_type") == "Primary"), None)
+        return [{**spec["contract"], "office_id": spec["contract"].get("office_id") or primary}]
+    return []
 
 
 CUSTOMER_ID_RE = re.compile(r"^[A-Za-z0-9_-]{3,32}$")
@@ -163,34 +178,51 @@ def validate_spec(spec):
         if not _is_int(c.get("contact_priority")) or c.get("contact_priority") < 1:
             errors.append(f"Contact {who}: contact_priority must be a whole number >= 1")
 
-    # 2. Contract
-    contract = spec.get("contract", {})
-    start = _parse_date(contract.get("contract_start_date"))
-    end = _parse_date(contract.get("contract_end_date"))
-    if not start:
-        errors.append("contract.contract_start_date must be a YYYY-MM-DD date")
-    if not end:
-        errors.append("contract.contract_end_date must be a YYYY-MM-DD date")
-    if start and end and end <= start:
-        errors.append("contract.contract_end_date must be after contract_start_date")
-    months = contract.get("contract_period_months")
-    if not _is_int(months) or not 1 <= months <= 60:
-        errors.append("contract.contract_period_months must be a whole number between 1 and 60")
-    fy = contract.get("financial_year")
-    if not _is_int(fy) or not 2024 <= fy <= 2050:
-        errors.append("contract.financial_year must be a year between 2024 and 2050")
-    elif start and fy != (start.year if start.month >= 4 else start.year - 1):
-        # Financial Year Master: FY_ID 2026 runs April 2026 - March 2027
-        errors.append(f"contract.financial_year {fy} does not match contract_start_date {contract.get('contract_start_date')} "
-                      f"(financial years run April - March, so it falls in {start.year if start.month >= 4 else start.year - 1})")
-    value = contract.get("contract_value", 0)
-    if not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0:
-        errors.append("contract.contract_value must be a number >= 0")
-    for field in ("contract_id", "customer_ref_po", "currency"):
-        if not contract.get(field):
-            errors.append(f"contract.{field} is required")
-    if contract.get("invoicing_frequency") not in ("M", "Q", "H", "Y"):
-        errors.append("contract.invoicing_frequency must be one of M, Q, H, Y")
+    # 2. Contracts: one per office (contract ID = <office ID>_C<NNN>)
+    contracts = contracts_of(spec)
+    if not contracts:
+        errors.append("contracts: each office needs a contract")
+    ids = [k.get("contract_id") for k in contracts]
+    if len(set(ids)) != len(ids):
+        errors.append("Contract IDs must be unique")
+    covered = [k.get("office_id") for k in contracts]
+    for off in sorted(office_ids):
+        if covered.count(off) != 1:
+            errors.append(f"Office {off} must have exactly one contract (it has {covered.count(off)})")
+    starts = []
+    for k in contracts:
+        who = f"Contract {k.get('contract_id') or '(no ID)'}"
+        if k.get("office_id") not in office_ids:
+            errors.append(f"{who} references unknown office_id: {k.get('office_id')}")
+        start = _parse_date(k.get("contract_start_date"))
+        end = _parse_date(k.get("contract_end_date"))
+        if not start:
+            errors.append(f"{who}: contract_start_date must be a YYYY-MM-DD date")
+        else:
+            starts.append(start)
+        if not end:
+            errors.append(f"{who}: contract_end_date must be a YYYY-MM-DD date")
+        if start and end and end <= start:
+            errors.append(f"{who}: contract_end_date must be after contract_start_date")
+        months = k.get("contract_period_months")
+        if not _is_int(months) or not 1 <= months <= 60:
+            errors.append(f"{who}: contract_period_months must be a whole number between 1 and 60")
+        fy = k.get("financial_year")
+        if not _is_int(fy) or not 2024 <= fy <= 2050:
+            errors.append(f"{who}: financial_year must be a year between 2024 and 2050")
+        elif start and fy != (start.year if start.month >= 4 else start.year - 1):
+            # Financial Year Master: FY_ID 2026 runs April 2026 - March 2027
+            errors.append(f"{who}: financial_year {fy} does not match contract_start_date {k.get('contract_start_date')} "
+                          f"(financial years run April - March, so it falls in {start.year if start.month >= 4 else start.year - 1})")
+        value = k.get("contract_value", 0)
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0:
+            errors.append(f"{who}: contract_value must be a number >= 0")
+        for field in ("contract_id", "customer_ref_po", "currency"):
+            if not k.get(field):
+                errors.append(f"{who}: {field} is required")
+        if k.get("invoicing_frequency") not in ("M", "Q", "H", "Y"):
+            errors.append(f"{who}: invoicing_frequency must be one of M, Q, H, Y")
+    start = min(starts) if starts else None  # the licence starts with the first contract
 
     # 3. Licensing quotas
     limits = spec.get("licensing_limits", {})
@@ -207,6 +239,7 @@ def validate_spec(spec):
     max_users = limit("max_users", 1)
     max_vcisos = limit("max_vcisos", 1)
     max_org_owners = limit("max_org_owners", 1)
+    max_it_admins = limit("max_it_admins", 1)
     max_apis = limit("max_api_integrations", 0)
     max_frameworks = limit("max_frameworks", 1)
     max_control_owners = limit("max_control_owners", 1) if "max_control_owners" in limits else None
@@ -214,8 +247,8 @@ def validate_spec(spec):
     # Cross-checks only run on quotas that parsed, so one bad value doesn't cascade.
     if None not in (max_control_owners, max_users) and max_control_owners >= max_users:
         errors.append("licensing_limits.max_control_owners must be less than max_users")
-    if None not in (max_vcisos, max_org_owners, max_users) and max_vcisos + max_org_owners > max_users:
-        errors.append("Sum of max_vcisos and max_org_owners cannot exceed total max_users")
+    if None not in (max_vcisos, max_org_owners, max_it_admins, max_users) and max_vcisos + max_org_owners + max_it_admins > max_users:
+        errors.append("Sum of max_vcisos, max_org_owners and max_it_admins cannot exceed total max_users")
 
     # Expiry date
     valid_to = limits.get("valid_to")
@@ -228,7 +261,7 @@ def validate_spec(spec):
         if exp_date < datetime.now():
             errors.append(f"licensing_limits.valid_to ({valid_to}) is already in the past")
         if start and exp_date <= start:
-            errors.append("licensing_limits.valid_to must be after contract_start_date (licence start)")
+            errors.append("licensing_limits.valid_to must be after the first contract's start date (licence start)")
 
     # 4. Selected Frameworks
     frameworks = spec.get("selected_frameworks", [])
@@ -312,8 +345,11 @@ def validate_spec(spec):
     if max_vcisos is not None and len(vciso_users) > max_vcisos:
         errors.append(f"Initial vCISO users ({len(vciso_users)}) exceed max_vcisos quota ({max_vcisos})")
 
-    if users and not any(u.get("role_type") == "IT Admin" for u in users):
+    it_admin_users = [u for u in users if u.get("role_type") == "IT Admin"]
+    if users and not it_admin_users:
         errors.append("At least one initial user must be an IT Admin")
+    if max_it_admins is not None and len(it_admin_users) > max_it_admins:
+        errors.append(f"Initial IT Admin users ({len(it_admin_users)}) exceed max_it_admins quota ({max_it_admins})")
 
     # Every licensed Organisation Owner seat is filled at onboarding: exactly max_org_owners of them.
     org_owner_users = [u for u in users if u.get("role_type") == "Organisation Owner"]
@@ -441,8 +477,9 @@ def run_wizard():
                 }
             ],
         },
-        "contract": {
-            "contract_id": f"CTR_{customer_id}_01",
+        "contracts": [{
+            "office_id": office_id_primary,
+            "contract_id": f"{office_id_primary}_C001",
             "customer_ref_po": f"PO_{customer_id}_2026",
             "contract_type": "Original",
             "financial_year": 2026,
@@ -452,11 +489,12 @@ def run_wizard():
             "contract_value": 1000000.0,
             "currency": "USD",
             "invoicing_frequency": "M",
-        },
+        }],
         "licensing_limits": {
             "max_users": max_users,
             "max_vcisos": max_vcisos,
             "max_org_owners": max_org_owners,
+            "max_it_admins": 1,
             "max_control_owners": max(10, max_users - max_vcisos - max_org_owners),
             "max_api_integrations": max_apis,
             "max_frameworks": len(selected_frameworks),

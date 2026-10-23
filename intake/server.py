@@ -249,6 +249,7 @@ class IntakeApiHandler(http.server.SimpleHTTPRequestHandler):
                         "max_users": body["licensing_limits"]["max_users"],
                         "max_vcisos": body["licensing_limits"]["max_vcisos"],
                         "max_org_owners": body["licensing_limits"]["max_org_owners"],
+                        "max_it_admins": body["licensing_limits"].get("max_it_admins"),
                         "frameworks_count": len(body["selected_frameworks"]),
                         "modules_count": len(body["enabled_modules"]),
                     }

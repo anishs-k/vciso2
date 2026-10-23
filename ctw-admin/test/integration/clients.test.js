@@ -33,46 +33,48 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
     let r = await api.call('POST', '/clients', spec);
     assert.equal(r.status, 201);
     assert.equal(r.body.status, 'draft');
-    // The API generates the contract ID: the customer's digits and the next running number.
-    assert.match(r.body.contract_id, /^Contract_00202_\d{3}$/);
-    spec.contract.contract_id = r.body.contract_id;
+    // One contract per office, <office ID>_C<NNN>.
+    assert.deepEqual(r.body.contracts, [
+      { office_id: 'Cust_00202_001', contract_id: 'Cust_00202_001_C001' },
+      { office_id: 'Cust_00202_002', contract_id: 'Cust_00202_002_C002' },
+    ]);
     assert.deepEqual((await api.call('GET', '/clients/Cust_00202')).body.spec, spec);
     r = await api.call('POST', '/clients/Cust_00202/validate');
     assert.deepEqual(r.body, { valid: true, errors: [], status: 'ready' });
     assert.equal((await api.call('POST', '/clients', spec)).status, 409);
   });
 
-  await t.test('contract IDs: suggested, typed or generated, never shared', async () => {
-    const next = (await api.call('GET', '/clients/next-contract-id?customer_id=Cust_00606')).body.contract_id;
-    assert.match(next, /^Contract_00606_\d{3}$/);
-    assert.equal((await api.call('GET', '/clients/next-contract-id?customer_id=Cust_00606')).body.contract_id, next, 'a preview uses no number up');
-    // The suggestion is saved as shown, and the next one moves past it.
+  await t.test('contracts: one per office, IDs <office ID>_C<NNN>, given when missing, never shared', async () => {
+    // A contract without an ID gets the next number after the client's highest.
     const a = freshSample('Cust_00606');
-    a.contract.contract_id = next;
-    assert.equal((await api.call('POST', '/clients', a)).body.contract_id, next);
-    const n = Number(next.split('_').at(-1));
-    assert.equal((await api.call('GET', '/clients/next-contract-id?customer_id=Cust_00607')).body.contract_id, `Contract_00607_${String(n + 1).padStart(3, '0')}`);
-    // An ID of the admin's own is kept; another client's is refused.
-    const b = freshSample('Cust_00607');
-    b.contract.contract_id = 'PO-ACME-2026';
-    assert.equal((await api.call('POST', '/clients', b)).body.contract_id, 'PO-ACME-2026');
-    const c = freshSample('Cust_00608');
-    c.contract.contract_id = 'PO-ACME-2026';
-    const r = await api.call('POST', '/clients', c);
+    a.contracts[1].contract_id = '';
+    let r = await api.call('POST', '/clients', a);
+    assert.equal(r.status, 201, JSON.stringify(r.body));
+    assert.deepEqual(r.body.contracts.map((k) => k.contract_id), ['Cust_00606_001_C001', 'Cust_00606_002_C002']);
+    const back = (await api.call('GET', '/clients/Cust_00606')).body.spec.contracts;
+    assert.deepEqual(back.map((k) => [k.office_id, k.contract_id]), [['Cust_00606_001', 'Cust_00606_001_C001'], ['Cust_00606_002', 'Cust_00606_002_C002']]);
+    // A spec with the older single "contract" is taken as the Primary office's contract.
+    const old = freshSample('Cust_00607');
+    old.contract = { ...old.contracts[0], contract_id: 'CTR-OLD' };
+    delete old.contract.office_id;
+    delete old.contracts;
+    r = await api.call('POST', '/clients', old);
+    assert.deepEqual(r.body.contracts, [{ office_id: 'Cust_00607_001', contract_id: 'CTR-OLD' }]);
+    // An ID another client already has is refused.
+    const b = freshSample('Cust_00608');
+    b.contracts[0].contract_id = 'CTR-OLD';
+    r = await api.call('POST', '/clients', b);
     assert.equal(r.status, 409);
     assert.match(r.body.error, /already used by Cust_00607/);
-    // Two admins saved the same suggestion: the second gets the next number instead.
-    const stale = { ...c, contract: { ...c.contract, contract_id: `Contract_00608_${String(n).padStart(3, '0')}` } };
-    await stack.db.query(`UPDATE ctw_contract SET contract_id = $1 WHERE customer_id = 'Cust_00607'`, [stale.contract.contract_id]);
-    const got = (await api.call('POST', '/clients', stale)).body.contract_id;
-    assert.match(got, /^Contract_00608_\d{3}$/);
-    assert.notEqual(got, stale.contract.contract_id);
-    // Editing keeps the ID; a new one can be typed in.
-    a.contract.contract_id = next;
-    a.organization.customer_name = 'Changed';
-    assert.equal((await api.call('PUT', '/clients/Cust_00606', a)).body.contract_id, next);
-    a.contract.contract_id = 'CTR-NEW';
-    assert.equal((await api.call('PUT', '/clients/Cust_00606', a)).body.contract_id, 'CTR-NEW');
+    // A removed office's contract is no longer current.
+    a.organization.offices.pop();
+    a.organization.contacts = a.organization.contacts.filter((x) => x.office_id !== 'Cust_00606_002');
+    a.selected_frameworks.forEach((f) => (f.office_ids = f.office_ids.filter((o) => o !== 'Cust_00606_002')));
+    a.initial_users.forEach((u) => (u.office_id = 'Cust_00606_001'));
+    a.contracts.pop();
+    r = await api.call('PUT', '/clients/Cust_00606', a);
+    assert.equal(r.status, 200, JSON.stringify(r.body));
+    assert.deepEqual((await api.call('GET', '/clients/Cust_00606')).body.spec.contracts.map((k) => k.contract_id), ['Cust_00606_001_C001']);
     for (const id of ['Cust_00606', 'Cust_00607', 'Cust_00608']) await api.call('DELETE', `/clients/${id}`);
   });
 
@@ -118,9 +120,9 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
     const spec = freshSample('Cust_00202');
     spec.organization.customer_name = 'Renamed Ltd';
     spec.integrations.tools.reverse();
-    const before = (await api.call('GET', '/clients/Cust_00202')).body.spec.contract.contract_id;
+    const before = (await api.call('GET', '/clients/Cust_00202')).body.spec.contracts.map((k) => ({ office_id: k.office_id, contract_id: k.contract_id }));
     let r = await api.call('PUT', '/clients/Cust_00202', spec);
-    assert.deepEqual(r.body, { customer_id: 'Cust_00202', status: 'draft', contract_id: before }, 'the contract ID stays');
+    assert.deepEqual(r.body, { customer_id: 'Cust_00202', status: 'draft', contracts: before }, 'the contract IDs stay');
     const back = (await api.call('GET', '/clients/Cust_00202')).body.spec;
     assert.equal(back.organization.customer_name, 'Renamed Ltd');
     assert.deepEqual(back.integrations.tools.map((x) => x.tool_name), ['Greenbone', 'Tenable'], 'order as entered');
@@ -148,7 +150,7 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
         offices: [{ office_id: 'Cust_00777_001', office_type: null, office_address: null, city: 'Pune', state: null, country: null }],
         contacts: [{ contact_id: 'Cust_00777_001_0001', office_id: null, contact_type: null, contact_priority: null, contact_person: 'A', designation: null, contact_email: null, contact_phone: null }],
       },
-      contract: { contract_id: null, customer_ref_po: null, contract_start_date: null, currency: null },
+      contracts: [{ office_id: 'Cust_00777_001', contract_id: null, customer_ref_po: null, contract_start_date: null, currency: null }],
       licensing_limits: { max_users: null, valid_to: null },
       selected_frameworks: [{ framework_id: 102, office_ids: [], review_frequency_months: null }],
       enabled_modules: ['compliance', 'vulnerabilities'],
@@ -158,9 +160,7 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
     };
     let r = await api.call('POST', '/clients', partial);
     assert.equal(r.status, 201, JSON.stringify(r.body));
-    const first = Number((await api.call('GET', '/clients/Cust_00202')).body.spec.contract.contract_id.split('_').at(-1));
-    assert.match(r.body.contract_id, /^Contract_00777_\d{3}$/);
-    assert.ok(Number(r.body.contract_id.split('_').at(-1)) > first, 'numbers run on across clients');
+    assert.deepEqual(r.body.contracts, [{ office_id: 'Cust_00777_001', contract_id: 'Cust_00777_001_C001' }]);
     const back = (await api.call('GET', '/clients/Cust_00777')).body.spec;
     assert.equal(back.organization.offices[0].city, 'Pune');
     assert.equal(back.organization.offices[0].office_type, undefined, 'empty stays empty');
@@ -169,7 +169,7 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
     r = await api.call('POST', '/clients/Cust_00777/validate');
     assert.equal(r.body.valid, false);
     assert.equal(r.body.status, 'draft');
-    for (const want of [/category must be one of/, /industry is required/, /office_type must be one of/, /contract.customer_ref_po is required/,
+    for (const want of [/category must be one of/, /industry is required/, /office_type must be one of/, /customer_ref_po is required/,
       /invoicing_frequency must be one of/, /max_users must be a whole number/, /contact_priority must be a whole number/,
       /pull_frequency_per_day must be a whole number/, /role_type must be one of/]) {
       assert.ok(r.body.errors.some((e) => want.test(e)), want.source);
@@ -184,13 +184,12 @@ test('clients', { skip: !dockerAvailable() && 'Docker is not running', timeout: 
       [(s) => (s.organization.category = 'Startup'), 400, /category/],
       [(s) => s.integrations.tools.push({ ...s.integrations.tools[0] }), 409, /Each tool can be listed only once/],
       [(s) => (s.initial_users[0].office_id = 'Elsewhere'), 400, /office/],
-      [(s) => (s.contract.contract_end_date = s.contract.contract_start_date), 400, /contract_end_date|check/],
+      [(s) => (s.contracts[0].contract_end_date = s.contracts[0].contract_start_date), 400, /contract_end_date|check/],
+      [(s) => (s.contracts[1].office_id = s.contracts[0].office_id), 409, /only one current contract/],
     ];
-    const seqBefore = (await stack.db.query('SELECT last_value FROM ctw_contract_seq')).rows[0].last_value;
     const bad = freshSample('Cust_00505');
     bad.organization.offices[1].office_type = 'Primary';
     assert.equal((await api.call('POST', '/clients', bad)).status, 409);
-    assert.equal((await stack.db.query('SELECT last_value FROM ctw_contract_seq')).rows[0].last_value, seqBefore, 'a refused client uses no contract number');
     for (const [mutate, status, msg] of cases) {
       const s = freshSample('Cust_00202');
       mutate(s);

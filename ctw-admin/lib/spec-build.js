@@ -26,13 +26,14 @@ async function buildSpec(db, id) {
             contact_email, contact_phone
        FROM ctw_client_contact WHERE customer_id = $1 ORDER BY contact_id`,
   );
-  const contract = await one(
-    `SELECT contract_id, customer_ref_po, contract_type, financial_year, contract_period_months,
+  // The current contract of each office.
+  const contracts = await all(
+    `SELECT office_id, contract_id, customer_ref_po, contract_type, financial_year, contract_period_months,
             contract_start_date, contract_end_date, contract_value, currency, invoicing_frequency
-       FROM ctw_contract WHERE customer_id = $1 AND is_current`,
+       FROM ctw_contract WHERE customer_id = $1 AND is_current ORDER BY office_id, contract_id`,
   );
   const licence = await one(
-    `SELECT max_users, max_vcisos, max_org_owners, max_control_owners, max_api_integrations, max_frameworks, valid_to
+    `SELECT max_users, max_vcisos, max_org_owners, max_it_admins, max_control_owners, max_api_integrations, max_frameworks, valid_to
        FROM ctw_licence WHERE customer_id = $1`,
   );
   const frameworks = await all(
@@ -72,7 +73,7 @@ async function buildSpec(db, id) {
   const spec = {
     organization: { ...clean(client), offices: offices.map(clean), contacts: contacts.map(clean) },
   };
-  if (contract) spec.contract = clean(contract);
+  if (contracts.length) spec.contracts = contracts.map(clean);
   if (licence) {
     spec.licensing_limits = clean(licence);
     spec.selected_frameworks = frameworks.map(clean);

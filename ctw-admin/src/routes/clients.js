@@ -7,11 +7,14 @@ const express = require('express');
 const db = require('../db');
 const { wrap, httpError } = require('../http');
 const { importSpec, replaceSpec } = require('../../lib/spec-import');
-const { previewContractId, currentContractId, planContractId, applyContractPlan } = require('../../lib/contract-id');
+const { assignContractIds, checkContractIds } = require('../../lib/contract-id');
 const { buildSpec } = require('../../lib/spec-build');
 const { validateSpec } = require('../../lib/python');
 
 const router = express.Router();
+
+// What the form needs back after a save: each office's contract ID.
+const contractIds = (spec) => spec.contracts.map((k) => ({ office_id: k.office_id, contract_id: k.contract_id }));
 
 function requireSpec(body) {
   if (!body || typeof body.organization !== 'object' || body.organization === null) {
@@ -23,7 +26,8 @@ function requireSpec(body) {
 router.get('/', wrap(async (_req, res) => {
   const { rows } = await db.query(`
     SELECT c.customer_id, c.customer_name, c.category, c.industry, c.status, c.created_at, c.updated_at,
-           k.contract_end_date, l.valid_to,
+           (SELECT max(k.contract_end_date) FROM ctw_contract k
+             WHERE k.customer_id = c.customer_id AND k.is_current) AS contract_end_date, l.valid_to,
            (SELECT count(*)::int FROM ctw_client_office o WHERE o.customer_id = c.customer_id) AS offices,
            (SELECT count(*)::int FROM ctw_client_initial_user u WHERE u.customer_id = c.customer_id) AS initial_users,
            COALESCE((SELECT array_agg(m.module_name ORDER BY cm.sort_order)
@@ -33,7 +37,6 @@ router.get('/', wrap(async (_req, res) => {
                        FROM ctw_licence_framework f WHERE f.customer_id = c.customer_id), '{}') AS frameworks,
            b.last_build
       FROM ctw_client c
-      LEFT JOIN ctw_contract k ON k.customer_id = c.customer_id AND k.is_current
       LEFT JOIN ctw_licence l ON l.customer_id = c.customer_id
       LEFT JOIN LATERAL (
         SELECT json_build_object('build_id', build_id, 'version', version, 'build_type', build_type,
@@ -42,13 +45,6 @@ router.get('/', wrap(async (_req, res) => {
       ) b ON true
      ORDER BY c.customer_id`);
   res.json(rows);
-}));
-
-// The contract ID the next generated one would be for this customer ID (the number is not used up).
-router.get('/next-contract-id', wrap(async (req, res) => {
-  const customerId = String(req.query.customer_id || '').trim();
-  if (!/^[A-Za-z0-9_-]{1,32}$/.test(customerId)) throw httpError(400, 'customer_id is required');
-  res.json({ contract_id: await previewContractId(db, customerId) });
 }));
 
 router.get('/:id', wrap(async (req, res) => {
@@ -64,22 +60,21 @@ router.post('/', wrap(async (req, res) => {
   const spec = requireSpec(req.body);
   const id = spec.organization.customer_id;
   if (!id) throw httpError(400, 'organization.customer_id is required');
-  // The contract ID: as entered if no other client has it, else generated (lib/contract-id.js).
+  // One contract per office; one without an ID gets <office ID>_C<NNN> (lib/contract-id.js).
+  assignContractIds(spec);
   try {
     await db.tx(async (c) => {
       const { rows } = await c.query('SELECT 1 FROM ctw_client WHERE customer_id = $1', [id]);
       if (rows.length) throw Object.assign(new Error('exists'), { code: 'exists' });
-      const plan = await planContractId(c, id, spec.contract?.contract_id, null);
-      spec.contract = { ...spec.contract, contract_id: plan.contractId };
+      await checkContractIds(c, id, spec.contracts);
       await importSpec(c, spec, { adminId: req.admin.admin_id, status: 'draft' });
-      spec.contract.contract_id = await applyContractPlan(c, id, plan);
     });
   } catch (err) {
     if (err.code === 'exists') throw httpError(409, `Client ${id} already exists`);
     if (err.code === 'contract_taken') throw httpError(409, err.message);
     throw err;
   }
-  res.status(201).json({ customer_id: id, status: 'draft', contract_id: spec.contract.contract_id });
+  res.status(201).json({ customer_id: id, status: 'draft', contracts: contractIds(spec) });
 }));
 
 router.put('/:id', wrap(async (req, res) => {
@@ -89,16 +84,13 @@ router.put('/:id', wrap(async (req, res) => {
     throw httpError(400, 'The customer ID cannot be changed');
   }
   spec.organization.customer_id = id;
+  assignContractIds(spec);
   try {
-    // The contract ID as on create; left empty, the current one stays.
     const status = await db.tx(async (c) => {
-      const plan = await planContractId(c, id, spec.contract?.contract_id, await currentContractId(c, id));
-      spec.contract = { ...spec.contract, contract_id: plan.contractId };
-      const status = await replaceSpec(c, id, spec, { adminId: req.admin.admin_id });
-      spec.contract.contract_id = await applyContractPlan(c, id, plan);
-      return status;
+      await checkContractIds(c, id, spec.contracts);
+      return replaceSpec(c, id, spec, { adminId: req.admin.admin_id });
     });
-    res.json({ customer_id: id, status, contract_id: spec.contract.contract_id });
+    res.json({ customer_id: id, status, contracts: contractIds(spec) });
   } catch (err) {
     if (err.code === 'not_found') throw httpError(404, 'Client not found');
     if (err.code === 'contract_taken') throw httpError(409, err.message);

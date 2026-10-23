@@ -52,4 +52,25 @@ const validateSpec = (spec) =>
 // The licence seal the bundle builder would give this spec (needs CTW_LICENSE_SECRET).
 const sealOf = (spec) => runIntake('print(json.dumps(client_intake.spec_seal(json.load(sys.stdin))))', spec);
 
-module.exports = { pythonPath, readCatalogue, validateSpec, sealOf, ROOT };
+// Runs intake/questionnaire.py with `args`, `input` (JSON) on stdin; resolves with the JSON it prints.
+function runQuestionnaire(args, input) {
+  return new Promise((resolve, reject) => {
+    const py = spawn(pythonPath(), [path.join(INTAKE_DIR, 'questionnaire.py'), ...args], { env: { ...process.env, PYTHONUTF8: '1' } });
+    let out = '';
+    let err = '';
+    py.stdout.on('data', (d) => (out += d));
+    py.stderr.on('data', (d) => (err += d));
+    py.on('error', (e) => reject(new Error(`cannot run ${pythonPath()}: ${e.message}`)));
+    py.on('close', (status) => {
+      if (status !== 0) return reject(new Error(`questionnaire.py failed: ${err.trim() || `exit ${status}`}`));
+      try {
+        resolve(JSON.parse(out));
+      } catch {
+        reject(new Error(`questionnaire.py printed something other than JSON: ${out.slice(0, 200)}`));
+      }
+    });
+    py.stdin.end(JSON.stringify(input));
+  });
+}
+
+module.exports = { pythonPath, readCatalogue, validateSpec, sealOf, runQuestionnaire, ROOT };

@@ -1,6 +1,6 @@
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth';
-import { Loading } from './components/ui';
+import { Icon, Loading } from './components/ui';
 import LoginPage from './pages/Login';
 import ClientsPage from './pages/Clients';
 import OnboardingPage from './pages/Onboarding';
@@ -96,7 +96,7 @@ function Shell({ children }) {
           <div className="date">{today}</div>
           {setUp && (
             <Link to="/audit" className="bell" title="Recent activity (audit log)" aria-label="Recent activity">
-              🔔
+              <Icon name="bell" size={18} />
             </Link>
           )}
         </header>

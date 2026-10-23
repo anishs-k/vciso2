@@ -5,7 +5,7 @@
   "type": "object",
   "required": [
     "organization",
-    "contract",
+    "contracts",
     "licensing_limits",
     "selected_frameworks",
     "enabled_modules",
@@ -80,25 +80,31 @@
         }
       }
     },
-    "contract": {
-      "type": "object",
-      "required": ["contract_id", "customer_ref_po", "financial_year", "contract_start_date", "contract_end_date", "contract_period_months", "currency", "invoicing_frequency"],
-      "properties": {
-        "contract_id": { "type": "string" },
-        "customer_ref_po": { "type": "string" },
-        "contract_type": { "type": "string", "enum": ["Original", "Extension", "AMC", "AR", "CR"], "default": "Original" },
-        "financial_year": { "type": "integer", "minimum": 2024, "maximum": 2050 },
-        "contract_period_months": { "type": "integer", "minimum": 1, "maximum": 60 },
-        "contract_start_date": { "type": "string", "format": "date" },
-        "contract_end_date": { "type": "string", "format": "date" },
-        "contract_value": { "type": "number", "minimum": 0 },
-        "currency": { "type": "string", "default": "USD" },
-        "invoicing_frequency": { "type": "string", "enum": ["M", "Q", "H", "Y"], "default": "M" }
+    "contracts": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One contract per office.",
+      "items": {
+        "type": "object",
+        "required": ["office_id", "contract_id", "customer_ref_po", "financial_year", "contract_start_date", "contract_end_date", "contract_period_months", "currency", "invoicing_frequency"],
+        "properties": {
+          "office_id": { "type": "string", "description": "The office this contract is for" },
+          "contract_id": { "type": "string", "description": "<office ID>_C<NNN>, e.g. Cust_00301_002_C002" },
+          "customer_ref_po": { "type": "string" },
+          "contract_type": { "type": "string", "enum": ["Original", "Extension", "AMC", "AR", "CR"], "default": "Original" },
+          "financial_year": { "type": "integer", "minimum": 2024, "maximum": 2050 },
+          "contract_period_months": { "type": "integer", "minimum": 1, "maximum": 60 },
+          "contract_start_date": { "type": "string", "format": "date" },
+          "contract_end_date": { "type": "string", "format": "date" },
+          "contract_value": { "type": "number", "minimum": 0 },
+          "currency": { "type": "string", "default": "USD" },
+          "invoicing_frequency": { "type": "string", "enum": ["M", "Q", "H", "Y"], "default": "M" }
+        }
       }
     },
     "licensing_limits": {
       "type": "object",
-      "required": ["max_users", "max_vcisos", "max_org_owners", "max_api_integrations", "max_frameworks", "valid_to"],
+      "required": ["max_users", "max_vcisos", "max_org_owners", "max_it_admins", "max_api_integrations", "max_frameworks", "valid_to"],
       "description": "Strict hard limits enforced in PostgreSQL triggers and application License Guard. The client organization CANNOT exceed these limits.",
       "properties": {
         "max_users": {
@@ -115,6 +121,11 @@
           "type": "integer",
           "minimum": 1,
           "description": "Hard quota for Organisation Owner / Executive role seats."
+        },
+        "max_it_admins": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Hard quota for IT Admin role seats. At least one IT Admin is required."
         },
         "max_control_owners": {
           "type": "integer",

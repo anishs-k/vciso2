@@ -4,6 +4,7 @@
 //
 // A draft may leave sections out (no contract yet, no users, ...); the validator, not the tables,
 // decides when a client is complete.
+const { contractsOf } = require('./contract-id');
 
 async function insert(db, table, row) {
   const cols = Object.keys(row).filter((k) => row[k] !== undefined);
@@ -22,7 +23,7 @@ const CLIENT_COLS = ['customer_name', 'category', 'industry', 'primary_domain', 
 const CONTRACT_COLS = ['customer_ref_po', 'contract_type', 'financial_year', 'contract_period_months',
   'contract_start_date', 'contract_end_date', 'contract_value', 'currency', 'invoicing_frequency'];
 
-// Everything below ctw_client. Old contracts are kept: the spec's contract becomes the current one.
+// Everything below ctw_client. Old contracts are kept: the spec's contracts become the current ones.
 async function writeSections(db, id, spec) {
   const org = spec.organization;
   for (const o of org.offices || []) {
@@ -39,23 +40,27 @@ async function writeSections(db, id, spec) {
     });
   }
 
-  if (spec.contract) {
+  // One current contract per office (lib/contract-id.js); the ones no longer in the spec stay as history.
+  const contracts = contractsOf(spec);
+  if (contracts.length) {
     await db.query('UPDATE ctw_contract SET is_current = false WHERE customer_id = $1', [id]);
-    const c = pick(spec.contract, CONTRACT_COLS);
-    await db.query(
-      `INSERT INTO ctw_contract (customer_id, contract_id, ${CONTRACT_COLS.join(', ')}, is_current)
-       VALUES ($1, $2, ${CONTRACT_COLS.map((_c, i) => `$${i + 3}`).join(', ')}, true)
-       ON CONFLICT (customer_id, contract_id) DO UPDATE SET
-         ${CONTRACT_COLS.map((col) => `${col} = EXCLUDED.${col}`).join(', ')}, is_current = true`,
-      [id, spec.contract.contract_id, ...CONTRACT_COLS.map((col) => c[col] ?? null)],
-    );
+    for (const k of contracts) {
+      const c = pick(k, CONTRACT_COLS);
+      await db.query(
+        `INSERT INTO ctw_contract (customer_id, contract_id, office_id, ${CONTRACT_COLS.join(', ')}, is_current)
+         VALUES ($1, $2, $3, ${CONTRACT_COLS.map((_c, i) => `$${i + 4}`).join(', ')}, true)
+         ON CONFLICT (customer_id, contract_id) DO UPDATE SET office_id = EXCLUDED.office_id,
+           ${CONTRACT_COLS.map((col) => `${col} = EXCLUDED.${col}`).join(', ')}, is_current = true`,
+        [id, k.contract_id, k.office_id || null, ...CONTRACT_COLS.map((col) => c[col] ?? null)],
+      );
+    }
   }
 
   // The licence row holds modules and frameworks too, so a draft gets one as soon as any of the three is there.
   if (spec.licensing_limits || spec.enabled_modules?.length || spec.selected_frameworks?.length) {
     await insert(db, 'ctw_licence', {
       customer_id: id,
-      ...pick(spec.licensing_limits, ['max_users', 'max_vcisos', 'max_org_owners', 'max_control_owners',
+      ...pick(spec.licensing_limits, ['max_users', 'max_vcisos', 'max_org_owners', 'max_it_admins', 'max_control_owners',
         'max_api_integrations', 'max_frameworks', 'valid_to']),
     });
     for (const m of spec.enabled_modules || []) {

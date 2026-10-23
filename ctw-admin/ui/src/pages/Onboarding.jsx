@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
-import { Alert, Loading, StatusBadge } from '../components/ui';
+import { Alert, Icon, Loading, StatusBadge } from '../components/ui';
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function OnboardingPage() {
   return (
     <>
       <div className="select-head">
-        <div className="big-icon" aria-hidden="true">🏢</div>
+        <div className="big-icon" aria-hidden="true"><Icon name="building" size={28} /></div>
         <h1>Select a Client</h1>
         <p>Choose the client you want to onboard. You can switch clients any time from the Clients tab.</p>
       </div>

@@ -22,6 +22,7 @@ const { pipeline } = require('stream/promises');
 const db = require('./db');
 const { httpError } = require('./http');
 const { buildSpec } = require('../lib/spec-build');
+const { contractsOf } = require('../lib/contract-id');
 const { pythonPath, sealOf, ROOT } = require('../lib/python');
 const { run } = require('../lib/run');
 
@@ -40,7 +41,7 @@ const tarName = (customerId) => `vciso-platform-${customerId.toLowerCase()}.tar.
 // they were at its base build. (Licence changes are caught by the seal before this matters.)
 const DATABASE_SECTIONS = {
   organization: 'organisation, offices and contacts',
-  contract: 'contract',
+  contracts: 'contracts (one per office)',
   licensing_limits: 'licence limits',
   selected_frameworks: 'frameworks and their offices',
   enabled_modules: 'modules',
@@ -128,9 +129,12 @@ function canonical(v) {
   return JSON.stringify(v ?? null);
 }
 
+// A section of a spec; contracts read the same from a snapshot taken before per-office contracts.
+const sectionOf = (spec, key) => (key === 'contracts' ? contractsOf(spec) : spec?.[key]);
+
 function changedSections(before, after) {
   return Object.entries(DATABASE_SECTIONS)
-    .filter(([key]) => canonical(before?.[key]) !== canonical(after?.[key]))
+    .filter(([key]) => canonical(sectionOf(before, key)) !== canonical(sectionOf(after, key)))
     .map(([key, label]) => ({ section: key, label }));
 }
 
@@ -193,11 +197,23 @@ async function prepareFull(build, dir, bundleDir, tag, log) {
     await db.query('UPDATE ctw_build SET spec_snapshot = $2 WHERE build_id = $1', [id, s]);
   });
 
+  // Stamped on the client's controls (created_by): the CTW admin who onboarded the client, else the one
+  // who started this build.
+  const { rows: [who] } = await db.query(
+    `SELECT COALESCE(o.full_name, r.full_name) AS name
+       FROM ctw_client c
+       LEFT JOIN ctw_admin_user o ON o.admin_id = c.created_by
+       LEFT JOIN ctw_admin_user r ON r.admin_id = $2
+      WHERE c.customer_id = $1`,
+    [cust, build.requested_by],
+  );
+
   const bundle = await step(log, '2/4 Bundle: validate, seal, schema, compose', async () => {
     const r = await run(
       pythonPath(),
       [path.join(ROOT, 'scripts', 'build_client_bundle.py'), '--spec', path.join(dir, 'spec.json'),
-        '--out', bundleDir, '--json', '--no-credentials-file', '--image-tag', tag],
+        '--out', bundleDir, '--json', '--no-credentials-file', '--image-tag', tag,
+        ...(who?.name ? ['--created-by', who.name] : [])],
       { cwd: ROOT, env: { PYTHONUTF8: '1' }, onLine: (l) => log.line(`   ${l}`), stdout: true },
     );
     let result;

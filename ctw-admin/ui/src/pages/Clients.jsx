@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
-import { Alert, ErrorList, Loading, Modal, StatusBadge, daysUntil } from '../components/ui';
+import { Alert, ErrorList, Icon, Loading, Modal, StatusBadge, daysUntil } from '../components/ui';
 
 // Delivered clients count as active; drafts and validated clients are still being onboarded.
 const GROUPS = {
@@ -24,7 +24,7 @@ function ClientCard({ c, onDelete }) {
       {!c.last_build && (
         <div className="actions">
           <button type="button" className="icon-btn" title="Delete this client (never built)" aria-label={`Delete ${c.customer_name}`} onClick={() => onDelete(c)}>
-            🗑
+            <Icon name="trash" size={16} />
           </button>
         </div>
       )}
@@ -111,21 +111,21 @@ export default function ClientsPage() {
         <>
           <div className="stats">
             <div className="stat-card">
-              <span className="icon">🏢</span>
+              <span className="icon"><Icon name="building" size={22} /></span>
               <div>
                 <div className="v">{clients.length}</div>
                 <div className="k">Total Clients</div>
               </div>
             </div>
             <div className="stat-card ok">
-              <span className="icon">✅</span>
+              <span className="icon"><Icon name="check" size={22} /></span>
               <div>
                 <div className="v">{count('active')}</div>
                 <div className="k">Active</div>
               </div>
             </div>
             <div className="stat-card info">
-              <span className="icon">⏸️</span>
+              <span className="icon"><Icon name="clock" size={22} /></span>
               <div>
                 <div className="v">{count('onboarding')}</div>
                 <div className="k">Onboarding</div>

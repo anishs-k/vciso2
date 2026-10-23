@@ -62,25 +62,42 @@
       }
     ]
   },
-  "contract": {
-    "contract_id": "Contract_00101_001",
-    "customer_ref_po": "PO_ACME_2026_09",
-    "contract_type": "Original",
-    "financial_year": 2026,
-    "contract_period_months": 12,
-    "contract_start_date": "2026-04-01",
-    "contract_end_date": "2027-03-31",
-    "contract_value": 1200000.0,
-    "currency": "INR",
-    "invoicing_frequency": "M"
-  },
+  "contracts": [
+    {
+      "office_id": "Cust_00101_001",
+      "contract_id": "Cust_00101_001_C001",
+      "customer_ref_po": "PO_ACME_2026_09",
+      "contract_type": "Original",
+      "financial_year": 2026,
+      "contract_period_months": 12,
+      "contract_start_date": "2026-04-01",
+      "contract_end_date": "2027-03-31",
+      "contract_value": 1200000.0,
+      "currency": "INR",
+      "invoicing_frequency": "M"
+    },
+    {
+      "office_id": "Cust_00101_002",
+      "contract_id": "Cust_00101_002_C002",
+      "customer_ref_po": "PO_ACME_2026_09",
+      "contract_type": "Original",
+      "financial_year": 2026,
+      "contract_period_months": 12,
+      "contract_start_date": "2026-04-01",
+      "contract_end_date": "2027-03-31",
+      "contract_value": 1200000.0,
+      "currency": "INR",
+      "invoicing_frequency": "M"
+    }
+  ],
   "licensing_limits": {
     "max_users": 25,
     "max_vcisos": 2,
     "max_org_owners": 1,
+    "max_it_admins": 1,
     "max_control_owners": 20,
     "max_api_integrations": 10,
-    "max_frameworks": 2,
+    "max_frameworks": 3,
     "valid_to": "2027-03-31"
   },
   "selected_frameworks": [

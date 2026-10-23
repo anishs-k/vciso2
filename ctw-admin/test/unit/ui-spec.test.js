@@ -58,9 +58,10 @@ test('checks follow the validator rules', async () => {
     return checkSpec(s).map((c) => c.message).join(' | ');
   };
   assert.match(messages((s) => (s.organization.offices[1].office_type = 'Primary')), /Exactly one office must be Primary/);
-  assert.match(messages((s) => (s.licensing_limits.max_vcisos = 30)), /vCISOs \+ Org Owners cannot exceed max users/);
-  assert.match(messages((s) => (s.licensing_limits.max_control_owners = s.licensing_limits.max_users)), /Max control owners must be less than max users/);
-  assert.match(messages((s) => (s.contract.financial_year = 2020)), /Financial year should be/);
+  assert.match(messages((s) => (s.licensing_limits.max_vcisos = 30)), /vCISOs \+ Org Owners \+ IT Admins cannot exceed max users/);
+  assert.match(messages((s) => (s.licensing_limits.max_it_admins = '')), /Max IT Admins must be a whole number ≥ 1/);
+  assert.match(messages((s) => s.initial_users.push({ ...s.initial_users[2], user_id: 'User_0009', login_id: 'it.two', user_email: 'it2@x.in' })), /2 IT Admins, licence allows 1/);
+  assert.match(messages((s) => (s.contracts[0].financial_year = 2020)), /Mumbai contract: financial year should be/);
   assert.match(messages((s) => (s.enabled_modules = s.enabled_modules.filter((m) => m !== 'alerting'))), /needs Alerting/);
   assert.match(messages((s) => (s.enabled_modules = ['compliance'])), /Scanner tools need the Vulnerabilities module/);
   assert.doesNotMatch(messages((s) => (s.initial_users[0].role_type = 'Viewer')), /vCISO/, 'a vCISO is optional');
@@ -170,7 +171,7 @@ test('toPayload sends every empty field as null and drops an unlicensed news pro
   assert.equal(p.licensing_limits.max_users, null);
   const empty = toPayload(normalize({ organization: { customer_id: 'X_1', customer_name: 'X' } }));
   assert.equal(empty.organization.category, null);
-  assert.equal(empty.contract.contract_start_date, null);
+  assert.deepEqual(empty.contracts, [], 'each office gets its contract on the Contract step');
   assert.equal(empty.security_policies.sso_type, null);
   assert.equal(p.news_watch_profile, undefined);
   assert.equal(s.licensing_limits.max_users, '', 'the form state is not changed');

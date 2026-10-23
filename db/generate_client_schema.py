@@ -20,7 +20,7 @@ What goes in:
 3. The licence row and the licence guard: triggers that refuse users, vCISOs, Organisation Owners,
    control owners, API integrations and frameworks beyond the licence, and anything after expiry.
 4. Only the licensed part of the master catalogue (vendor IP), plus the client's own register:
-   offices, contacts, contract, licence per office, initial users and roles, control register.
+   offices, contacts, contracts (one per office), licence per office, initial users and roles, control register.
 
 Everything the client build decides on top of the workbook is in the CLIENT DECISIONS section.
 """
@@ -37,7 +37,7 @@ from datetime import date, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from db.generate_schema import load_schema  # noqa: E402
-from intake.client_intake import ROLE_TYPES  # noqa: E402
+from intake.client_intake import ROLE_TYPES, contracts_of  # noqa: E402
 
 try:
     import bcrypt  # hashes the one-time passwords here, so the SQL file never holds them in plain text
@@ -145,9 +145,11 @@ def array(values, typ='text'):
 
 # ---------------------------------------------------------------- generator
 
-def build_client_schema(spec, excel_path, output_path, write_credentials=True):
+def build_client_schema(spec, excel_path, output_path, write_credentials=True, created_by=None):
     """Writes the SQL and instance.json next to output_path. The one-time passwords are returned in
-    'credentials' and, unless write_credentials is False, also written to initial_credentials.txt."""
+    'credentials' and, unless write_credentials is False, also written to initial_credentials.txt.
+    `created_by` (the CTW admin who onboarded the client) and the time of generation are stamped on the
+    client's controls (master_clause_control_map created_by / created_at)."""
     if not spec.get('license_seal'):
         # The API checks the seal in the database against instance.json; 'unsealed' would ship a licence
         # nobody signed. scripts/build_client_bundle.py seals the spec before calling this.
@@ -163,20 +165,28 @@ def build_client_schema(spec, excel_path, output_path, write_credentials=True):
     warnings = []
 
     org = spec['organization']
-    contract = spec['contract']
     limits = spec['licensing_limits']
     policies = spec.get('security_policies', {})
     mods = set(spec['enabled_modules'])
     selected = spec['selected_frameworks']
     fids = sorted(f['framework_id'] for f in selected)
     cust_id = org['customer_id']
-    ctr_id = contract['contract_id']
-    fy_id = contract['financial_year']
     offices = org['offices']
     primary_office = next(o['office_id'] for o in offices if o['office_type'] == 'Primary')
+    # One contract per office; rows for an office carry its contract and financial year.
+    contracts = contracts_of(spec)
+    contract_by_office = {k['office_id']: k for k in contracts}
+    primary_contract = contract_by_office.get(primary_office) or contracts[0]
+
+    def contract_of(office):
+        return contract_by_office.get(office) or primary_contract
+
+    first_start = min(k['contract_start_date'] for k in contracts)
+    last_end = max(k['contract_end_date'] for k in contracts)
 
     instance_id = str(uuid.uuid4())
-    generated_at = datetime.now().astimezone().isoformat(timespec='seconds')
+    generated = datetime.now().astimezone().replace(microsecond=0)
+    generated_at = generated.isoformat()
 
     sql = []
     w = sql.append
@@ -224,7 +234,7 @@ def build_client_schema(spec, excel_path, output_path, write_credentials=True):
     w(f'-- Generated: {generated_at}   instance {instance_id}   schema version {SCHEMA_VERSION}')
     w(f'-- Licensed frameworks: {fids}')
     w(f'-- Licensed modules: {sorted(mods)}')
-    w(f"-- Limits: users {limits['max_users']}, vCISOs {limits['max_vcisos']}, Org Owners {limits['max_org_owners']}, "
+    w(f"-- Limits: users {limits['max_users']}, vCISOs {limits['max_vcisos']}, Org Owners {limits['max_org_owners']}, IT Admins {limits.get('max_it_admins')}, "
       f"control owners {limits.get('max_control_owners', limits['max_users'])}, API integrations {limits['max_api_integrations']}, "
       f"frameworks {limits['max_frameworks']}, valid to {limits['valid_to']}")
     w('-- ===========================================================================')
@@ -555,7 +565,7 @@ COMMENT ON TABLE threat_intel_match IS 'A feed item that matches one of the clie
     w('-- SECTION 3: Licence and licence guard')
     w('-- The triggers stop the platform and its users from going past the licence. They are not a defence')
     w('-- against the database superuser, who can disable triggers: the API must also verify license_seal.')
-    roles_sql = {r: q(r) for r in ('vCISO', 'Organisation Owner')}
+    roles_sql = {r: q(r) for r in ('vCISO', 'Organisation Owner', 'IT Admin')}
     w(f"""CREATE TABLE client_license (
   license_id text PRIMARY KEY,
   customer_id text NOT NULL UNIQUE REFERENCES master_customer_details (customer_id),
@@ -564,6 +574,7 @@ COMMENT ON TABLE threat_intel_match IS 'A feed item that matches one of the clie
   max_users integer NOT NULL,
   max_vcisos integer NOT NULL,
   max_org_owners integer NOT NULL,
+  max_it_admins integer NOT NULL,
   max_control_owners integer NOT NULL,
   max_api_integrations integer NOT NULL,
   max_frameworks integer NOT NULL,
@@ -630,17 +641,25 @@ BEGIN
       RAISE EXCEPTION 'LICENSE_VIOLATION: the licence allows % Organisation Owner(s).', lic.max_org_owners;
     END IF;
   END IF;
+
+  IF NEW.user_role = {roles_sql['IT Admin']} AND NOT (was_active AND OLD.user_role = {roles_sql['IT Admin']}) THEN
+    SELECT count(*) INTO n FROM customer_framework_users
+      WHERE customer_id = NEW.customer_id AND active IS TRUE AND user_role = {roles_sql['IT Admin']} AND user_id <> NEW.user_id;
+    IF n >= lic.max_it_admins THEN
+      RAISE EXCEPTION 'LICENSE_VIOLATION: the licence allows % IT Admin(s).', lic.max_it_admins;
+    END IF;
+  END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Role grants: the vCISO and Organisation Owner roles count distinct users, like the user quotas.
+-- Role grants: the vCISO, Organisation Owner and IT Admin roles count distinct users, like the user quotas.
 CREATE FUNCTION trg_enforce_role_limits() RETURNS trigger AS $$
 DECLARE
   lic client_license;
   n integer;
 BEGIN
-  IF NEW.active IS NOT TRUE OR NEW.role_id NOT IN ({q(ROLE_IDS['vCISO'])}, {q(ROLE_IDS['Organisation Owner'])}) THEN
+  IF NEW.active IS NOT TRUE OR NEW.role_id NOT IN ({q(ROLE_IDS['vCISO'])}, {q(ROLE_IDS['Organisation Owner'])}, {q(ROLE_IDS['IT Admin'])}) THEN
     RETURN NEW;
   END IF;
   lic := ctw_active_license(NEW.customer_id);
@@ -651,6 +670,9 @@ BEGIN
   END IF;
   IF NEW.role_id = {q(ROLE_IDS['Organisation Owner'])} AND n >= lic.max_org_owners THEN
     RAISE EXCEPTION 'LICENSE_VIOLATION: the Organisation Owner role ({ROLE_IDS['Organisation Owner']}) is licensed for % user(s).', lic.max_org_owners;
+  END IF;
+  IF NEW.role_id = {q(ROLE_IDS['IT Admin'])} AND n >= lic.max_it_admins THEN
+    RAISE EXCEPTION 'LICENSE_VIOLATION: the IT Admin role ({ROLE_IDS['IT Admin']}) is licensed for % user(s).', lic.max_it_admins;
   END IF;
   RETURN NEW;
 END;
@@ -774,9 +796,10 @@ CREATE TRIGGER enforce_control_owner_limits BEFORE INSERT OR UPDATE OF owner_use
     # ---- 4. licensed catalogue
     w('-- SECTION 4: Master catalogue (only what this client licensed)')
     fy_rows = seed('financial_year_master', sheet_rows('financial_year_master'), ['fy_id'])
-    if (fy_id,) not in fy_rows:
-        raise ValueError(f'contract.financial_year {fy_id} is not in the Financial Year Master sheet '
-                         f'({min(k[0] for k in fy_rows)}-{max(k[0] for k in fy_rows)})')
+    for k in contracts:
+        if (k['financial_year'],) not in fy_rows:
+            raise ValueError(f"contract {k['contract_id']}: financial_year {k['financial_year']} is not in the Financial "
+                             f"Year Master sheet ({min(r[0] for r in fy_rows)}-{max(r[0] for r in fy_rows)})")
 
     seed('master_framework', (r for r in sheet_rows('master_framework') if r['framework_id'] in fids), ['framework_id'])
 
@@ -791,6 +814,9 @@ CREATE TRIGGER enforce_control_owner_limits BEFORE INSERT OR UPDATE OF owner_use
             raise ValueError(f'Framework {fid} has more than 999 controls; the ID scheme <framework><3 digits> is full')
         r['source_clause_control_id'] = r['clause_control_id']
         r['clause_control_id'] = fid * 1000 + seq[fid]
+        # Made for this client now, by the CTW admin who onboarded it (not the workbook's own values).
+        r['created_at'] = generated
+        r['created_by'] = created_by
         controls.append(r)
     seed('master_clause_control_map', controls, ['clause_control_id'])
     for fid in fids:
@@ -852,11 +878,12 @@ CREATE TRIGGER enforce_control_owner_limits BEFORE INSERT OR UPDATE OF owner_use
 
     # ---- 5. client register
     w('-- SECTION 5: Client register')
-    # The client is on board for the contract: on-boarding is its first day, off-boarding its last.
-    def boarding(t):
-        d = {'on_boarding_date': contract['contract_start_date']}
+    # On board for the contract: on-boarding is its first day, off-boarding its last. An office's rows follow
+    # its own contract; the client's follow all of them (first start, last end).
+    def boarding(t, k=None):
+        d = {'on_boarding_date': k['contract_start_date'] if k else first_start}
         if 'off_boarding_date' in types[t]:
-            d['off_boarding_date'] = contract['contract_end_date']
+            d['off_boarding_date'] = k['contract_end_date'] if k else last_end
         return d
     insert('master_customer_details', dict(customer_id=cust_id, customer_name=org['customer_name'],
                                            category=org.get('category'), active=True, **boarding('master_customer_details')))
@@ -864,24 +891,28 @@ CREATE TRIGGER enforce_control_owner_limits BEFORE INSERT OR UPDATE OF owner_use
         insert('master_customer_address_details', dict(
             customer_id=cust_id, office_id=o['office_id'], office_type=o['office_type'], office_address=o['office_address'],
             city=o['city'], state=o['state'], country=o['country'], pincode=o.get('pincode'),
-            category=org.get('category'), industry=org.get('industry'), active=True, **boarding('master_customer_address_details')))
+            category=org.get('category'), industry=org.get('industry'), active=True,
+            **boarding('master_customer_address_details', contract_of(o['office_id']))))
     for c in org.get('contacts', []):
         insert('master_customer_contact_details', dict(
             customer_id=cust_id, office_id=c['office_id'], contact_id=c['contact_id'], contact_type=c['contact_type'],
             contact_priority=c.get('contact_priority'), contact_person=c.get('contact_person'),
             designation=c.get('designation'), department=c.get('department'), contact_phone=c.get('contact_phone'),
-            contact_email=c.get('contact_email'), active=True, **boarding('master_customer_contact_details')))
-    insert('master_customer_contract_detail', dict(
-        customer_id=cust_id, office_id=primary_office, fy_id=fy_id, customer_ref_po=contract.get('customer_ref_po'),
-        contract_id=ctr_id, contract_type=contract.get('contract_type', 'Original'),
-        contract_period_months=contract.get('contract_period_months'), contract_start_date=contract['contract_start_date'],
-        contract_end_date=contract['contract_end_date'], contract_value=contract.get('contract_value'),
-        invoicing_frequency=contract.get('invoicing_frequency'), active=True, **boarding('master_customer_contract_detail')))
+            contact_email=c.get('contact_email'), active=True,
+            **boarding('master_customer_contact_details', contract_of(c['office_id']))))
+    for k in contracts:
+        insert('master_customer_contract_detail', dict(
+            customer_id=cust_id, office_id=k['office_id'], fy_id=k['financial_year'], customer_ref_po=k.get('customer_ref_po'),
+            contract_id=k['contract_id'], contract_type=k.get('contract_type') or 'Original',
+            contract_period_months=k.get('contract_period_months'), contract_start_date=k['contract_start_date'],
+            contract_end_date=k['contract_end_date'], contract_value=k.get('contract_value'),
+            invoicing_frequency=k.get('invoicing_frequency'), active=True, **boarding('master_customer_contract_detail', k)))
 
     w(f"""INSERT INTO client_license (license_id, customer_id, valid_from, valid_to, max_users, max_vcisos, max_org_owners,
-  max_control_owners, max_api_integrations, max_frameworks, licensed_frameworks, licensed_modules, license_seal)
-VALUES ({q('LIC_' + cust_id)}, {q(cust_id)}, {q(contract['contract_start_date'])}, {q(limits['valid_to'])}, {int(limits['max_users'])},
-  {int(limits['max_vcisos'])}, {int(limits['max_org_owners'])}, {int(limits.get('max_control_owners', limits['max_users']))},
+  max_it_admins, max_control_owners, max_api_integrations, max_frameworks, licensed_frameworks, licensed_modules, license_seal)
+VALUES ({q('LIC_' + cust_id)}, {q(cust_id)}, {q(first_start)}, {q(limits['valid_to'])}, {int(limits['max_users'])},
+  {int(limits['max_vcisos'])}, {int(limits['max_org_owners'])}, {int(limits.get('max_it_admins') or limits['max_users'])},
+  {int(limits.get('max_control_owners', limits['max_users']))},
   {int(limits['max_api_integrations'])}, {int(limits['max_frameworks'])}, {array(fids, 'integer')}, {array(sorted(mods))},
   {q(spec.get('license_seal') or 'unsealed')});
 -- From here on the licence row is read-only.
@@ -925,9 +956,10 @@ CREATE TRIGGER protect_platform_instance_truncate BEFORE TRUNCATE ON platform_in
     for f in selected:
         for off in f['office_ids']:
             insert('customer_contract_framework_map', dict(
-                customer_id=cust_id, office_id=off, fy_id=fy_id, contract_id=ctr_id, framework_id=f['framework_id'],
+                customer_id=cust_id, office_id=off, fy_id=contract_of(off)['financial_year'],
+                contract_id=contract_of(off)['contract_id'], framework_id=f['framework_id'],
                 review_frequency_months=review_months(f, off),
-                customer_ref_po=contract.get('customer_ref_po'), active=True,
+                customer_ref_po=contract_of(off).get('customer_ref_po'), active=True,
                 framework_license_count=limits['max_frameworks'], api_integration_license_count=limits['max_api_integrations'],
                 user_license_count=limits['max_users'], for_customer_or_internal='C'))
 
@@ -955,8 +987,8 @@ CREATE TRIGGER protect_platform_instance_truncate BEFORE TRUNCATE ON platform_in
         password = secrets.token_urlsafe(12)
         credentials.append((u['login_id'], u['role_type'], password))
         insert('customer_framework_users', dict(
-            customer_id=cust_id, office_id=office, fy_id=fy_id, contract_id=ctr_id,
-            framework_id=(own_fids or fids)[0], user_id=u['user_id'], user_role=u['role_type'], user_name=u['user_name'],
+            customer_id=cust_id, office_id=office, fy_id=contract_of(office)['financial_year'],
+            contract_id=contract_of(office)['contract_id'], framework_id=(own_fids or fids)[0], user_id=u['user_id'], user_role=u['role_type'], user_name=u['user_name'],
             user_email=u['user_email'], user_mobile=u.get('user_mobile'), designation=u.get('designation'),
             department=u.get('department'), login_id=u['login_id'],
             password_hash=password_hash_sql(password),
@@ -970,8 +1002,9 @@ CREATE TRIGGER protect_platform_instance_truncate BEFORE TRUNCATE ON platform_in
         for fid in fids:
             for ui in screens:
                 insert('customer_framework_role_user', dict(
-                    customer_id=cust_id, address_id=office, fy_id=fy_id, contract_id=ctr_id,
-                    customer_ref_po=contract.get('customer_ref_po'), framework_id=fid, active=True, role_id=role_id,
+                    customer_id=cust_id, address_id=office, fy_id=contract_of(office)['financial_year'],
+                    contract_id=contract_of(office)['contract_id'], customer_ref_po=contract_of(office).get('customer_ref_po'),
+                    framework_id=fid, active=True, role_id=role_id,
                     user_id=u['user_id'], ui_id=ui, for_customer_or_internal='C'))
 
     # Control register (architecture Diagram 2, step 5): every licensed control, per office it applies to.
@@ -987,7 +1020,8 @@ CREATE TRIGGER protect_platform_instance_truncate BEFORE TRUNCATE ON platform_in
             months = int(review_months(f, off))
             for m in (c for c in controls if c['framework_id'] == f['framework_id']):
                 insert('customer_clause_control_map', dict(
-                    customer_id=cust_id, office_id=off, fy_id=fy_id, contract_id=ctr_id, framework_id=m['framework_id'],
+                    customer_id=cust_id, office_id=off, fy_id=contract_of(off)['financial_year'],
+                    contract_id=contract_of(off)['contract_id'], framework_id=m['framework_id'],
                     clause_control_id=m['clause_control_id'],
                     clause_control_ref=first_filled(m['clause_control_sub_ref_no'], m['clause_control_ref_no']),
                     clause_control_desc=first_filled(m['clause_control_sub_ref_desc'], m['clause_control_ref_desc']),
@@ -1110,6 +1144,7 @@ def main():
     parser.add_argument('--spec', required=True, help='Validated client intake spec (client_spec.json)')
     parser.add_argument('--excel', default=DEFAULT_XLSX, help='Master workbook')
     parser.add_argument('--out', help='Output SQL file (default: dist_client/<customer_id>/<customer_id>_init.sql)')
+    parser.add_argument('--created-by', help="Name of the CTW admin who onboarded the client (on the controls' created_by)")
     args = parser.parse_args()
 
     for path in (args.spec, args.excel):
@@ -1120,7 +1155,7 @@ def main():
     cust = spec['organization']['customer_id']
     out = args.out or os.path.join(ROOT, 'dist_client', cust, sql_file_name(cust))
     try:
-        build_client_schema(spec, args.excel, out)
+        build_client_schema(spec, args.excel, out, created_by=args.created_by)
     except ValueError as exc:
         sys.exit(f'Error: {exc}')
 

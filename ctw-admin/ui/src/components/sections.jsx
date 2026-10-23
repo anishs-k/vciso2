@@ -6,7 +6,7 @@ import { Alert, Field, NumberField, SearchSelect, Select, Text } from './ui';
 import { useCountries, usePlaces } from '../lib/geo';
 import { countryNamed } from '../lib/phone';
 import { PhoneField } from './PhoneField';
-import { endAfterMonths, financialYear, monthsBetween, newContact, newOffice, newTool, newUser, removeOffice, renameCustomer, userIdFor, userNumber } from '../lib/spec';
+import { contactIdFor, endAfterMonths, lastContractEnd, newContract, financialYear, frameworkOfficeCount, monthsBetween, newContact, newOffice, newTool, newUser, removeOffice, renameCustomer, userIdFor, userNumber } from '../lib/spec';
 
 const MODULE_INFO = {
   compliance: ['Compliance', 'Frameworks, controls, evidence, audits. Always included.'],
@@ -103,6 +103,31 @@ function OfficePlace({ office, edit }) {
   );
 }
 
+// The pincode. A 6-digit Indian pincode (with the country empty or India) fills in the country, state
+// and city from India Post (/api/geo/pincode); they can still be changed after. A failed lookup leaves
+// them for typing in.
+const INDIAN_PINCODE = /^[1-9][0-9]{5}$/;
+function OfficePincode({ office, edit }) {
+  return (
+    <Text
+      label="Pincode"
+      required
+      value={office.pincode}
+      onChange={(v) => {
+        edit((o) => (o.pincode = v));
+        const pincode = v.trim();
+        if (!INDIAN_PINCODE.test(pincode) || (office.country && office.country !== 'India')) return;
+        api(`/geo/pincode/${pincode}`)
+          .then((place) => edit((o) => {
+            // Only if the box still holds this pincode (typing on starts a new lookup).
+            if ((o.pincode || '').trim() === pincode) Object.assign(o, { country: place.country, state: place.state, city: place.city });
+          }))
+          .catch(() => {});
+      }}
+    />
+  );
+}
+
 // ─── 2. Offices ─────────────────────────────────────────────────────────────────────────────
 export function Offices({ spec, edit, catalogue }) {
   const offices = spec.organization.offices;
@@ -125,7 +150,7 @@ export function Offices({ spec, edit, catalogue }) {
               <Select label="Type" required value={o.office_type} onChange={set('office_type')} options={catalogue.options.office_types} placeholder="Choose…" />
               <Text label="Address" required value={o.office_address} onChange={set('office_address')} />
               <OfficePlace office={o} edit={(fn) => edit((s) => fn(s.organization.offices[i]))} />
-              <Text label="Pincode" required value={o.pincode} onChange={set('pincode')} />
+              <OfficePincode office={o} edit={(fn) => edit((s) => fn(s.organization.offices[i]))} />
             </div>
           </div>
         );
@@ -147,6 +172,16 @@ const officeCountry = (spec, countries, officeId) =>
 export function Contacts({ spec, edit, catalogue }) {
   const contacts = spec.organization.contacts;
   const countries = useCountries();
+  // When the step opens with no contacts at all, every office gets an empty one to fill in. Contacts that
+  // are there already (typed in, or from a questionnaire) are left as they are: nothing is added to them.
+  const officeIds = spec.organization.offices.map((o) => o.office_id).join();
+  useEffect(() => {
+    if (spec.organization.contacts.length || !spec.organization.offices.length) return;
+    edit((s) => {
+      if (s.organization.contacts.length) return;
+      for (const o of s.organization.offices) s.organization.contacts.push(newContact(s, o.office_id));
+    });
+  }, [officeIds]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="stack">
       {!contacts.length && (
@@ -167,10 +202,35 @@ export function Contacts({ spec, edit, catalogue }) {
             <div className="grid-3">
               <Select label="Type" required value={c.contact_type} onChange={set('contact_type')} options={catalogue.options.contact_types} placeholder="Choose…" />
               <NumberField label="Priority" required min={1} value={c.contact_priority} onChange={set('contact_priority')} />
-              <OfficeSelect spec={spec} value={c.office_id} onChange={set('office_id')} />
+              <OfficeSelect
+                spec={spec}
+                value={c.office_id}
+                onChange={(v) => edit((s) => {
+                  // The contact ID follows the office: <office ID>_<number>.
+                  const cc = s.organization.contacts[i];
+                  if (v === cc.office_id) return;
+                  cc.office_id = v;
+                  cc.contact_id = contactIdFor(s, v, cc.contact_id);
+                })}
+              />
               <Text label="Name" required value={c.contact_person} onChange={set('contact_person')} />
-              <Text label="Designation" required value={c.designation} onChange={set('designation')} />
-              <Text label="Department" value={c.department} onChange={set('department')} />
+              <SearchSelect
+                label="Designation"
+                required
+                value={c.designation}
+                options={catalogue.options.designations || []}
+                freeText
+                placeholder="Type to search…"
+                onChange={set('designation')}
+              />
+              <SearchSelect
+                label="Department"
+                value={c.department}
+                options={catalogue.options.departments || []}
+                freeText
+                placeholder="Type to search…"
+                onChange={set('department')}
+              />
               <Text label="Email" required type="email" value={c.contact_email} onChange={set('contact_email')} />
               <PhoneField
                 label="Phone"
@@ -198,26 +258,14 @@ export function Contacts({ spec, edit, catalogue }) {
   );
 }
 
-// ─── 4. Contract ────────────────────────────────────────────────────────────────────────────
-// The next generated contract ID for this customer, from the API (the number is not used up until saved).
-const nextContractId = (customerId) =>
-  api(`/clients/next-contract-id?customer_id=${encodeURIComponent(customerId)}`).then((r) => r.contract_id);
-
-export function Contract({ spec, edit, catalogue }) {
-  const k = spec.contract;
-  const set = (key) => (v) => edit((s) => (s.contract[key] = v));
-  const cid = spec.organization.customer_id;
-  // An empty contract ID is filled in as soon as the step opens; the admin may change it.
-  useEffect(() => {
-    if (!/^[A-Za-z0-9_-]{3,32}$/.test(cid || '') || k.contract_id) return;
-    nextContractId(cid)
-      .then((id) => edit((s) => !s.contract.contract_id && (s.contract.contract_id = id)))
-      .catch(() => {}); // left empty, the API generates it on save
-  }, [cid]); // eslint-disable-line react-hooks/exhaustive-deps
-
+// ─── 4. Contracts ───────────────────────────────────────────────────────────────────────────
+// One contract per office. Its ID is <office ID>_C<NNN> (lib/spec.js contractIdFor); the admin may change it.
+function ContractFields({ k, edit, catalogue }) {
+  // edit(fn): fn mutates this office's contract.
+  const set = (key) => (v) => edit((c) => (c[key] = v));
   return (
     <div className="grid-3">
-      <Text label="Contract ID" value={k.contract_id} onChange={set('contract_id')} />
+      <Text label="Contract ID" value={k.contract_id} onChange={set('contract_id')} hint="Office ID + C + number; left empty, it is given on save" />
       <Text label="Client's PO number" required value={k.customer_ref_po} onChange={set('customer_ref_po')} />
       <Select label="Type" value={k.contract_type} onChange={set('contract_type')} options={catalogue.options.contract_types} placeholder="Choose…" />
       <Text
@@ -225,13 +273,12 @@ export function Contract({ spec, edit, catalogue }) {
         required
         type="date"
         value={k.contract_start_date}
-        onChange={(v) => edit((s) => {
-          const k = s.contract;
-          k.contract_start_date = v;
-          k.financial_year = financialYear(v);
+        onChange={(v) => edit((c) => {
+          c.contract_start_date = v;
+          c.financial_year = financialYear(v);
           // With a period, the end date follows the start; without one, the period comes from the dates.
-          if (v && Number.isInteger(k.contract_period_months)) k.contract_end_date = endAfterMonths(v, k.contract_period_months);
-          else k.contract_period_months = monthsBetween(v, k.contract_end_date);
+          if (v && Number.isInteger(c.contract_period_months)) c.contract_end_date = endAfterMonths(v, c.contract_period_months);
+          else c.contract_period_months = monthsBetween(v, c.contract_end_date);
         })}
       />
       <Text
@@ -239,9 +286,9 @@ export function Contract({ spec, edit, catalogue }) {
         required
         type="date"
         value={k.contract_end_date}
-        onChange={(v) => edit((s) => {
-          s.contract.contract_end_date = v;
-          s.contract.contract_period_months = monthsBetween(s.contract.contract_start_date, v);
+        onChange={(v) => edit((c) => {
+          c.contract_end_date = v;
+          c.contract_period_months = monthsBetween(c.contract_start_date, v);
         })}
       />
       <NumberField
@@ -250,23 +297,55 @@ export function Contract({ spec, edit, catalogue }) {
         min={1}
         max={60}
         value={k.contract_period_months}
-        onChange={(v) => edit((s) => {
-          s.contract.contract_period_months = v;
-          const end = endAfterMonths(s.contract.contract_start_date, v);
-          if (end) s.contract.contract_end_date = end;
+        onChange={(v) => edit((c) => {
+          c.contract_period_months = v;
+          const end = endAfterMonths(c.contract_start_date, v);
+          if (end) c.contract_end_date = end;
         })}
         hint="From the dates; or enter it to set the end date"
       />
-      <NumberField
-        label="Financial year"
-        required
-        value={k.financial_year}
-        onChange={set('financial_year')}
-        hint="April–March; set from the start date"
-      />
+      <NumberField label="Financial year" required value={k.financial_year} onChange={set('financial_year')} hint="April–March; set from the start date" />
       <NumberField label="Contract value" min={0} value={k.contract_value} onChange={set('contract_value')} />
       <Select label="Currency" required value={k.currency} onChange={set('currency')} options={['INR', 'USD', 'EUR', 'GBP', 'AED', 'SGD']} placeholder="Choose…" />
       <Select label="Invoicing" required value={k.invoicing_frequency} onChange={set('invoicing_frequency')} options={catalogue.options.invoicing_frequencies} placeholder="Choose…" />
+    </div>
+  );
+}
+
+export function Contract({ spec, edit, catalogue }) {
+  const offices = spec.organization.offices;
+  // When the step opens, every office without a contract gets one to fill in.
+  const officeIds = offices.map((o) => o.office_id).join();
+  useEffect(() => {
+    const has = (s, o) => s.contracts.some((k) => k.office_id === o.office_id);
+    if (offices.every((o) => has(spec, o))) return;
+    edit((s) => {
+      for (const o of s.organization.offices) if (!has(s, o)) s.contracts.push(newContract(s, o.office_id));
+    });
+  }, [officeIds]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!offices.length) return <Alert>Add the client's offices first: each office gets its own contract.</Alert>;
+  return (
+    <div className="stack">
+      {offices.map((o) => {
+        const k = spec.contracts.find((x) => x.office_id === o.office_id);
+        if (!k) return null;
+        return (
+          <div className="repeat" key={o.office_id}>
+            <div className="repeat-head">
+              <h3 className="grow">
+                {o.city || o.office_id} <span className="muted">({o.office_type || 'office'})</span>{' '}
+                <span className="muted mono">{k.contract_id}</span>
+              </h3>
+            </div>
+            <ContractFields
+              k={k}
+              catalogue={catalogue}
+              edit={(fn) => edit((s) => fn(s.contracts.find((x) => x.office_id === o.office_id)))}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -275,11 +354,10 @@ export function Contract({ spec, edit, catalogue }) {
 export function Licence({ spec, edit }) {
   const l = spec.licensing_limits;
   const set = (key) => (v) => edit((s) => (s.licensing_limits[key] = v));
-  // On opening the step, an empty licence end takes the contract's end date; the admin may change it.
+  // On opening the step, an empty licence end takes the last contract's end date; the admin may change it.
   useEffect(() => {
-    if (!l.valid_to && spec.contract.contract_end_date) {
-      edit((s) => !s.licensing_limits.valid_to && (s.licensing_limits.valid_to = s.contract.contract_end_date));
-    }
+    const end = lastContractEnd(spec);
+    if (!l.valid_to && end) edit((s) => !s.licensing_limits.valid_to && (s.licensing_limits.valid_to = end));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="stack">
@@ -291,13 +369,7 @@ export function Licence({ spec, edit }) {
         <NumberField label="Max users" required min={1} value={l.max_users} onChange={set('max_users')} />
         <NumberField label="Max vCISOs" required min={1} value={l.max_vcisos} onChange={set('max_vcisos')} />
         <NumberField label="Max Organisation Owners" required min={1} value={l.max_org_owners} onChange={set('max_org_owners')} />
-        <NumberField label="Max control owners" min={1} value={l.max_control_owners} onChange={set('max_control_owners')} hint="Less than max users" />
-        <Text
-          label="Max viewer only"
-          value={Number.isInteger(l.max_users) && Number.isInteger(l.max_control_owners) ? l.max_users - l.max_control_owners : ''}
-          disabled
-          hint="Max users − max control owners"
-        />
+        <NumberField label="Max IT Admins" required min={1} value={l.max_it_admins} onChange={set('max_it_admins')} hint="At least 1" />
         <NumberField label="Max tool integrations" required min={0} value={l.max_api_integrations} onChange={set('max_api_integrations')} />
         <NumberField label="Max frameworks" required min={1} value={l.max_frameworks} onChange={set('max_frameworks')} />
         <Text
@@ -306,7 +378,7 @@ export function Licence({ spec, edit }) {
           type="date"
           value={l.valid_to}
           onChange={set('valid_to')}
-          hint="Taken from the contract's end date; after this date the platform turns read-only"
+          hint="Taken from the last contract's end date; after this date the platform turns read-only"
         />
       </div>
     </div>
@@ -320,6 +392,9 @@ const monthsLabel = (m) => `${m} month${m > 1 ? 's' : ''}`;
 export function Frameworks({ spec, edit, catalogue }) {
   const selected = new Map(spec.selected_frameworks.map((f, i) => [f.framework_id, i]));
   const max = spec.licensing_limits.max_frameworks;
+  // The licence counts a framework once per office it applies to; when that is used up, nothing new can be ticked.
+  const used = frameworkOfficeCount(spec);
+  const full = Number(max) > 0 && used >= Number(max);
   const toggle = (id) =>
     edit((s) => {
       const i = s.selected_frameworks.findIndex((f) => f.framework_id === id);
@@ -336,8 +411,8 @@ export function Frameworks({ spec, edit, catalogue }) {
   return (
     <div className="stack">
       <p className="muted" style={{ margin: 0 }}>
-        {selected.size} of {max || '?'} allowed by the licence. Only the selected frameworks' controls go into the
-        client's database.
+        {used} of {max || '?'} allowed by the licence (a framework counts once for each office it applies to). Only
+        the selected frameworks' controls go into the client's database.
       </p>
       {catalogue.frameworks.map((fw) => {
         const i = selected.get(fw.framework_id);
@@ -348,6 +423,7 @@ export function Frameworks({ spec, edit, catalogue }) {
             <input
               type="checkbox"
               checked={on}
+              disabled={!on && full}
               onChange={() => toggle(fw.framework_id)}
               aria-label={fw.framework_name}
               style={{ marginTop: 3 }}
@@ -368,6 +444,7 @@ export function Frameworks({ spec, edit, catalogue }) {
                             <input
                               type="checkbox"
                               checked={applies}
+                              disabled={!applies && full}
                               onChange={(e) =>
                                 edit((s) => {
                                   const ff = s.selected_frameworks[i];
@@ -387,6 +464,7 @@ export function Frameworks({ spec, edit, catalogue }) {
                           <select
                             aria-label={`Review every, ${o.city || o.office_id}`}
                             value={applies ? months : ''}
+                            disabled={!applies && full}
                             onChange={(e) =>
                               edit((s) => {
                                 const ff = s.selected_frameworks[i];
@@ -553,7 +631,6 @@ export function Security({ spec, edit, catalogue }) {
         {p.sso_type !== 'LOCAL' && (
           <Text label="SSO metadata URL" required value={p.sso_metadata_url} onChange={setP('sso_metadata_url')} />
         )}
-        <NumberField label="Password expires after (days)" min={1} value={p.password_expiry_days} onChange={setP('password_expiry_days')} />
         <NumberField label="Session timeout (minutes)" min={1} value={p.session_timeout_minutes} onChange={setP('session_timeout_minutes')} />
       </div>
       <label className="check">
@@ -577,9 +654,10 @@ export function Users({ spec, edit, catalogue }) {
     <div className="stack">
       <Alert>
         The first people to sign in. Each gets a one-time password when the image is generated, shown once to you.{' '}
+        {Number.isInteger(spec.licensing_limits.max_it_admins) ? `1 to ${spec.licensing_limits.max_it_admins} IT Admin(s)` : 'At least one IT Admin'}
         {Number.isInteger(spec.licensing_limits.max_org_owners)
-          ? `At least one IT Admin, and exactly ${spec.licensing_limits.max_org_owners} Organisation Owner(s), as set in Licence limits; a vCISO is optional.`
-          : 'At least one IT Admin, and as many Organisation Owners as Licence limits sets; a vCISO is optional.'}
+          ? `, and exactly ${spec.licensing_limits.max_org_owners} Organisation Owner(s), as set in Licence limits; a vCISO is optional.`
+          : ', and as many Organisation Owners as Licence limits sets; a vCISO is optional.'}
       </Alert>
       {users.map((u, i) => {
         const set = (k) => (v) => edit((s) => (s.initial_users[i][k] = v));
